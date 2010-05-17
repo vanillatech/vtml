@@ -1,4 +1,3 @@
-#include "stdafx.h"
 //#include <cassert>
 #include "neuron.h"
 
@@ -27,6 +26,30 @@ Neuron* Neuron::commonSubsequentNeuron(const Neuron& r) const
 	}
 	return 0;
 }
+
+/*
+void Neuron::newLink (Neuron *toNeuron, int ndelay, int countTotal) {
+
+		  int g = axons.size();
+		  Dendrite *tempDend = new Dendrite();
+		  axons.push_back(tempDend);
+		  (*axons[g]).dendriteFrom = this;
+		  (*axons[g]).dendriteTo = toNeuron;
+		  (*axons[g]).synapses = 2;
+
+		  (*axons[g]).activationDelay = ndelay;
+
+		  toNeuron->dendrites.push_back(&(*axons[g]));
+
+		  AnsiString captionID = toNeuron->id;
+		  captionID += " layer: ";
+		  captionID += toNeuron->layer;
+		  toNeuron->debugCallingNode = SDIAppForm->addLink(captionID,this->debugCallingNode);
+		  Debug1->refreshTT();
+
+		  Debug1->ListBox1->Items->Insert(0,"NewLink: " + id + " to " + toNeuron->id);
+}
+*/
 
 bool Neuron::connectFrom(
 	Neuron& from, float connectionWeight, int connectionDelay

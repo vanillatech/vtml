@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "layer.h"
 #include "model.h"
 

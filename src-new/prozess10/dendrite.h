@@ -31,4 +31,22 @@ struct Dendrite
 		//Dendrite& operator=(const Dendrite&);
 };
 
+/*
+class Dendrite {
+	public:
+	ActivationQueue *aqueuelocal;
+	Neuron *dendriteFrom;
+	Neuron *dendriteTo;
+	int synapses;
+	int lastUsed;
+	//bool inhibitory;
+	int activationDelay;
+	float weight;
+	Dendrite(void);
+	Dendrite(int);
+	void changeWeights (void);
+	void stimulate (void);
+};
+*/
+
 } //Odin

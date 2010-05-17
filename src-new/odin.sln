@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "odin", "odin.vcproj", "{D2D56C79-E8FC-47DC-90BE-89CD028981AC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DDA23A47-AE45-44EF-B98E-C3831C30C581} = {DDA23A47-AE45-44EF-B98E-C3831C30C581}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "prozess10", "prozess10\prozess10.vcproj", "{DDA23A47-AE45-44EF-B98E-C3831C30C581}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D2D56C79-E8FC-47DC-90BE-89CD028981AC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D2D56C79-E8FC-47DC-90BE-89CD028981AC}.Debug|Win32.Build.0 = Debug|Win32
+		{D2D56C79-E8FC-47DC-90BE-89CD028981AC}.Release|Win32.ActiveCfg = Release|Win32
+		{D2D56C79-E8FC-47DC-90BE-89CD028981AC}.Release|Win32.Build.0 = Release|Win32
+		{DDA23A47-AE45-44EF-B98E-C3831C30C581}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DDA23A47-AE45-44EF-B98E-C3831C30C581}.Debug|Win32.Build.0 = Debug|Win32
+		{DDA23A47-AE45-44EF-B98E-C3831C30C581}.Release|Win32.ActiveCfg = Release|Win32
+		{DDA23A47-AE45-44EF-B98E-C3831C30C581}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

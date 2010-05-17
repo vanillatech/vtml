@@ -9,13 +9,25 @@ typedef std::string TPattern;
 
 struct Configuration
 {
-	float threshold;
-	float activationDecay;
+	int queueMax;
+	int recoveryTime;
+	int blockTime;
+	float activationBias;
+	float drain;
+	float minActivation;
+	float fireMargin;
+	float learnRate;
 	float defaultImpulse;
 
 	Configuration() :
-		threshold(0.2f),
-		activationDecay(0.95f),
+		queueMax(9),
+		recoveryTime(1),
+		blockTime(1),
+		activationBias(0.5f),
+		drain(0.9f),
+		minActivation(0.01f),
+		fireMargin(0.1f),
+		learnRate(0.5f),
 		defaultImpulse(1.0f)
 	{}
 };

@@ -43,3 +43,44 @@ struct Neuron
 };
 
 } //Odin
+
+// Functions moved to Layer...
+
+/*
+class Neuron {
+	private:
+
+	  void drainActivation (void);
+
+
+	public:
+	  //TDebug1 *debuginst;
+	  TTreeNode *debugCallingNode;
+	  ActivationQueue* activationQueue;
+	  vector <RecoveryQueue> *recoveryQueue;
+	  vector <Dendrite*> axons;
+	  vector <Dendrite*> dendrites;
+	  double activationVal;
+	  int layer;
+	  AnsiString id;
+	  int lastchecked;
+	  char outputData;
+	  int lastfired;
+	  int blockActivation;
+	  int type; //0:temporal, 1:spatial, 2:downward
+	  float threshold;
+	  //Constructor
+	  Neuron (ActivationQueue*, vector< RecoveryQueue > * ,unsigned int, int);
+	  //Functions
+	  void newLink (Neuron *, int, int);
+	  int countSynapses ();
+	  void activate (double);
+	  void fire (void);
+	  void predictNext (void);
+	  void propagateDown(int *);
+	  int checkActivation (void);
+	  void inhibit (void);
+	  bool containsDendrite(Neuron *);
+	  int axonsRemove(Dendrite *);
+};
+*/

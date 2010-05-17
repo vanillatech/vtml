@@ -80,4 +80,6 @@ class RecoveryQueue
 		RQItem m_infiniteItem; // always empty item for consistency of operator[]
 };
 
+
+
 } //Odin
