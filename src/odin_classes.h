@@ -84,6 +84,7 @@ class RecoveryQueue {
 	void recover(void);
 	bool noChangeInCycle(void);
 	int countItems (void);
+	int countInputNeuronsCurrentStep(void);
 };
 
 class Neuron {
@@ -106,12 +107,13 @@ class Neuron {
 	  char outputData;
 	  int lastfired;
 	  int blockActivation;
-	  int type; //0:temporal, 1:spatial, 2:downward
+	  int type; //0:input, 1:intrinsic
 	  float threshold;
 	  //Constructor
 	  Neuron (ActivationQueue*, vector< RecoveryQueue > * ,unsigned int, int);
 	  //Functions
-	  void newLink (Neuron *, int, int);
+	  Dendrite* newLink (Neuron *, int, int);
+	  Dendrite* newLink (Neuron *);
 	  int countSynapses ();
 	  void activate (double);
 	  void fire (void);

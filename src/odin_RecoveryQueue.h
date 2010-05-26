@@ -73,38 +73,18 @@ void RecoveryQueue::insert(Neuron *neuron) {
 
 void RecoveryQueue::checkNewPattern() {
 	//Associate everything in recQueue with a new neuron
-		//old: only check for new pattern if nothing has been fired on all of the layers below current layer (0.0.61)
-		/*if (this->queue[this->lastelement].empty() && recQueueIdle == (this->layer - 1)) {
-			recQueueIdle = this->layer;
-		} */
-		//new: if recovery queue is 'full' and on the upper layer has nothing been fired
-		//means - if no pattern has been recognized
-		//then insert a new neuron in our model representing the current queue as a pattern
-		if (this->noChangeInCycle() && this->countItems() > 1) {
-			
-	
-		//if ( recQueueIdle == this->layer && this->countItems() > 1) { //experimental
-		//if ( this->countItems() > 1) { //experimental
-			Neuron *newNeuron = new Neuron(&aqueue,&recQueue,this->layer + 1,0);
-			int c = this->counter - 1;
-			for (int n=0;n<queueMax ;n++ ) {
+		//check if there are input neurons in current step.
+		if ( this->countInputNeuronsCurrentStep() > 0) {
+			//new neuron in same layer, type intrinsic.
+			Neuron *newNeuron = new Neuron(&aqueue,&recQueue,this->layer,1);
+			Dendrite *newDend;
+			for (unsigned int n=0;n<queue[this->counter].size();n++ ) {
 
-				if (c<0) { c = queueMax - 1; }
-				unsigned int countTotal = queue[c].size();
-				if (countTotal > 1) {
-				Neuron *newNeuron2 = new Neuron(&aqueue,&recQueue,this->layer + 1,1);
-				for (unsigned int m=0;m < countTotal ;m++ ) {
-						queue[c][m]->newLink(newNeuron2,0,countTotal);
-				}
-				newNeuron2->newLink(newNeuron,n,countTotal);
-				} else if (countTotal == 1) {
-					queue[c][0]->newLink(newNeuron,n,countTotal);
-				}
-				c--;
+				newDend = queue[this->counter][n]->newLink(newNeuron);
 			}
-			//deletePattern(newNeuron,0,0);
-			newNeuron->fire();
-			//lastFiredNeuron = newNeuron;
+
+			newDend->stimulate();
+			
 		}
 
 		if (recQueue.capacity() < recQueue.size() + 3) {
@@ -117,10 +97,11 @@ void RecoveryQueue::recover(void) {
 
 
 		this->lastelement = this->counter;
+		this->checkNewPattern();
 		this->counter++;
 		if (this->counter>=queueMax) {  this->counter = 0; }
 		this->queue[this->counter].clear();
-		this->checkNewPattern();
+
 		stepLastElement = stepCounter;
 	}
 }
@@ -140,3 +121,11 @@ int RecoveryQueue::countItems() {
 	return (cItems);
 }
 
+
+int RecoveryQueue::countInputNeuronsCurrentStep() {
+	int cItems = 0;
+	for (unsigned int n=0;n<queue[this->counter].size() ;n++ ) {
+		if (queue[this->counter][n]->type == 0) cItems ++;
+	}
+	return (cItems);
+}

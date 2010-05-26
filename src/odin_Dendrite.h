@@ -1,6 +1,6 @@
 Dendrite::Dendrite (void){
 	this->aqueuelocal = &aqueue;
-	this->weight=0.5;
+	this->weight=1;
 	this->lastUsed = 0;
 	this->synapses = 1;
 };

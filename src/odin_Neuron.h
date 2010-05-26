@@ -28,15 +28,17 @@ Neuron::Neuron (ActivationQueue* queue, vector< RecoveryQueue > *recQueueTemp, u
 		  this->threshold = 0.5;
 }
 
-
-void Neuron::newLink (Neuron *toNeuron, int ndelay, int countTotal) {
+Dendrite* Neuron::newLink (Neuron *toNeuron) {
+		return this->newLink(toNeuron,0,0);
+}
+Dendrite* Neuron::newLink (Neuron *toNeuron, int ndelay, int countTotal) {
 
 		  int g = axons.size();
 		  Dendrite *tempDend = new Dendrite();
 		  axons.push_back(tempDend);
 		  (*axons[g]).dendriteFrom = this;
 		  (*axons[g]).dendriteTo = toNeuron;
-		  (*axons[g]).synapses = 2;
+		  (*axons[g]).synapses = 1;
 
 		  (*axons[g]).activationDelay = ndelay;
 
@@ -49,6 +51,7 @@ void Neuron::newLink (Neuron *toNeuron, int ndelay, int countTotal) {
 		  Debug1->refreshTT();
 
 		  Debug1->ListBox1->Items->Insert(0,"NewLink: " + id + " to " + toNeuron->id);
+		  return &(*axons[g]);
 }
 
 int Neuron::countSynapses () {
