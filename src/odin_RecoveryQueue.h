@@ -75,15 +75,28 @@ void RecoveryQueue::checkNewPattern() {
 	//Associate everything in recQueue with a new neuron
 		//check if there are input neurons in current step.
 		if ( this->countInputNeuronsCurrentStep() > 0) {
-			//new neuron in same layer, type intrinsic.
-			Neuron *newNeuron = new Neuron(&aqueue,&recQueue,this->layer,1);
-			Dendrite *newDend;
-			for (unsigned int n=0;n<queue[this->counter].size();n++ ) {
-
-				newDend = queue[this->counter][n]->newLink(newNeuron);
+			//check if there is a pattern not yet known. Means: check if
+			//all of the neurons in current time step have a connection to same
+			//successor.
+			bool patternIsAlreadyKnown = true;
+			if (queue[this->counter].size() < 2)
+				patternIsAlreadyKnown = false;
+			for (unsigned int n=1;n<queue[this->counter].size();n++ ) {
+				if (!queue[this->counter][n-1]->hasSameSuccessor(queue[this->counter][n])) {
+					patternIsAlreadyKnown = false;
+				}
 			}
+			if (!patternIsAlreadyKnown) {
+				//new neuron in same layer, type intrinsic.
+				Neuron *newNeuron = new Neuron(&aqueue,&recQueue,this->layer,1);
+				Dendrite *newDend;
+				for (unsigned int n=0;n<queue[this->counter].size();n++ ) {
 
-			newDend->stimulate();
+					newDend = queue[this->counter][n]->newLink(newNeuron);
+				}
+
+				newDend->stimulate(0);
+			}
 			
 		}
 
@@ -93,6 +106,8 @@ void RecoveryQueue::checkNewPattern() {
 }
 
 void RecoveryQueue::recover(void) {
+	//a new time step begins... first check if we learn something in recent
+	//time step
     if (stepLastElement != stepCounter) {
 
 

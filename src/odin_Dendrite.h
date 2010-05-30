@@ -29,3 +29,8 @@ void Dendrite::stimulate (void) {
 		this->aqueuelocal->schedActivation(this, this->activationDelay, this->weight);
 		this->lastUsed = stepCounter;
 };
+
+void Dendrite::stimulate (int aDelay) {
+		this->aqueuelocal->schedActivation(this, aDelay, this->weight);
+		this->lastUsed = stepCounter;
+};

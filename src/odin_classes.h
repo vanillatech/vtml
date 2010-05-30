@@ -13,6 +13,7 @@ class Dendrite {
 	Dendrite(int);
 	void changeWeights (void);
 	void stimulate (void);
+	void stimulate (int);
 };
 
 
@@ -123,6 +124,7 @@ class Neuron {
 	  void inhibit (void);
 	  bool containsDendrite(Neuron *);
 	  int axonsRemove(Dendrite *);
+	  bool hasSameSuccessor(Neuron *);
 };
 
 class Sense {

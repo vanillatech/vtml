@@ -29,7 +29,7 @@ Neuron::Neuron (ActivationQueue* queue, vector< RecoveryQueue > *recQueueTemp, u
 }
 
 Dendrite* Neuron::newLink (Neuron *toNeuron) {
-		return this->newLink(toNeuron,0,0);
+		return this->newLink(toNeuron,1,0);
 }
 Dendrite* Neuron::newLink (Neuron *toNeuron, int ndelay, int countTotal) {
 
@@ -263,4 +263,15 @@ bool Neuron::containsDendrite(Neuron *compareNeuron) {
 
 	}
 	return (false);
+}
+
+bool Neuron::hasSameSuccessor(Neuron *compareNeuron) {
+	for (unsigned int n=0;n<axons.size();n++) {
+	  for (unsigned int m=0;m<compareNeuron->axons.size();m++) {
+		if (axons[n]->dendriteTo == compareNeuron->axons[m]->dendriteTo) {
+			return true;
+		}
+	  }
+	}
+	return false;
 }
