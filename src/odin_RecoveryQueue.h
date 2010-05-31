@@ -79,8 +79,9 @@ void RecoveryQueue::checkNewPattern() {
 			//all of the neurons in current time step have a connection to same
 			//successor.
 			bool patternIsAlreadyKnown = true;
-			if (queue[this->counter].size() < 2)
-				patternIsAlreadyKnown = false;
+			if (queue[this->counter].size() == 1)
+				if (queue[this->counter][0]->axons.size() == 0)
+					patternIsAlreadyKnown = false;
 			for (unsigned int n=1;n<queue[this->counter].size();n++ ) {
 				if (!queue[this->counter][n-1]->hasSameSuccessor(queue[this->counter][n])) {
 					patternIsAlreadyKnown = false;
