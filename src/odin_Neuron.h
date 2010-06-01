@@ -57,7 +57,6 @@ void Neuron::activate(double activationValNew) {
   if (this->lastfired < this->layer->step - recoveryTime && this->blockActivation < this->layer->step) {
 	this->activationVal += activationValNew;
 	Debug1->ListBox1->Items->Insert(0,"Activate Neuron: " + id + " (Increase: " + AnsiString (activationValNew)+"; activationVal: " + AnsiString(activationVal) + ") " );
-	this->checkActivation();
   };
 }
 
