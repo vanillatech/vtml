@@ -27,8 +27,8 @@ __fastcall TSDIAppForm::TSDIAppForm(TComponent *AOwner)
 	: TForm(AOwner)
 {
 	 Label1->Caption = "";
-	 readSense = new Sense(&aqueue, &recQueue);
-	 recQueue[0].recover();
+	 readSense = new Sense(&inputLayer);
+	 //recQueue[0].recover();
 }
 //---------------------------------------------------------------------
 
@@ -49,24 +49,25 @@ void __fastcall TSDIAppForm::Button1Click(TObject *Sender)
 		   readSense->input(text1chr[n]);
 		   //Read text char by char... Its not possible to read 2 chars
 		   //simultaneously. So temporal separation is required.
-		   aqueue.activate();
+		   readSense->nextStep();
+		   //aqueue.activate();
 		   //for (unsigned int n=0;n<recQueue.size() ;n++ ) {
 		   //		recQueue[n].recover();
 		   //}
 		   //***
 		}
 		//lastFiredNeuron->predictNext();
-
-		aqueue.activate();
-		for (unsigned int n=0;n<recQueue.size();n++ ) {
+		 readSense->nextStep();
+		//aqueue.activate();
+		/*for (unsigned int n=0;n<recQueue.size();n++ ) {
 				recQueue[n].recover();
-		}
+		} */
 		//--test
 		//lastFiredNeuron->predictNext();
-		aqueue.activate();
-		for (unsigned int n=0;n<recQueue.size();n++ ) {
+		//aqueue.activate();
+		/*for (unsigned int n=0;n<recQueue.size();n++ ) {
 				recQueue[n].recover();
-		}
+		} */
 		//--end test
 	}
 	Edit1->Text = "";

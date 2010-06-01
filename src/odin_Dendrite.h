@@ -1,20 +1,25 @@
-Dendrite::Dendrite (void){
-	this->aqueuelocal = &aqueue;
+
+//**********
+//Member functions Dendrite
+//**********
+
+Dendrite::Dendrite (Layer *nLayer){
+	this->layer = nLayer;
 	this->weight=1;
 	this->lastUsed = 0;
 	this->synapses = 1;
 };
 
-Dendrite::Dendrite(int strength) {
-	this->aqueuelocal = &aqueue;
+Dendrite::Dendrite(Layer *nLayer, int strength) {
+	this->layer = nLayer;
 	this->lastUsed = 0;
 	this->weight=1;
 	this->synapses = 1;
 }
 
 void Dendrite::changeWeights (void) {
-		if (this->lastUsed + queueMax >= stepCounter) {
-			//if last usage of dendrite was within recoveryTime
+		//check if dendrite was last used not more than activationdelay ago
+		if (this->lastUsed + this->activationDelay >= this->layer->step) {
 			// then: learn
 			this->weight = this->weight * (1 - learnRate )+    (1 - learnRate);
 		} else {
@@ -26,11 +31,11 @@ void Dendrite::changeWeights (void) {
 };
 
 void Dendrite::stimulate (void) {
-		this->aqueuelocal->schedActivation(this, this->activationDelay, this->weight);
-		this->lastUsed = stepCounter;
+		this->layer->aqueue->schedActivation(this, this->activationDelay, this->weight);
+		this->lastUsed = this->layer->step;
 };
 
 void Dendrite::stimulate (int aDelay) {
-		this->aqueuelocal->schedActivation(this, aDelay, this->weight);
-		this->lastUsed = stepCounter;
+		this->layer->aqueue->schedActivation(this, aDelay, this->weight);
+		this->lastUsed = this->layer->step;
 };

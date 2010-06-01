@@ -5,23 +5,13 @@
 //**********
 
 
-Neuron::Neuron (ActivationQueue* queue, vector< RecoveryQueue > *recQueueTemp, unsigned int nLayer, int neuronType) {
-          this->type = neuronType;
-		  this->activationQueue = queue;
-		  this->recoveryQueue = recQueueTemp;
-		  /*if (this->recoveryQueue->capacity() == 0) {
-			this->recoveryQueue->reserve(1);
-			(*recoveryQueue)[0] = RecoveryQueue();
-		  } */
-		  if ((*recoveryQueue).size() ==nLayer) {
-			//this->recoveryQueue->resize(this->recoveryQueue->size()+1);
-			(*recoveryQueue).push_back(RecoveryQueue(nLayer));
-			//this->recoveryQueue->at(nLayer) = new RecoveryQueue;
-		  }
-		  this->activationVal = 0;
-		  this->lastchecked = recoveryTime;
-		  this->lastfired = 0;
+Neuron::Neuron (Layer *nLayer, int neuronType) {
+		  this->type = neuronType;
 		  this->layer = nLayer;
+
+		  this->activationVal = 0;
+		  this->lastchecked = this->layer->step;
+		  this->lastfired = 0;
 		  this->id = neuronCounter++;
 		  this->outputData = 0;
 		  this->blockActivation = 0;
@@ -34,7 +24,7 @@ Dendrite* Neuron::newLink (Neuron *toNeuron) {
 Dendrite* Neuron::newLink (Neuron *toNeuron, int ndelay, int countTotal) {
 
 		  int g = axons.size();
-		  Dendrite *tempDend = new Dendrite();
+		  Dendrite *tempDend = new Dendrite(this->layer);
 		  axons.push_back(tempDend);
 		  (*axons[g]).dendriteFrom = this;
 		  (*axons[g]).dendriteTo = toNeuron;
@@ -46,7 +36,7 @@ Dendrite* Neuron::newLink (Neuron *toNeuron, int ndelay, int countTotal) {
 
 		  AnsiString captionID = toNeuron->id;
 		  captionID += " layer: ";
-		  captionID += toNeuron->layer;
+		  //captionID += toNeuron->layer;
 		  toNeuron->debugCallingNode = SDIAppForm->addLink(captionID,this->debugCallingNode);
 		  Debug1->refreshTT();
 
@@ -64,7 +54,7 @@ int Neuron::countSynapses () {
 
 void Neuron::activate(double activationValNew) {
   this->drainActivation();
-  if (this->lastfired < stepCounter - recoveryTime && this->blockActivation < stepCounter) {
+  if (this->lastfired < this->layer->step - recoveryTime && this->blockActivation < this->layer->step) {
 	this->activationVal += activationValNew;
 	Debug1->ListBox1->Items->Insert(0,"Activate Neuron: " + id + " (Increase: " + AnsiString (activationValNew)+"; activationVal: " + AnsiString(activationVal) + ") " );
 	this->checkActivation();
@@ -72,10 +62,10 @@ void Neuron::activate(double activationValNew) {
 }
 
 void Neuron::drainActivation(void) {
-  for (int n=0;n<50 && n<(stepCounter-lastchecked)&&lastchecked>0 ;n++ ) {
+  for (unsigned int n=0;n<50 && n<(this->layer->step-lastchecked)&&lastchecked>0 ;n++ ) {
 			this->activationVal *= drain;
   }
-  lastchecked = stepCounter;
+  lastchecked = this->layer->step;
 }
 
 int Neuron::axonsRemove(Dendrite* dent) {
@@ -93,13 +83,11 @@ void Neuron::fire (void) {
 			SDIAppForm->Label1->Caption = SDIAppForm->Label1->Caption + this->outputData;
 		  }
 		  Debug1->ListBox1->Items->Insert(0,"Neuron fired: " + id + " ActVal: " + activationVal );
-		  if (id == 200) {
-			  int stophere = 1;
-		  }
+
 		  this->activationVal = 0;
-		  this->lastfired = stepCounter;
+		  this->lastfired = this->layer->step;
           // Neuron abtrennen wenn keine Synapsen mehr 0.0.67
-		  if (this->layer > 0) {
+		  //if (this->layer > 0) {
 		  for (unsigned int n=0;n<dendrites.size();n++) {
 				if (dendrites[n] != 0) {
                 //learn
@@ -124,7 +112,7 @@ void Neuron::fire (void) {
 					(*dendrites[n]).synapses--;
 				}
 		  }
-		  }
+		  //}
 		  //activate parent neurons
 		  for (unsigned int n=0;n<axons.size();n++ ) {
 					Debug1->ListBox1->Items->Insert(0,"Schedule Activation: " + axons[n]->dendriteTo->id + " in: " + AnsiString((*axons[n]).activationDelay) );
@@ -142,7 +130,7 @@ void Neuron::fire (void) {
 					  (*recoveryQueue)[this->layer - 1].deletePattern(this,0,0);
 
 		  } */
-		  (*recoveryQueue)[this->layer].insert(this);
+		  this->layer->recQueue->insert(this);
 		  //this->predictNext();
 		  /*if (this->layer > 0) {
 			  this->propagateDown(0);
@@ -209,7 +197,7 @@ void Neuron::propagateDown(int *timeOffset) {
 	int toutput = int(timeOffset);
 	Debug1->ListBox1->Items->Insert(0,"PropagateDown: " + this->id + " timeoffset: " + AnsiString(toutput) );
 	if (this->outputData != 0) {
-			this->activationQueue->schedActivation(&(*dendrites[0]), int(timeOffset));
+			this->layer->aqueue->schedActivation(&(*dendrites[0]), int(timeOffset));
 			//SDIAppForm->Label1->Caption = SDIAppForm->Label1->Caption + this->outputData;
 			//this->fire();
 	}
@@ -233,7 +221,7 @@ int Neuron::checkActivation (void) {
 			  this->fire();
 			  return(1);
 	}
-	if (this->lastfired == stepCounter) {
+	if (this->lastfired == this->layer->step) {
         return (1);
 	}
 	return(0);
@@ -244,12 +232,12 @@ void Neuron::inhibit (void) {
 		  //been scheduled for activation of the successor before.
 		  Debug1->ListBox1->Items->Insert(0,"Inhibit: " + id );
 
-		  this->blockActivation = stepCounter + blockTime;//-1; //sets recoveryTime
+		  this->blockActivation = this->layer->step + blockTime;//-1; //sets recoveryTime
 		  this->activationVal = 0;
 		  for (unsigned int n=0;n<axons.size();n++ ) {
 				//double inval = double((*axons[n]).synapses) / (*axons[n]).dendriteTo->countSynapses((*axons[n]).self);
 				//(*axons[n]).dendriteTo->activationVal -= inval;
-				(*axons[n]).dendriteTo->blockActivation = stepCounter + blockTime;
+				(*axons[n]).dendriteTo->blockActivation = this->layer->step + blockTime;
                 (*axons[n]).dendriteTo->activationVal = 0;
 		  }
 }

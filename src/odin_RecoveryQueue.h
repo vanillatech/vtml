@@ -4,13 +4,13 @@
 //Member functions RecoveryQueue
 //**********
 
-RecoveryQueue::RecoveryQueue (int nLayer) {
+RecoveryQueue::RecoveryQueue (Layer *caller) {
 		//this->queue.resize(queueMax);
 		this->counter = 0;
 		this->lastelement = 0;
 		this->stepLastElement = 0;
-		this->layer = nLayer;
-		this->lastInsertedElement = 0;
+		this->layer = caller;
+		//this->lastInsertedElement = 0;
 }
 
 int RecoveryQueue::deletePattern(Neuron *neuron, unsigned int pos, unsigned int forderOld) {
@@ -51,18 +51,18 @@ int RecoveryQueue::deletePattern(Neuron *neuron, unsigned int pos, unsigned int 
 
 void RecoveryQueue::insert(Neuron *neuron) {
         //if a new neuron is inserted into the queue it is not idle anymore.
-		if (recQueueIdle >= this->layer) recQueueIdle = this->layer - 1;
+		//if (recQueueIdle >= this->layer) recQueueIdle = this->layer - 1;
 
 		//insert actual neuron
 		this->queue[this->counter].push_back(neuron);
-		this->lastInsertedElement = stepCounter;
+		//this->lastInsertedElement = stepCounter;
 		//new type=2 neuron
-		if (this->layer > 1) {
-            
-			Neuron *dNeuron = new Neuron(&aqueue,&recQueue,this->layer,2);
+		/*if (this->layer > 1) {
+
+			Neuron *dNeuron = new Neuron(this->layer,2);
 			neuron->newLink(dNeuron,0,1);
 			this->lastType2Neuron = dNeuron;
-		}
+		}*/
 		//link lastType2Neuron of uppler layer to this element
 		/* -- segmentation fault
 		if (recQueue[this->layer+1].lastType2Neuron != 0) {
@@ -89,7 +89,7 @@ void RecoveryQueue::checkNewPattern() {
 			}
 			if (!patternIsAlreadyKnown) {
 				//new neuron in same layer, type intrinsic.
-				Neuron *newNeuron = new Neuron(&aqueue,&recQueue,this->layer,1);
+				Neuron *newNeuron = new Neuron(this->layer,1);
 				Dendrite *newDend;
 				for (unsigned int n=0;n<queue[this->counter].size();n++ ) {
 
@@ -101,15 +101,15 @@ void RecoveryQueue::checkNewPattern() {
 			
 		}
 
-		if (recQueue.capacity() < recQueue.size() + 3) {
+		/*if (recQueue.capacity() < recQueue.size() + 3) {
 			recQueue.reserve(recQueue.size()+3);
-		}
+		} */
 }
 
 void RecoveryQueue::recover(void) {
 	//a new time step begins... first check if we learn something in recent
 	//time step
-    if (stepLastElement != stepCounter) {
+    if (stepLastElement != this->layer->step) {
 
 
 		this->lastelement = this->counter;
@@ -122,12 +122,12 @@ void RecoveryQueue::recover(void) {
 	}
 }
 
-bool RecoveryQueue::noChangeInCycle() {
+/*bool RecoveryQueue::noChangeInCycle() {
 	if (recQueue[this->layer+1].lastInsertedElement <=stepCounter - queueMax && (recQueue[this->layer+1].lastInsertedElement != 0 || stepCounter > queueMax)) {
 		return(true);
 	}
 	return(false);
-}
+} */
 
 int RecoveryQueue::countItems() {
 	int cItems = 0;

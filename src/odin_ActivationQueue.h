@@ -2,23 +2,22 @@
 //Member functions ActivationQueue
 //**********
 
+ActivationQueue::ActivationQueue (Layer *caller) {
+	this->layer = caller;
+}
 void ActivationQueue::schedActivation (Dendrite* dendrite, int aDelay) {
-		this->q.push(Aqueue(aDelay+stepCounter,dendrite,1));
+		this->q.push(Aqueue(aDelay+this->layer->step,dendrite,1));
 }
 
 void ActivationQueue::schedActivation (Dendrite* dendrite, int aDelay, double aVal) {
-		this->q.push(Aqueue(aDelay+stepCounter,dendrite,aVal));
+		this->q.push(Aqueue(aDelay+this->layer->step,dendrite,aVal));
 }
 
 void ActivationQueue::activate (void) {
-	stepCounter++;
-	for (unsigned int n=0;n<recQueue.size();n++ ) {
-				recQueue[n].recover();
-	}
-	Debug1->ListBox1->Items->Insert(0,AnsiString("----------- ") + AnsiString(stepCounter) + AnsiString("------------"));
+	this->layer->newStep();
 	priority_queue <Aqueue> qtemp;
 	//first activate subsequent neurons
-	while ((!this->q.empty()) && this->q.top().getPos() <= stepCounter) {
+	while ((!this->q.empty()) && this->q.top().getPos() <= this->layer->step) {
 		Dendrite *d;
 		d = this->q.top().getDendrite();
 		double actVal = 0;
@@ -28,7 +27,7 @@ void ActivationQueue::activate (void) {
 		actVal = this->q.top().getAct();
 		//actVal = 1;
 		if (actVal > minActivation) {
-		if (d->dendriteTo->lastfired < (stepCounter - recoveryTime)) {
+		if (d->dendriteTo->lastfired < (this->layer->step - recoveryTime)) {
 			d->dendriteTo->activate(actVal);
 			qtemp.push(Aqueue(d->dendriteTo->activationVal,d));
 		}}

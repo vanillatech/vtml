@@ -1,20 +1,34 @@
 
+class Layer {
+	public:
+	Layer(void);
+	Layer(Layer *);
+	void newStep (void);
+	Layer *lower;
+	Layer *higher;
+	unsigned int step;
+	ActivationQueue *aqueue;
+	RecoveryQueue *recQueue;
+};
+
 class Dendrite {
 	public:
-	ActivationQueue *aqueuelocal;
 	Neuron *dendriteFrom;
 	Neuron *dendriteTo;
 	int synapses;
-	int lastUsed;
+	unsigned int lastUsed;
 	//bool inhibitory;
 	int activationDelay;
 	float weight;
-	Dendrite(void);
-	Dendrite(int);
+	Dendrite(Layer *);
+	Dendrite(Layer *, int);
 	void changeWeights (void);
 	void stimulate (void);
 	void stimulate (int);
+	private:
+	Layer *layer;
 };
+
 
 
 class Aqueue {
@@ -56,34 +70,34 @@ class ActivationQueue {
 	private:
 	priority_queue<Aqueue> q;
 	Dendrite *queue[queueMax];
+	Layer *layer;
 	public:
-	ActivationQueue (void) {
-	}
+	ActivationQueue (Layer*);
 	void schedActivation (Dendrite* , int);
 	void schedActivation (Dendrite* , int, double);
 
 	void activate (void);
 	bool isEmpty (void);
+	//unsigned int step;
 
 };
 
 class RecoveryQueue {
 	private:
+	Layer* layer;
 	int counter;
 	int lastelement;
-	int lastInsertedElement;
-	int stepLastElement;
-	int layer;
+	//unsigned int lastInsertedElement;
+	unsigned int stepLastElement;
 	vector <Neuron*> queue[queueMax];
 	public:
 	Neuron *lastType2Neuron;
-	RecoveryQueue(void) {}
-	RecoveryQueue (int);
+	RecoveryQueue (Layer*);
 	int deletePattern(Neuron *,  unsigned int, unsigned int);
 	void insert(Neuron *);
 	void checkNewPattern ();
 	void recover(void);
-	bool noChangeInCycle(void);
+	//bool noChangeInCycle(void);
 	int countItems (void);
 	int countInputNeuronsCurrentStep(void);
 };
@@ -92,26 +106,24 @@ class Neuron {
 	private:
 
 	  void drainActivation (void);
+	  Layer *layer;
 
 
 	public:
 	  //TDebug1 *debuginst;
 	  TTreeNode *debugCallingNode;
-	  ActivationQueue* activationQueue;
-	  vector <RecoveryQueue> *recoveryQueue;
 	  vector <Dendrite*> axons;
 	  vector <Dendrite*> dendrites;
 	  double activationVal;
-	  int layer;
 	  AnsiString id;
-	  int lastchecked;
+	  unsigned int lastchecked;
 	  char outputData;
-	  int lastfired;
-	  int blockActivation;
-	  int type; //0:input, 1:intrinsic
+	  unsigned int lastfired;
+	  unsigned int blockActivation;
+	  int type; //0:input, 1:intrinsic, 2:output
 	  float threshold;
 	  //Constructor
-	  Neuron (ActivationQueue*, vector< RecoveryQueue > * ,unsigned int, int);
+	  Neuron (Layer *, int);
 	  //Functions
 	  Dendrite* newLink (Neuron *, int, int);
 	  Dendrite* newLink (Neuron *);
@@ -129,21 +141,18 @@ class Neuron {
 
 class Sense {
 	private:
-	ActivationQueue *aqueue;
+	//provide 8 bit input interface
 	Neuron *inputNeurons[256];
 	Neuron *outputNeurons[256];
+	Layer *layer;
 	public:
-	Sense (ActivationQueue *queue, vector< RecoveryQueue > *recQueueTemp) {
-		//inputNeurons = new (Neuron*)[256];
-		//inputNeurons = new Neuron(&queue)[256];
-		//first check that the capacity of recQueue is sufficient
-		(*recQueueTemp).reserve((*recQueueTemp).size()+3);
-		this->aqueue = queue;
+	Sense (Layer* nLayer) {
+		this->layer = nLayer;
 		for ( int  i = 0 ; i < 256 ; i++ ) {
-			 this->inputNeurons[i] = new  Neuron (aqueue,recQueueTemp,0,0);
-			 this->outputNeurons[i] = new  Neuron (aqueue,recQueueTemp,0,0);
+			 this->inputNeurons[i] = new  Neuron (this->layer,0);
+			 this->outputNeurons[i] = new  Neuron (this->layer,2);
 
-			 this->inputNeurons[i]->dendrites.push_back(new Dendrite(1));
+			 this->inputNeurons[i]->dendrites.push_back(new Dendrite(this->layer,1));
 			 this->inputNeurons[i]->dendrites[0]->dendriteTo = this->inputNeurons[i];
 			 this->inputNeurons[i]->dendrites[0]->dendriteFrom = this->outputNeurons[i];
 			 this->inputNeurons[i]->dendrites[0]->synapses = 1;
@@ -157,7 +166,7 @@ class Sense {
 			 this->outputNeurons[i]->axons[0][0]->dendriteTo = this->inputNeurons[i];
 			 this->outputNeurons[i]->axons[0][0]->synapses = 1;
 			 this->outputNeurons[i]->axons[0][0]->self=0;*/
-			 this->outputNeurons[i]->dendrites.push_back(new Dendrite());
+			 this->outputNeurons[i]->dendrites.push_back(new Dendrite(this->layer));
 			 this->outputNeurons[i]->dendrites[0]->dendriteTo = this->outputNeurons[i];
 			 this->outputNeurons[i]->dendrites[0]->synapses = 1;
 			 this->outputNeurons[i]->dendrites[0]->activationDelay = 0;
@@ -174,9 +183,12 @@ class Sense {
 
 	}
 	void input (int c) {
-		this->outputNeurons[c]->lastfired = stepCounter;
+		this->outputNeurons[c]->lastfired = this->layer->step;
 		//this->aqueue->schedActivation( this->inputNeurons[c]->dendrites[0],0);
 		this->inputNeurons[c]->dendrites[0]->stimulate();
 		//this->inputNeurons[c]->checkActivation();
 	}
+	void nextStep (void) {
+        this->layer->aqueue->activate();
+    }
 };

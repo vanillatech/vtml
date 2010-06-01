@@ -26,11 +26,15 @@ class RecoveryQueue;
 
 #include "odin_classes.h"
 
-vector <RecoveryQueue> recQueue;
+//vector <RecoveryQueue> recQueue;
 //RecoveryQueue *recQueue = new RecoveryQueue[1];
-ActivationQueue aqueue;
-Sense *readSense;
+//vector <ActivationQueue> aqueue;
+
 Neuron *lastFiredNeuron;
+Layer inputLayer;
+//--doesn't work because form isn't initialized yet - borland c++
+//Sense readSense(&inputLayer);
+Sense *readSense;
 
 bool operator<(const Aqueue &a, const Aqueue &b) {
 	if (a.retMode()) return a.getPos() > b.getPos();
@@ -41,4 +45,5 @@ bool operator<(const Aqueue &a, const Aqueue &b) {
 #include "odin_Neuron.h"
 #include "odin_Dendrite.h"
 #include "odin_RecoveryQueue.h"
+#include "odin_Layer.h"
 
