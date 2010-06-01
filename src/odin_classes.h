@@ -42,9 +42,11 @@ class Aqueue {
 		this->pos = queuePos;
 		this->dendrite = dendrite;
 	}
+	//in this case priority_queue should be ordered by actVal
 	Aqueue(double aVal, Dendrite* dendrite) {
 		this->actVal = aVal;
 		this->dendrite = dendrite;
+		this->pos = 0;
 	}
 	Aqueue(int queuePos, Dendrite* dendrite,double aVal) {
 		this->actVal = aVal;

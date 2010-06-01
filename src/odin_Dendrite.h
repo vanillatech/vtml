@@ -9,6 +9,7 @@ Dendrite::Dendrite (Layer *nLayer){
 	this->lastUsed = 0;
 	this->synapses = 1;
 	this->weightFrozen = false;
+	this->activationDelay = 1;
 };
 
 Dendrite::Dendrite(Layer *nLayer, int strength) {
@@ -17,10 +18,11 @@ Dendrite::Dendrite(Layer *nLayer, int strength) {
 	this->weight=1;
 	this->synapses = 1;
 	this->weightFrozen = false;
+	this->activationDelay = 1;
 }
 
 void Dendrite::changeWeights (void) {
-		if (!this->weightFrozen) {
+		//if (!this->weightFrozen) {
 			
 
 		//check if dendrite was last used not more than activationdelay ago
@@ -33,7 +35,7 @@ void Dendrite::changeWeights (void) {
 			// so forget it
 			this->weight = this->weight * (1 - learnRate );
 		}
-		}
+		//}
 };
 
 void Dendrite::stimulate (void) {
