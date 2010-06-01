@@ -8,6 +8,7 @@ Dendrite::Dendrite (Layer *nLayer){
 	this->weight=1;
 	this->lastUsed = 0;
 	this->synapses = 1;
+	this->weightFrozen = false;
 };
 
 Dendrite::Dendrite(Layer *nLayer, int strength) {
@@ -15,9 +16,13 @@ Dendrite::Dendrite(Layer *nLayer, int strength) {
 	this->lastUsed = 0;
 	this->weight=1;
 	this->synapses = 1;
+	this->weightFrozen = false;
 }
 
 void Dendrite::changeWeights (void) {
+		if (!this->weightFrozen) {
+			
+
 		//check if dendrite was last used not more than activationdelay ago
 		if (this->lastUsed + this->activationDelay >= this->layer->step) {
 			// then: learn
@@ -27,7 +32,8 @@ void Dendrite::changeWeights (void) {
 			//so this dendrite does not belong to the recognized pattern
 			// so forget it
 			this->weight = this->weight * (1 - learnRate );
-        }
+		}
+		}
 };
 
 void Dendrite::stimulate (void) {

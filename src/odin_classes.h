@@ -13,6 +13,7 @@ class Layer {
 
 class Dendrite {
 	public:
+	bool weightFrozen;
 	Neuron *dendriteFrom;
 	Neuron *dendriteTo;
 	int synapses;
@@ -156,6 +157,7 @@ class Sense {
 			 this->inputNeurons[i]->dendrites[0]->dendriteTo = this->inputNeurons[i];
 			 this->inputNeurons[i]->dendrites[0]->dendriteFrom = this->outputNeurons[i];
 			 this->inputNeurons[i]->dendrites[0]->synapses = 1;
+			 this->inputNeurons[i]->dendrites[0]->weightFrozen = true;
 			 /*this->inputNeurons[i]->axons.push_back(new Dendrite());
 			 this->inputNeurons[i]->axons[0]->dendriteTo = this->outputNeurons[i];
 			 this->inputNeurons[i]->axons[0]->dendriteFrom = this->inputNeurons[i];
@@ -169,6 +171,7 @@ class Sense {
 			 this->outputNeurons[i]->dendrites.push_back(new Dendrite(this->layer));
 			 this->outputNeurons[i]->dendrites[0]->dendriteTo = this->outputNeurons[i];
 			 this->outputNeurons[i]->dendrites[0]->synapses = 1;
+			 this->outputNeurons[i]->dendrites[0]->weightFrozen = true;
 			 this->outputNeurons[i]->dendrites[0]->activationDelay = 0;
 
 			 //this->outputNeurons[i]->dendrites[1]->inhibitory = true;

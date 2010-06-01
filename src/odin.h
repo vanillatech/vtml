@@ -37,7 +37,7 @@ Layer inputLayer;
 Sense *readSense;
 
 bool operator<(const Aqueue &a, const Aqueue &b) {
-	if (a.retMode()) return a.getPos() > b.getPos();
+	if (a.retMode()==1) return a.getPos() > b.getPos();
 	else return a.getPos() < b.getPos();
 }
 
