@@ -28,7 +28,9 @@ void Dendrite::changeWeights (void) {
 		//check if dendrite was last used not more than activationdelay ago
 		if (this->lastUsed + this->activationDelay >= this->layer->step) {
 			// then: learn
-			this->weight = this->weight * (1 - globals.learnRate )+    (1 - globals.learnRate);
+			//this algorithm is taken from James A. Anderson, 'Introduction to Neural Networks' (MIT Press)
+			//related to Kohonen's SOFM.
+			this->weight = this->weight * (1 - globals.learnRate )+    globals.learnRate;
 		} else {
 			//don't learn: this dendrite had not been used to activate the neuron
 			//so this dendrite does not belong to the recognized pattern
