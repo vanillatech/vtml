@@ -198,10 +198,26 @@
 			<File
 				RelativePath=".\AssemblyInfo.cpp"
 				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						CompileAsManaged="1"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Form1.cpp"
 				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						CompileAsManaged="1"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\message_formats.cpp"
@@ -214,10 +230,27 @@
 						CompileAsManaged="0"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+						CompileAsManaged="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\src-new-1.cpp"
 				>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						CompileAsManaged="1"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\stdafx.cpp"
@@ -237,6 +270,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						UsePrecompiledHeader="1"
+						CompileAsManaged="1"
 					/>
 				</FileConfiguration>
 			</File>
@@ -301,6 +335,15 @@
 						CompileAsManaged="0"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+						CompileAsManaged="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\prozess10\ActivationQueue.h"
@@ -314,6 +357,15 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
+						CompileAsManaged="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
 						CompileAsManaged="0"
 					/>
 				</FileConfiguration>
@@ -333,6 +385,15 @@
 						CompileAsManaged="0"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+						CompileAsManaged="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\prozess10\globals.h"
@@ -346,6 +407,15 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
+						CompileAsManaged="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
 						CompileAsManaged="0"
 					/>
 				</FileConfiguration>
@@ -365,6 +435,15 @@
 						CompileAsManaged="0"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+						CompileAsManaged="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\prozess10\Neuron.h"
@@ -381,6 +460,15 @@
 						CompileAsManaged="0"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+						CompileAsManaged="0"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\prozess10\RecoveryQueue.h"
@@ -394,6 +482,15 @@
 					>
 					<Tool
 						Name="VCCLCompilerTool"
+						CompileAsManaged="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
 						CompileAsManaged="0"
 					/>
 				</FileConfiguration>

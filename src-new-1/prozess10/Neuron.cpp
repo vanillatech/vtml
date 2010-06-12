@@ -18,7 +18,9 @@ Neuron::Neuron (Layer *nLayer, int neuronType) {
 		  this->activationVal = 0;
 		  this->lastchecked = this->layer->step;
 		  this->lastfired = 0;
-		  this->id = globals.neuronCounter++;
+		  char buf[8];
+		  _itoa_s(globals.neuronCounter++, buf, 7, 10);
+		  this->id = buf;
 		  this->outputData = 0;
 		  this->blockActivation = 0;
 		  this->threshold = 0.5;

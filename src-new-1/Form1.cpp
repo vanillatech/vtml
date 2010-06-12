@@ -32,10 +32,24 @@ void Form1::OnCallback(Odin::ICallbackMsg* msg)
 	delete msg;
 }
 
+void Form1::OnCallback1(int code, const char* param1, const char* param2, const char* param3)
+{
+	richTextBox1->Text += gcnew System::String(param1);
+	richTextBox1->Text += "\n";
+	richTextBox1->SelectionStart = richTextBox1->Text->Length;
+	richTextBox1->ScrollToCaret();
+	if (code == MSG_NEW_INPUT_NEURON) {
+		insertTreeItem("", param2, param3);
+	}
+	else if (code == MSG_NEW_LINK) {
+		insertTreeItem(param2, param3, "");
+	}
+}
+
 void Form1::insertTreeItem(const std::string& parentID, const std::string& ID, const std::string& pattern)
 {
 	char buf[256];
-	sprintf_s(buf, 255, "%s ('%s')", ID, pattern.c_str());
+	sprintf_s(buf, 255, "%s ('%s')", ID.c_str(), pattern.c_str());
 	buf[255] = 0;
 
 	if (parentID.empty()) {
@@ -43,14 +57,20 @@ void Form1::insertTreeItem(const std::string& parentID, const std::string& ID, c
 		if (it != m_treeSync->end())
 			return;
 
+		// adding item to the root of treeview
+		THandleSet hs;
+		TTreeItemIndex index;
+		index.push_back(treeView1->Nodes->Count);
+		hs.insert(index);
+		m_treeSync->insert(std::make_pair(ID, hs));
 		treeView1->Nodes->Add(gcnew System::String(buf));
-		m_treeSync->insert(std::make_pair(ID, THandleSet()));
 		return;
 	}
 
 	TTreeSync::iterator pit = m_treeSync->find(parentID);
 	if (pit == m_treeSync->end() || pit->second.empty())
 		return;
+
 	TTreeSync::iterator it = m_treeSync->find(ID);
 	if (it == m_treeSync->end()) {
 		it = m_treeSync->insert(std::make_pair(ID, THandleSet())).first;
@@ -58,17 +78,22 @@ void Form1::insertTreeItem(const std::string& parentID, const std::string& ID, c
 	THandleSet::iterator h = pit->second.begin();
 	THandleSet::iterator end = pit->second.end();
 	for (; h != end; ++h) {
-		doInsert(*h, buf);
+		int lastIndex = doInsert(*h, buf);
+		TTreeItemIndex index(*h);
+		index.push_back(lastIndex);
+		it->second.insert(index);
 	}
 }
 
-void Form1::doInsert(const TTreeItemIndex& parent, const std::string& value)
+int Form1::doInsert(const TTreeItemIndex& parent, const std::string& value)
 {
 	TreeNodeCollection^ nodes = treeView1->Nodes;
 	for (size_t i=0; i<parent.size(); ++i) {
-		nodes = nodes[i]->Nodes;
+		nodes = nodes[parent[i]]->Nodes;
 	}
+	int ret = nodes->Count;
 	nodes->Add(gcnew System::String(value.c_str()));
+	return ret;
 }
 
 System::Void Form1::button1_Click(System::Object^  sender, System::EventArgs^  e)
@@ -76,7 +101,9 @@ System::Void Form1::button1_Click(System::Object^  sender, System::EventArgs^  e
 	System::String^ text = textBox1->Text;
 	for (int i=0; i<text->Length; ++i) {
 		m_sense->input(text[i] & 0xFF);
+		m_sense->nextStep();
 	}
+	m_sense->nextStep();
 	textBox1->Text = "";
 }
 

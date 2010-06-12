@@ -175,13 +175,15 @@ namespace srcnew1 {
 public:
 	void OnCallback(Odin::ICallbackMsg* message);
 
+	void OnCallback1(int code, const char* param1, const char* param2, const char* param3);
+
 private: 
 
 	System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e);
 	System::Void button1_Click(System::Object^  sender, System::EventArgs^  e);
 
 	void insertTreeItem(const std::string& parentID, const std::string& ID, const std::string& pattern);
-	void doInsert(const TTreeItemIndex& parent, const std::string& value);
+	int doInsert(const TTreeItemIndex& parent, const std::string& value);
 
 	TTreeSync* m_treeSync;
 	Sense* m_sense;

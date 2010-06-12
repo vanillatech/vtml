@@ -53,9 +53,12 @@ void Sense::init()
 
 #else
 			 std::string captionID;
-			 char buf[4];
-			 captionID += _itoa_s(i, buf, 4, 10);
-			 callback->onCallback(new CallbackMsg<MSG_NEW_LINK>(0, "", 0, captionID));
+			 //char buf[4];
+			 //_itoa_s(i, buf, 4, 10);
+			 //captionID += buf;
+			 captionID += (char)i;
+			 callback->onCallback(new CallbackMsg<MSG_NEW_INPUT_NEURON>(0, inputNeurons[i]->id, captionID));
+			 callback->onCallback(new CallbackMsg<MSG_NEW_LINK>(0, inputNeurons[i]->id, 0, outputNeurons[i]->id));
 
 #endif
 			//*inputNeurons = new Neuron (queue);
