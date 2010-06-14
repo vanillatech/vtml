@@ -1,9 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<BorlandProject>
-	<Transactions>
-    <Transaction>2008.05.08 10:53:26.796.bdsproj,C:\daten\c++\SdiApp.bdsproj=C:\daten\c++\odin.bdsproj</Transaction>
-    <Transaction>2008.05.27 13:12:20.921.cpp,C:\daten\odin\0.0.23\ABOUT1.cpp=C:\daten\odin\0.0.23\debug.cpp</Transaction>
-    <Transaction>2008.05.27 13:12:20.921.h,C:\daten\odin\0.0.23\ABOUT1.h=C:\daten\odin\0.0.23\debug.h</Transaction>
-    <Transaction>2008.05.27 13:12:20.921.dfm,C:\daten\odin\0.0.23\ABOUT1.dfm=C:\daten\odin\0.0.23\debug.dfm</Transaction>
-  </Transactions>
-</BorlandProject>
