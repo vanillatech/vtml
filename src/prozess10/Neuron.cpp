@@ -148,7 +148,14 @@ void Neuron::fire (void) {
 			callback->onCallback(new CallbackMsg<MSG_ACTIVATION_SCHEDULED>(0, id, axons[n]->activationDelay));
 #endif
 					float aWeight = axons[n]->getWeight();
-					axons[n]->stimulate(aWeight / totalWeight);
+					if (axons[n]->dendriteTo->type==0) {
+						//if subsequent neuron is an input neuron we'll activate this with 1
+						axons[n]->stimulate(float(1.0));
+					} else {
+						//otherwise it is within a layer then we'll distribute the activation among the 
+						//subsequent neurons
+						axons[n]->stimulate(aWeight / totalWeight);
+					}
 					//this->activationQueue->schedActivation(&(*axons[n]),(*axons[n]).activationDelay);
 		  }
 		  //only insert into rec.queue when fired twice within recoveryTime
@@ -184,7 +191,7 @@ float Neuron::getAxonsWeight (void) {
 		totalWeight += axons[n]->getWeight();
 	}
 	return totalWeight;
-};
+}
 
 void Neuron::predictNext(void) {
 
@@ -322,4 +329,23 @@ bool Neuron::hasSameSuccessor(Neuron *compareNeuron) {
 	  }
 	}
 	return false;
+}
+
+bool Neuron::isOutputNeuron (void) {
+	for (unsigned int n=0;n<axons.size();n++) {
+		if (axons[n]->dendriteTo->getLayer() != this->layer) 
+			return true;
+	}
+	return false;
+}
+
+void Neuron::newOutput (void) {
+	//create new Neuron type=input
+	Neuron *newNeuron = new Neuron(this->getLayer()->getHigher(),0);
+	//link new Neuron to current Neuron's axon
+	this->newLink(newNeuron);
+}
+
+Layer *Neuron::getLayer (void) {
+	return this->layer;
 }

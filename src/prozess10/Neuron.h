@@ -46,6 +46,9 @@ class Neuron {
 	  int checkActivation (void);
 	  void inhibit (void);
 	  bool containsDendrite(Neuron *);
+	  bool isOutputNeuron (void);
+	  void newOutput(void);
+	  Layer *getLayer(void);
 	  int axonsRemove(Dendrite *);
 	  bool hasSameSuccessor(Neuron *);
 };

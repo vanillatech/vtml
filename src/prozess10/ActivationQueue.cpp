@@ -43,6 +43,14 @@ void ActivationQueue::activate (void) {
 
 		if (d->dendriteTo->checkActivation() == 1) {
 			//d->synapses += 2; //hebbian learning rule - synaptic plasticity
+		} else {
+			//activated Neuron didn't fire, so activating neuron (d) is probably representation of a new pattern
+			//therefor we create a new input neuron on higher layer and connect it to this neuron if it
+			//doesn't exist already
+			if (!d->dendriteFrom->isOutputNeuron()) {
+				d->dendriteFrom->newOutput();
+			}
+
 		}
         d->synapses += 1; //hebbian learning rule - synaptic plasticity
 		qtemp.pop();

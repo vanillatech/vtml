@@ -31,3 +31,10 @@ void Layer::newStep(void) {
 	callback->onCallback(new CallbackMsg<MSG_STEP_COUNTER>(0, step));
 #endif
 }
+
+Layer *Layer::getHigher(void) {
+	if (this->higher == 0) {
+		this->higher = new Layer(this);
+	}
+	return this->higher;
+}
