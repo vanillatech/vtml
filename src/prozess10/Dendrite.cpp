@@ -50,3 +50,11 @@ void Dendrite::stimulate (int aDelay) {
 		this->lastUsed = this->layer->step;
 };
 
+void Dendrite::stimulate (float tWeight) {
+	this->layer->aqueue->schedActivation(this, this->activationDelay, tWeight);
+	this->lastUsed = this->layer->step;
+};
+
+float Dendrite::getWeight (void) {
+	return this->weight;
+};

@@ -138,6 +138,7 @@ void Neuron::fire (void) {
 				}
 		  }
 		  //}
+		  float totalWeight = this->getAxonsWeight();
 		  //activate parent neurons
 		  for (unsigned int n=0;n<axons.size();n++ ) {
 
@@ -146,7 +147,8 @@ void Neuron::fire (void) {
 #else
 			callback->onCallback(new CallbackMsg<MSG_ACTIVATION_SCHEDULED>(0, id, axons[n]->activationDelay));
 #endif
-					axons[n]->stimulate();
+					float aWeight = axons[n]->getWeight();
+					axons[n]->stimulate(aWeight / totalWeight);
 					//this->activationQueue->schedActivation(&(*axons[n]),(*axons[n]).activationDelay);
 		  }
 		  //only insert into rec.queue when fired twice within recoveryTime
@@ -175,6 +177,14 @@ void Neuron::fire (void) {
 
 		  //} *
 }
+
+float Neuron::getAxonsWeight (void) {
+	float totalWeight = 0;
+	for (unsigned int n=0;n<axons.size();n++ ) {
+		totalWeight += axons[n]->getWeight();
+	}
+	return totalWeight;
+};
 
 void Neuron::predictNext(void) {
 

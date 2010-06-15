@@ -18,6 +18,8 @@ class Dendrite {
 	void changeWeights (void);
 	void stimulate (void);
 	void stimulate (int);
+	void stimulate (float);
+	float getWeight (void);
 	private:
 	Layer *layer;
 };

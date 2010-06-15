@@ -42,6 +42,7 @@ class Neuron {
 	  void fire (void);
 	  void predictNext (void);
 	  void propagateDown(int);
+	  float getAxonsWeight(void);
 	  int checkActivation (void);
 	  void inhibit (void);
 	  bool containsDendrite(Neuron *);
