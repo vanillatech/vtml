@@ -57,7 +57,7 @@ enum ECallbackTypes {
 	MSG_PREDICT_NEXT,
 	MSG_PROPAGATE_DOWN,
 	MSG_INHIBIT,
-	MSG_DELETE_FROM_RQ
+	MSG_DELETE_FROM_RQ,
 };
 
 /*Debug1->ListBox1->Items->Insert

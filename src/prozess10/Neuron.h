@@ -45,6 +45,7 @@ class Neuron {
 	  float getAxonsWeight(void);
 	  int checkActivation (void);
 	  void inhibit (void);
+	  void inhibit (bool);
 	  bool containsDendrite(Neuron *);
 	  bool isOutputNeuron (void);
 	  void newOutput(void);

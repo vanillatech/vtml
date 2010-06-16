@@ -127,4 +127,12 @@ std::string CallbackMsg<MSG_DELETE_FROM_RQ>::message() const
 	return std::string(b);
 }
 
+/*std::string CallbackMsg<MSG_NEW_OUTPUT>::message() const
+{
+	char b[BUF_SIZE];
+	sprintf_s(b, BUF_SIZE, "New Output from Neuron: %s to Neuron: %s", id.c_str(), id.c_str());
+	b[BUF_SIZE-1]=0;
+	return std::string(b);
+}*/
+
 } //Odin

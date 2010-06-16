@@ -9,3 +9,5 @@ In this example 196 is fired that is activating 512 and 513. Now, the activation
 - chr13 automatically presses 'go' button
 
 - debug output of schedule activation is wrong, should show neuron to be activated and also scheduled activation value
+
+- debug output for function Neuron::newOutput

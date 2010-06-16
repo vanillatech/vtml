@@ -108,9 +108,10 @@ void RecoveryQueue::checkNewPattern() {
 				for (unsigned int n=0;n<queue[this->counter].size();n++ ) {
 
 					newDend = queue[this->counter][n]->newLink(newNeuron);
+					newDend->stimulate(0);
 				}
 
-				newDend->stimulate(0);
+				
 			}
 			
 		}

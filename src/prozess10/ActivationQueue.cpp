@@ -47,7 +47,9 @@ void ActivationQueue::activate (void) {
 			//activated Neuron didn't fire, so activating neuron (d) is probably representation of a new pattern
 			//therefor we create a new input neuron on higher layer and connect it to this neuron if it
 			//doesn't exist already
-			if (!d->dendriteFrom->isOutputNeuron()) {
+			//only add output if neuron is not an input neuron
+			//only if activated Neuron had not been inhibited before
+			if (!d->dendriteFrom->isOutputNeuron() && d->dendriteFrom->type == 1 && d->dendriteTo->blockActivation == 0) {
 				d->dendriteFrom->newOutput();
 			}
 

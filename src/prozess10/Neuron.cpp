@@ -14,7 +14,7 @@ extern ICallback* callback;
 Neuron::Neuron (Layer *nLayer, int neuronType) {
 		  this->type = neuronType;
 		  this->layer = nLayer;
-
+		  
 		  this->activationVal = 0;
 		  this->lastchecked = this->layer->step;
 		  this->lastfired = 0;
@@ -154,7 +154,7 @@ void Neuron::fire (void) {
 					} else {
 						//otherwise it is within a layer then we'll distribute the activation among the 
 						//subsequent neurons
-						axons[n]->stimulate(aWeight / totalWeight);
+						axons[n]->stimulate(aWeight * aWeight / totalWeight);
 					}
 					//this->activationQueue->schedActivation(&(*axons[n]),(*axons[n]).activationDelay);
 		  }
@@ -290,6 +290,10 @@ int Neuron::checkActivation (void) {
 }
 
 void Neuron::inhibit (void) {
+	this->inhibit(true);
+}
+
+void Neuron::inhibit (bool recursive) {
 		  //inhibits current neuron and all successors with the value that had
 		  //been scheduled for activation of the successor before.
 
@@ -301,11 +305,12 @@ void Neuron::inhibit (void) {
 
 		  this->blockActivation = this->layer->step + globals.blockTime;//-1; //sets recoveryTime
 		  this->activationVal = 0;
-		  for (unsigned int n=0;n<axons.size();n++ ) {
+		  for (unsigned int n=0;n<axons.size() && recursive;n++ ) {
 				//double inval = double((*axons[n]).synapses) / (*axons[n]).dendriteTo->countSynapses((*axons[n]).self);
 				//(*axons[n]).dendriteTo->activationVal -= inval;
-				(*axons[n]).dendriteTo->blockActivation = this->layer->step + globals.blockTime;
-                (*axons[n]).dendriteTo->activationVal = 0;
+				//(*axons[n]).dendriteTo->blockActivation = this->layer->step + globals.blockTime;
+                //(*axons[n]).dendriteTo->activationVal = 0;
+				axons[n]->dendriteTo->inhibit(false);
 		  }
 }
 
@@ -340,8 +345,15 @@ bool Neuron::isOutputNeuron (void) {
 }
 
 void Neuron::newOutput (void) {
+
 	//create new Neuron type=input
 	Neuron *newNeuron = new Neuron(this->getLayer()->getHigher(),0);
+	#ifdef BORLAND_GUI
+	
+	#else
+	//callback->onCallback(new CallbackMsg<MSG_NEW_OUTPUT>(0, this->id, newNeuron->id));
+	#endif
+
 	//link new Neuron to current Neuron's axon
 	this->newLink(newNeuron);
 }
