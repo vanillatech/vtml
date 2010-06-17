@@ -10,14 +10,16 @@ ActivationQueue::ActivationQueue (Layer *caller) {
 }
 void ActivationQueue::schedActivation (Dendrite* dendrite, int aDelay) {
 		this->q.push(Aqueue(aDelay+this->layer->step,dendrite,1));
+		this->layer->setIdle(false);
 }
 
 void ActivationQueue::schedActivation (Dendrite* dendrite, int aDelay, double aVal) {
 		this->q.push(Aqueue(aDelay+this->layer->step,dendrite,aVal));
+		this->layer->setIdle(false);
 }
 
 void ActivationQueue::activate (void) {
-	this->layer->newStep();
+	//this->layer->newStep();
 	priority_queue <Aqueue> qtemp;
 	//first activate subsequent neurons
 	while ((!this->q.empty()) && this->q.top().getPos() <= this->layer->step) {
@@ -49,7 +51,7 @@ void ActivationQueue::activate (void) {
 			//doesn't exist already
 			//only add output if neuron is not an input neuron
 			//only if activated Neuron had not been inhibited before
-			if (!d->dendriteFrom->isOutputNeuron() && d->dendriteFrom->type == 1 && d->dendriteTo->blockActivation == 0) {
+			if (!d->dendriteFrom->isOutputNeuron() && d->dendriteFrom->type == 1 && !d->dendriteTo->isInhibited()) {
 				d->dendriteFrom->newOutput();
 			}
 

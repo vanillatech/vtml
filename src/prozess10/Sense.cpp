@@ -75,5 +75,5 @@ void Sense::input (int c) {
 }
 
 void Sense::nextStep (void) {
-     this->layer->aqueue->activate();
+     this->layer->newStep();
 }

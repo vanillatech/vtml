@@ -48,6 +48,7 @@ class Neuron {
 	  void inhibit (bool);
 	  bool containsDendrite(Neuron *);
 	  bool isOutputNeuron (void);
+	  bool isInhibited(void);
 	  void newOutput(void);
 	  Layer *getLayer(void);
 	  int axonsRemove(Dendrite *);

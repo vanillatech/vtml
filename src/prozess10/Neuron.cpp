@@ -314,6 +314,11 @@ void Neuron::inhibit (bool recursive) {
 		  }
 }
 
+bool Neuron::isInhibited (void) {
+	if (this->blockActivation > this->layer->step) return true;
+	return false;
+}
+
 bool Neuron::containsDendrite(Neuron *compareNeuron) {
 	for (unsigned int n = 0;n< this->dendrites.size() ;n++ ) {
 
