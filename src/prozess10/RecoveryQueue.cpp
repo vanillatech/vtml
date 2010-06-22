@@ -14,6 +14,8 @@ RecoveryQueue::RecoveryQueue (Layer *caller) {
 		this->lastelement = 0;
 		this->stepLastElement = 0;
 		this->layer = caller;
+		this->focusStep = 0;
+		this->getElement = 0;
 		//this->lastInsertedElement = 0;
 }
 
@@ -159,4 +161,41 @@ int RecoveryQueue::countInputNeuronsCurrentStep() {
 		if (queue[this->counter][n]->type == 0) cItems ++;
 	}
 	return (cItems);
+}
+
+int RecoveryQueue::countItemsLastStep() {
+	int cItems = 0;
+	return (queue[this->getStep(-1)].size());
+}
+
+int RecoveryQueue::getStep(int val) {
+	//gets queue position relative from current recoverystep
+	if (val > globals.queueMax || val < -(globals.queueMax)) return -1;
+	if (this->counter + val >=globals.queueMax) { 
+		val -= this->counter;
+		return (val); 
+	}
+	if (this->counter + val <= 0) {
+		val += this->counter;
+		return ( globals.queueMax - 1 + val);
+	}
+	return (this->counter + val);
+
+}
+
+Neuron *RecoveryQueue::getNext() {
+	this->getElement++;
+	if (this->queue[this->focusStep].size() < this->getElement) return 0;
+	return (this->queue[this->focusStep][this->getElement-1]);
+}
+
+int RecoveryQueue::setFocusStep(int val) {
+	//sets the focus for this::getNext on specific queue position
+	int s = this->getStep(val);
+	if (s == -1) return -1;
+	else {
+		this->focusStep = s;
+		this->getElement = 0;
+		return (s);
+	}
 }
