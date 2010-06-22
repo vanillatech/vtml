@@ -175,16 +175,16 @@ void Neuron::fire (void) {
 			  this->propagateDown(0);
 		  } */
 		  //look what neurons were fired in current layer in last step and connect them to this neuron
-		  /*if (this->layer->recQueue->setFocusStep(-1) != -1) {
+		  if (this->layer->recQueue->setFocusStep(-1) != -1) {
 			Neuron *n;
 			while ((n = this->layer->recQueue->getNext()) != 0) {
-				if (n->type == 1) {
+				if (this->type == 1) {
 					if (!this->containsDendrite(n)) {
 						n->newLink(this);
 					}
 				}
 			}
-		  }*/
+		  }
 		  globals.lastFiredNeuron = this;
 
 		  //} *
