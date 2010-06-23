@@ -41,19 +41,22 @@ void Dendrite::changeWeights (void) {
 };
 
 void Dendrite::stimulate (void) {
-		this->layer->aqueue->schedActivation(this, this->activationDelay, this->weight);
-		this->lastUsed = this->layer->step;
+	this->stimulate(this->weight, this->activationDelay);
 };
 
 void Dendrite::stimulate (int aDelay) {
-		this->layer->aqueue->schedActivation(this, aDelay, this->weight);
-		this->lastUsed = this->layer->step;
+	this->stimulate(this->weight,aDelay);
 };
 
 void Dendrite::stimulate (float tWeight) {
-	this->layer->aqueue->schedActivation(this, this->activationDelay, tWeight);
+	this->stimulate(tWeight, this->activationDelay);	
+}
+
+void Dendrite::stimulate(float tWeight, int aDelay) {
+	this->layer->aqueue->schedActivation(this, aDelay, tWeight);
 	this->lastUsed = this->layer->step;
-};
+	this->synapses++;
+}
 
 float Dendrite::getWeight (void) {
 	return this->weight;

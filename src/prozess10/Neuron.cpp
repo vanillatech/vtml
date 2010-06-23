@@ -67,6 +67,23 @@ int Neuron::countSynapses () {
 		  return (countSyn);
 }
 
+int Neuron::countSynapsesOnAxons () {
+		  int countSyn = 0;
+		  for (unsigned int n=0;n<axons.size();n++) {
+			countSyn += this->axons[n]->synapses;
+		  }
+		  return (countSyn);
+}
+
+int Neuron::countMaxSynapsesOnAxons () {
+		  int countSyn = 0;
+		  for (unsigned int n=0;n<axons.size();n++) {
+			if (this->axons[n]->synapses > countSyn)
+				countSyn = this->axons[n]->synapses;
+		  }
+		  return (countSyn);
+}
+
 void Neuron::activate(double activationValNew) {
   this->drainActivation();
   if (this->lastfired < this->layer->step - globals.recoveryTime && this->blockActivation < this->layer->step) {
@@ -139,6 +156,7 @@ void Neuron::fire (void) {
 		  }
 		  //}
 		  float totalWeight = this->getAxonsWeight();
+		  //int totalSynapses = this->countSynapsesOnAxons();
 		  //activate parent neurons
 		  for (unsigned int n=0;n<axons.size();n++ ) {
 
@@ -154,7 +172,9 @@ void Neuron::fire (void) {
 					} else {
 						//otherwise it is within a layer then we'll distribute the activation among the 
 						//subsequent neurons
-						axons[n]->stimulate(aWeight * aWeight / totalWeight);
+						//wFactor: 'oldest'/strongest Dendrite will get most attention
+						float wFactor = float(axons[n]->synapses) / this->countMaxSynapsesOnAxons();
+						axons[n]->stimulate(aWeight * aWeight / totalWeight * wFactor);
 					}
 					//this->activationQueue->schedActivation(&(*axons[n]),(*axons[n]).activationDelay);
 		  }

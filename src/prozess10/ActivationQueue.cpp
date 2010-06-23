@@ -56,7 +56,7 @@ void ActivationQueue::activate (void) {
 			}
 
 		}
-        d->synapses += 1; //hebbian learning rule - synaptic plasticity
+        //d->synapses += 1; //hebbian learning rule - synaptic plasticity
 		qtemp.pop();
 	}
 }

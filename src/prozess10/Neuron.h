@@ -38,6 +38,8 @@ class Neuron {
 	  Dendrite* newLink (Neuron *, int, int);
 	  Dendrite* newLink (Neuron *);
 	  int countSynapses ();
+	  int countSynapsesOnAxons(void);
+	  int countMaxSynapsesOnAxons(void);
 	  void activate (double);
 	  void fire (void);
 	  void predictNext (void);
