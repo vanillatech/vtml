@@ -8,19 +8,26 @@ using namespace Odin;
 
 extern ICallback* callback;
 
-Layer::Layer(void) {
-		this->step = 1;
-		this->idle = true;
-		this->aqueue = new ActivationQueue(this);
-		this->recQueue = new RecoveryQueue(this);
+Layer::Layer(Layer* caller) :
+	number(caller ? (caller->number + 1) : 1),
+	step(1),
+	lower(caller),
+	higher(0),
+	aqueue(0),
+	recQueue(0),
+	idle(true)
+{
+	this->aqueue = new ActivationQueue(this);
+	this->recQueue = new RecoveryQueue(this);
 }
 
-Layer::Layer(Layer *caller) {
-		this->step = 1;
-		this->idle = true;
-		this->aqueue = new ActivationQueue(this);
-		this->recQueue = new RecoveryQueue(this);
-		this->lower = caller;
+Layer::~Layer()
+{
+	if (higher) {
+		delete higher;
+	}
+	delete recQueue;
+	delete aqueue;
 }
 
 void Layer::newStep(void) {
@@ -36,7 +43,7 @@ void Layer::newStep(void) {
 #ifdef BORLAND_GUI
 	Debug1->ListBox1->Items->Insert(0,AnsiString("----------- ") + AnsiString(this->step) + AnsiString("------------"));
 #else
-	callback->onCallback(new CallbackMsg<MSG_STEP_COUNTER>(0, step));
+	callback->onCallback(new CallbackMsg<MSG_STEP_COUNTER>(number, step));
 #endif
 	this->aqueue->activate();
 }

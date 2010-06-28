@@ -32,10 +32,13 @@ namespace srcnew1 {
 	{
 	public:
 		Form1(Sense* sense)
-			: m_sense(sense)
+			: m_sense(sense),
+			m_currentIndex(0),
+			m_initialized(false)
 		{
 			InitializeComponent();
 			m_treeSync = new TTreeSync;
+			m_log = new TDebugLog;
 		}
 
 	protected:
@@ -48,6 +51,7 @@ namespace srcnew1 {
 			{
 				delete components;
 			}
+			delete m_log;
 			delete m_treeSync;
 		}
 
@@ -56,6 +60,8 @@ namespace srcnew1 {
 	private: System::Windows::Forms::SplitContainer^  splitContainer1;
 	private: System::Windows::Forms::RichTextBox^  richTextBox1;
 	private: System::Windows::Forms::TreeView^  treeView1;
+	private: System::Windows::Forms::Label^  label1;
+	private: System::Windows::Forms::ComboBox^  comboBox1;
 
 
 	protected: 
@@ -78,6 +84,8 @@ namespace srcnew1 {
 			this->splitContainer1 = (gcnew System::Windows::Forms::SplitContainer());
 			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
 			this->treeView1 = (gcnew System::Windows::Forms::TreeView());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			this->splitContainer1->Panel1->SuspendLayout();
 			this->splitContainer1->Panel2->SuspendLayout();
 			this->splitContainer1->SuspendLayout();
@@ -86,7 +94,7 @@ namespace srcnew1 {
 			// button1
 			// 
 			this->button1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
-			this->button1->Location = System::Drawing::Point(486, 12);
+			this->button1->Location = System::Drawing::Point(486, 5);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(75, 23);
 			this->button1->TabIndex = 0;
@@ -100,10 +108,11 @@ namespace srcnew1 {
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->textBox1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->textBox1->Location = System::Drawing::Point(4, 12);
+			this->textBox1->Location = System::Drawing::Point(101, 6);
 			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(476, 22);
+			this->textBox1->Size = System::Drawing::Size(379, 22);
 			this->textBox1->TabIndex = 1;
+			this->textBox1->KeyPress += gcnew KeyPressEventHandler(this, &Form1::textBox1_Key);
 			// 
 			// splitContainer1
 			// 
@@ -133,10 +142,10 @@ namespace srcnew1 {
 			this->richTextBox1->BackColor = System::Drawing::SystemColors::Window;
 			this->richTextBox1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->richTextBox1->Location = System::Drawing::Point(0, 0);
+			this->richTextBox1->Location = System::Drawing::Point(0, -4);
 			this->richTextBox1->Name = L"richTextBox1";
 			this->richTextBox1->ReadOnly = true;
-			this->richTextBox1->Size = System::Drawing::Size(557, 532);
+			this->richTextBox1->Size = System::Drawing::Size(557, 536);
 			this->richTextBox1->TabIndex = 0;
 			this->richTextBox1->Text = L"";
 			// 
@@ -152,11 +161,37 @@ namespace srcnew1 {
 			this->treeView1->Size = System::Drawing::Size(557, 220);
 			this->treeView1->TabIndex = 0;
 			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
+				static_cast<System::Byte>(204)));
+			this->label1->Location = System::Drawing::Point(5, 9);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(45, 16);
+			this->label1->TabIndex = 3;
+			this->label1->Text = L"Layer:";
+			// 
+			// comboBox1
+			// 
+			this->comboBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Left) 
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->comboBox1->FormattingEnabled = true;
+			this->comboBox1->Location = System::Drawing::Point(53, 6);
+			this->comboBox1->MaximumSize = System::Drawing::Size(42, 0);
+			this->comboBox1->MaxLength = 2;
+			this->comboBox1->MinimumSize = System::Drawing::Size(42, 0);
+			this->comboBox1->Name = L"comboBox1";
+			this->comboBox1->Size = System::Drawing::Size(42, 21);
+			this->comboBox1->TabIndex = 4;
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(564, 802);
+			this->Controls->Add(this->comboBox1);
+			this->Controls->Add(this->label1);
 			this->Controls->Add(this->splitContainer1);
 			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->button1);
@@ -175,19 +210,27 @@ namespace srcnew1 {
 public:
 	void OnCallback(Odin::ICallbackMsg* message);
 
-	void OnCallback1(int code, const char* param1, const char* param2, const char* param3);
+	//void OnCallback1(int code, const char* param1, const char* param2, const char* param3);
 
 private: 
+	//void OnCallbackInternal(Odin::ICallbackMsg* message);
 
 	System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e);
 	System::Void button1_Click(System::Object^  sender, System::EventArgs^  e);
+	System::Void textBox1_Key(System::Object^  sender, KeyPressEventArgs^  e);
+	System::Void comboBox_Changed(System::Object^  sender, System::EventArgs^  e);
 
 	void insertTreeItem(const std::string& parentID, const std::string& ID, const std::string& pattern);
 	int doInsert(const TTreeItemIndex& parent, const std::string& value);
+	void onGo();
+	void switchLayer(int index);
+	void drawLogItem(int messageType, const std::string& msg);
 
 	TTreeSync* m_treeSync;
 	Sense* m_sense;
-	
+	TDebugLog* m_log;
+	int m_currentIndex;
+	bool m_initialized;
 };
 }
 

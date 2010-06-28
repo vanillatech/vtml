@@ -28,7 +28,7 @@ struct Globals
 	//ActivationQueue aqueue;
 	//Sense *readSense;
 	Neuron *lastFiredNeuron;
-	Layer inputLayer;
+	Layer* inputLayer;
 	//--doesn't work because form isn't initialized yet - borland c++
 	//Sense readSense(&inputLayer);
 	
@@ -45,6 +45,7 @@ struct Globals
 		fireMargin(0.1f),
 		learnRate(0.5f),
 		lastFiredNeuron(0),
+		inputLayer(new Layer(0)),
 		neuronCounter(0),
 		stepCounter(recoveryTime+1),
 		recQueueIdle(-1)

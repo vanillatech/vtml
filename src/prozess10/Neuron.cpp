@@ -26,6 +26,13 @@ Neuron::Neuron (Layer *nLayer, int neuronType) {
 		  this->threshold = 0.5;
 }
 
+Neuron::~Neuron()
+{
+	for (size_t i=0; i<dendrites.size(); ++i) {
+		delete dendrites[i];
+	}
+}
+
 Dendrite* Neuron::newLink (Neuron *toNeuron) {
 		return this->newLink(toNeuron,1,0);
 }
@@ -53,7 +60,11 @@ Dendrite* Neuron::newLink (Neuron *toNeuron, int ndelay, int countTotal) {
 		  Debug1->ListBox1->Items->Insert(0,"NewLink: " + id + " to " + toNeuron->id);
 #else
 		  std::string captionID = toNeuron->id;
-		  callback->onCallback(new CallbackMsg<MSG_NEW_LINK>(0, id, 0, toNeuron->id));	
+		  callback->onCallback(
+			  new CallbackMsg<MSG_NEW_LINK>(
+					getLayer()->number, id, toNeuron->getLayer()->number, toNeuron->id
+			  )
+		  );	
 
 #endif
 		  return &(*axons[g]);
@@ -92,7 +103,7 @@ void Neuron::activate(double activationValNew) {
 #ifdef BORLAND_GUI
 	Debug1->ListBox1->Items->Insert(0,"Activate Neuron: " + id + " (Increase: " + AnsiString (activationValNew)+"; activationVal: " + AnsiString(activationVal) + ") " );
 #else
-	callback->onCallback(new CallbackMsg<MSG_NEURON_ACTIVATE>(0, id, (float)activationVal, (float)activationValNew));
+	callback->onCallback(new CallbackMsg<MSG_NEURON_ACTIVATE>(getLayer()->number, id, (float)activationVal, (float)activationValNew));
 #endif
 
   };
@@ -123,7 +134,7 @@ void Neuron::fire (void) {
 		  }
 		  Debug1->ListBox1->Items->Insert(0,"Neuron fired: " + id + " ActVal: " + activationVal );
 #else
-		callback->onCallback(new CallbackMsg<MSG_NEURON_FIRE>(0, id, (float)activationVal));
+		callback->onCallback(new CallbackMsg<MSG_NEURON_FIRE>(getLayer()->number, id, (float)activationVal));
 #endif
 
 		  this->activationVal = 0;
@@ -159,23 +170,33 @@ void Neuron::fire (void) {
 		  //int totalSynapses = this->countSynapsesOnAxons();
 		  //activate parent neurons
 		  for (unsigned int n=0;n<axons.size();n++ ) {
-
-#ifdef BORLAND_GUI
-					Debug1->ListBox1->Items->Insert(0,"Schedule Activation: " + axons[n]->dendriteTo->id + " in: " + AnsiString((*axons[n]).activationDelay) );
-#else
-			callback->onCallback(new CallbackMsg<MSG_ACTIVATION_SCHEDULED>(0, id, axons[n]->activationDelay));
-#endif
+					float weightToStimulate = 0.0f;
+					
 					float aWeight = axons[n]->getWeight();
 					if (axons[n]->dendriteTo->type==0) {
 						//if subsequent neuron is an input neuron we'll activate this with 1
-						axons[n]->stimulate(float(1.0));
+						weightToStimulate = 1.0f;
+						axons[n]->stimulate(weightToStimulate);
 					} else {
 						//otherwise it is within a layer then we'll distribute the activation among the 
 						//subsequent neurons
 						//wFactor: 'oldest'/strongest Dendrite will get most attention
 						float wFactor = float(axons[n]->synapses) / this->countMaxSynapsesOnAxons();
-						axons[n]->stimulate(aWeight * aWeight / totalWeight * wFactor);
+						weightToStimulate = aWeight * aWeight / totalWeight * wFactor;
+						axons[n]->stimulate(weightToStimulate);
 					}
+
+#ifdef BORLAND_GUI
+		Debug1->ListBox1->Items->Insert(0,"Schedule Activation: " + axons[n]->dendriteTo->id + " in: " + AnsiString((*axons[n]).activationDelay) );
+#else
+		callback->onCallback(
+			new CallbackMsg<MSG_ACTIVATION_SCHEDULED>(
+				getLayer()->number, id, axons[n]->activationDelay, weightToStimulate
+			)
+		);
+#endif
+
+
 					//this->activationQueue->schedActivation(&(*axons[n]),(*axons[n]).activationDelay);
 		  }
 		  //only insert into rec.queue when fired twice within recoveryTime
@@ -223,7 +244,7 @@ void Neuron::predictNext(void) {
 #ifdef BORLAND_GUI
 	Debug1->ListBox1->Items->Insert(0,"PredictNext: " + this->id );
 #else
-	callback->onCallback(new CallbackMsg<MSG_PREDICT_NEXT>(0, id));
+	callback->onCallback(new CallbackMsg<MSG_PREDICT_NEXT>(getLayer()->number, id));
 #endif
 
 	//0.0.50: select strongest axon
@@ -280,7 +301,7 @@ void Neuron::propagateDown(int timeOffset) {
 #ifdef BORLAND_GUI
 	Debug1->ListBox1->Items->Insert(0,"PropagateDown: " + this->id + " timeoffset: " + AnsiString(toutput) );
 #else
-	callback->onCallback(new CallbackMsg<MSG_PROPAGATE_DOWN>(0, id, timeOffset));
+	callback->onCallback(new CallbackMsg<MSG_PROPAGATE_DOWN>(getLayer()->number, id, timeOffset));
 #endif
 
 	if (this->outputData != 0) {
@@ -325,7 +346,7 @@ void Neuron::inhibit (bool recursive) {
 #ifdef BORLAND_GUI
 		  Debug1->ListBox1->Items->Insert(0,"Inhibit: " + id );
 #else
-	callback->onCallback(new CallbackMsg<MSG_INHIBIT>(0, id));
+	callback->onCallback(new CallbackMsg<MSG_INHIBIT>(getLayer()->number, id));
 #endif
 
 		  this->blockActivation = this->layer->step + globals.blockTime;//-1; //sets recoveryTime
@@ -377,12 +398,23 @@ bool Neuron::isOutputNeuron (void) {
 void Neuron::newOutput (void) {
 
 	//create new Neuron type=input
-	Neuron *newNeuron = new Neuron(this->getLayer()->getHigher(),0);
-	#ifdef BORLAND_GUI
+	Neuron *newNeuron = new Neuron(this->getLayer()->getHigher(), 0);
+
+#ifdef BORLAND_GUI
 	
-	#else
-	//callback->onCallback(new CallbackMsg<MSG_NEW_OUTPUT>(0, this->id, newNeuron->id));
-	#endif
+#else
+
+	callback->onCallback(new CallbackMsg<MSG_NEW_OUTPUT>(
+			getLayer()->number, this->id, newNeuron->getLayer()->number, newNeuron->id
+		)
+	);
+
+	callback->onCallback(new CallbackMsg<MSG_NEW_INPUT_NEURON>(
+			newNeuron->getLayer()->number, newNeuron->id, ""
+		)
+	);
+
+#endif
 
 	//link new Neuron to current Neuron's axon
 	this->newLink(newNeuron);

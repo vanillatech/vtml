@@ -10,7 +10,8 @@ static const int BUF_SIZE = 1024;
 std::string CallbackMsg<MSG_STEP_COUNTER>::message() const
 {
 	char b[BUF_SIZE];
-	sprintf_s(b, BUF_SIZE, "------- step %d (layer #%d) -------", step, layer());
+	//sprintf_s(b, BUF_SIZE, "------- step %d (layer #%d) -------", step, layer());
+	sprintf_s(b, BUF_SIZE, "------- step %d -------", step);
 	b[BUF_SIZE-1]=0;
 	return std::string(b);
 }
@@ -18,7 +19,8 @@ std::string CallbackMsg<MSG_STEP_COUNTER>::message() const
 std::string CallbackMsg<MSG_NEW_INPUT_NEURON>::message() const
 {
 	char b[BUF_SIZE];
-	sprintf_s(b, BUF_SIZE, "New Input Neuron: layer: %d, id: %s, value: %s", layer(), id.c_str(), value.c_str());
+	//sprintf_s(b, BUF_SIZE, "New Input Neuron: layer: %d, id: %s, value: %s", layer(), id.c_str(), value.c_str());
+	sprintf_s(b, BUF_SIZE, "New Input Neuron: id: %s, value: %s", id.c_str(), value.c_str());
 	b[BUF_SIZE-1]=0;
 	return std::string(b);
 }
@@ -78,7 +80,7 @@ Debug1->ListBox1->Items->Insert
 std::string CallbackMsg<MSG_ACTIVATION_SCHEDULED>::message() const
 {
 	char b[BUF_SIZE];
-	sprintf_s(b, BUF_SIZE, "Schedule Activation: %d (Delay: %d)", id.c_str(), delay);
+	sprintf_s(b, BUF_SIZE, "Schedule Activation: %s (Delay: %d, Value: %f)", id.c_str(), delay, actValue);
 	b[BUF_SIZE-1]=0;
 	return std::string(b);
 }
@@ -127,12 +129,12 @@ std::string CallbackMsg<MSG_DELETE_FROM_RQ>::message() const
 	return std::string(b);
 }
 
-/*std::string CallbackMsg<MSG_NEW_OUTPUT>::message() const
+std::string CallbackMsg<MSG_NEW_OUTPUT>::message() const
 {
 	char b[BUF_SIZE];
-	sprintf_s(b, BUF_SIZE, "New Output from Neuron: %s to Neuron: %s", id.c_str(), id.c_str());
+	sprintf_s(b, BUF_SIZE, "New Output from Neuron: %s to Neuron: %s", fromId.c_str(), toId.c_str());
 	b[BUF_SIZE-1]=0;
 	return std::string(b);
-}*/
+}
 
 } //Odin

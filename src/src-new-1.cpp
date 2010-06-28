@@ -44,6 +44,7 @@ struct Unmanaged_Wrapper1
 	Forward1 func;
 };
 
+/*
 class Callback : public ICallback
 {
 	public:
@@ -78,6 +79,23 @@ class Callback : public ICallback
 		//Forward func;
 		Forward1 func1;
 };
+*/
+
+class Callback : public ICallback
+{
+	public:
+		Callback(Forward f) : func(f)
+		{}
+
+		virtual void onCallback(ICallbackMsg* msg)
+		{
+			func(msg);
+		}
+
+	private:
+		Forward func;
+		
+};
 
 ICallback* callback;
 
@@ -90,16 +108,16 @@ int main(array<System::String ^> ^args)
 	Application::EnableVisualStyles();
 	Application::SetCompatibleTextRenderingDefault(false); 
 
-	Sense* sense = new Sense(&globals.inputLayer);
+	Sense* sense = new Sense(globals.inputLayer);
 
 	Form1^ form = gcnew Form1(sense);
-	
-	//Managed_Delegate_Wrapper^ w = gcnew Managed_Delegate_Wrapper;
-	Managed_Delegate_Wrapper1^ w = gcnew Managed_Delegate_Wrapper1;
-	//w->d = gcnew D(form, &Form1::OnCallback);
-	w->d = gcnew D1(form, &Form1::OnCallback1);
-	//Unmanaged_Wrapper u;
-	Unmanaged_Wrapper1 u;
+
+	Managed_Delegate_Wrapper^ w = gcnew Managed_Delegate_Wrapper;
+	//Managed_Delegate_Wrapper1^ w = gcnew Managed_Delegate_Wrapper1;
+	w->d = gcnew D(form, &Form1::OnCallback);
+	//w->d = gcnew D1(form, &Form1::OnCallback1);
+	Unmanaged_Wrapper u;
+	//Unmanaged_Wrapper1 u;
 	Marshal::StructureToPtr(w, (System::IntPtr)&u, false);
 	callback = new Callback(u.func);
 

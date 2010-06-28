@@ -57,8 +57,8 @@ void Sense::init()
 			 //_itoa_s(i, buf, 4, 10);
 			 //captionID += buf;
 			 captionID += (char)i;
-			 callback->onCallback(new CallbackMsg<MSG_NEW_INPUT_NEURON>(0, inputNeurons[i]->id, captionID));
-			 callback->onCallback(new CallbackMsg<MSG_NEW_LINK>(0, inputNeurons[i]->id, 0, outputNeurons[i]->id));
+			 callback->onCallback(new CallbackMsg<MSG_NEW_INPUT_NEURON>(layer->number, inputNeurons[i]->id, captionID));
+			 callback->onCallback(new CallbackMsg<MSG_NEW_LINK>(layer->number, inputNeurons[i]->id, layer->number, outputNeurons[i]->id));
 
 #endif
 			//*inputNeurons = new Neuron (queue);

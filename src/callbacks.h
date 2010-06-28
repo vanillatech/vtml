@@ -58,6 +58,7 @@ enum ECallbackTypes {
 	MSG_PROPAGATE_DOWN,
 	MSG_INHIBIT,
 	MSG_DELETE_FROM_RQ,
+	MSG_NEW_OUTPUT
 };
 
 /*Debug1->ListBox1->Items->Insert
@@ -162,15 +163,16 @@ Debug1->ListBox1->Items->Insert
 
 template <> struct CallbackMsg<MSG_ACTIVATION_SCHEDULED> : ICallbackMsg
 {
-	CallbackMsg(int _layer, const TNeuronID& _id, int _delay) : 
+	CallbackMsg(int _layer, const TNeuronID& _id, int _delay, float _actValue) : 
 		ICallbackMsg(MSG_ACTIVATION_SCHEDULED, _layer),
-		id(_id), delay(_delay)
+		id(_id), delay(_delay), actValue(_actValue)
 	{}
 
 	virtual std::string message() const;
 
 	TNeuronID id;
 	int delay;
+	float actValue;
 };
 
 
@@ -232,6 +234,20 @@ template <> struct CallbackMsg<MSG_DELETE_FROM_RQ> : ICallbackMsg
 	virtual std::string message() const;
 
 	TNeuronID id;
+};
+
+template <> struct CallbackMsg<MSG_NEW_OUTPUT> : ICallbackMsg
+{
+	CallbackMsg(int _layer, const TNeuronID& _fromId, int _toLayer, const TNeuronID& _toId) : 
+		ICallbackMsg(MSG_NEW_OUTPUT, _layer),
+		fromId(_fromId), toLayer(_toLayer), toId(_toId)
+	{}
+
+	virtual std::string message() const;
+
+	TNeuronID fromId;
+	int toLayer;
+	TNeuronID toId;
 };
 
 } //Odin

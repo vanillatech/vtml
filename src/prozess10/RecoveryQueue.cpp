@@ -35,7 +35,7 @@ int RecoveryQueue::deletePattern(Neuron *neuron, unsigned int pos, unsigned int 
 #ifdef BORLAND_GUI
 			Debug1->ListBox1->Items->Insert(0,"Delete from Rq: " + queue[forderNew][n]->id);
 #else
-		callback->onCallback(new CallbackMsg<MSG_DELETE_FROM_RQ>(0, queue[forderNew][n]->id));
+			callback->onCallback(new CallbackMsg<MSG_DELETE_FROM_RQ>(layer->number, queue[forderNew][n]->id));
 #endif
 			queue[forderNew].erase(queue[forderNew].begin()+n);
 			return(1);
@@ -53,7 +53,7 @@ int RecoveryQueue::deletePattern(Neuron *neuron, unsigned int pos, unsigned int 
 #ifdef BORLAND_GUI
                    Debug1->ListBox1->Items->Insert(0,"Delete from Rq: " + queue[m][n]->id);
 #else
-	callback->onCallback(new CallbackMsg<MSG_DELETE_FROM_RQ>(0, queue[m][n]->id));
+	callback->onCallback(new CallbackMsg<MSG_DELETE_FROM_RQ>(layer->number, queue[m][n]->id));
 #endif
 				   queue[m].erase(queue[m].begin()+n);
 				   return(1);

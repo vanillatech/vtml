@@ -32,8 +32,13 @@ class Neuron {
 	  unsigned int blockActivation;
 	  int type; //0:input, 1:intrinsic, 2:output
 	  float threshold;
+	  
 	  //Constructor
 	  Neuron (Layer *, int);
+	  
+	  //Dtor
+	  ~Neuron();
+
 	  //Functions
 	  Dendrite* newLink (Neuron *, int, int);
 	  Dendrite* newLink (Neuron *);

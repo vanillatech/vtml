@@ -3,18 +3,23 @@
 class ActivationQueue;
 class RecoveryQueue;
 
-class Layer {
-	public:
-	Layer(void);
-	Layer(Layer *);
+class Layer 
+{
+public:
+	explicit Layer(Layer* caller = 0);
+	~Layer();
+
 	void newStep (void);
 	void setIdle (bool);
 	Layer *getHigher(void);
+	
+	int number;
+	unsigned int step;
 	Layer *lower;
 	Layer *higher;
-	unsigned int step;
 	ActivationQueue *aqueue;
 	RecoveryQueue *recQueue;
+	
 private:
 	bool idle;
 };
