@@ -1,19 +1,33 @@
 //#include "stdafx.h"
 #include "globals.h"
+#include "../callbacks.h"
 #include "Dendrite.h"
 #include "Neuron.h"
 #include "ActivationQueue.h"
+
+using namespace Odin;
+
+extern ICallback* callback;
 
 ActivationQueue::ActivationQueue (Layer *caller) {
 	this->layer = caller;
 	queue.resize(globals.queueMax);
 }
 void ActivationQueue::schedActivation (Dendrite* dendrite, int aDelay) {
-		this->q.push(Aqueue(aDelay+this->layer->step,dendrite,1));
-		this->layer->setIdle(false);
+		this->schedActivation(dendrite, aDelay, 1);	
 }
 
 void ActivationQueue::schedActivation (Dendrite* dendrite, int aDelay, double aVal) {
+		#ifdef BORLAND_GUI
+		Debug1->ListBox1->Items->Insert(0,"Schedule Activation: " + axons[n]->dendriteTo->id + " in: " + AnsiString((*axons[n]).activationDelay) );
+		#else
+		callback->onCallback(
+			new CallbackMsg<MSG_ACTIVATION_SCHEDULED>(
+				dendrite->dendriteTo->getLayer()->number, dendrite->dendriteTo->id, dendrite->activationDelay, aVal
+			)
+		);
+		#endif
+		
 		this->q.push(Aqueue(aDelay+this->layer->step,dendrite,aVal));
 		this->layer->setIdle(false);
 }

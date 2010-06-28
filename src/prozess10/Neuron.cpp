@@ -48,7 +48,7 @@ Dendrite* Neuron::newLink (Neuron *toNeuron, int ndelay, int countTotal) {
 
 		  (*axons[g]).activationDelay = ndelay;
 
-		  toNeuron->dendrites.push_back(&(*axons[g]));
+		  toNeuron->dendrites.push_back(axons[g]);
 
 #ifdef BORLAND_GUI
 		  AnsiString captionID = toNeuron->id;
@@ -67,7 +67,7 @@ Dendrite* Neuron::newLink (Neuron *toNeuron, int ndelay, int countTotal) {
 		  );	
 
 #endif
-		  return &(*axons[g]);
+		  return axons[g];
 }
 
 int Neuron::countSynapses () {
@@ -186,15 +186,7 @@ void Neuron::fire (void) {
 						axons[n]->stimulate(weightToStimulate);
 					}
 
-#ifdef BORLAND_GUI
-		Debug1->ListBox1->Items->Insert(0,"Schedule Activation: " + axons[n]->dendriteTo->id + " in: " + AnsiString((*axons[n]).activationDelay) );
-#else
-		callback->onCallback(
-			new CallbackMsg<MSG_ACTIVATION_SCHEDULED>(
-				getLayer()->number, id, axons[n]->activationDelay, weightToStimulate
-			)
-		);
-#endif
+
 
 
 					//this->activationQueue->schedActivation(&(*axons[n]),(*axons[n]).activationDelay);
