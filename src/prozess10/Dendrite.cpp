@@ -5,7 +5,7 @@
 
 Dendrite::Dendrite (Layer *nLayer){
 	this->layer = nLayer;
-	this->weight=0.6;
+	this->weight=0.6f;
 	this->lastUsed = 0;
 	this->synapses = 1;
 	this->weightFrozen = false;

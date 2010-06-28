@@ -80,7 +80,7 @@ void Form1::drawLogItem(int messageType, const std::string& msg)
 			color = Color::DarkBlue;
 			break;
 		case MSG_NEW_OUTPUT:
-			color = Color::Gold;
+			color = Color::Orange;
 			break;
 	}
 
@@ -110,9 +110,11 @@ void Form1::OnCallback(Odin::ICallbackMsg* msg)
 	std::string text = msg->message();
 	(*m_log)[layer-1].push_back(std::make_pair(type, text));
 
-	drawLogItem(type, msg->message());
-	richTextBox1->SelectionStart = richTextBox1->Text->Length;
-	richTextBox1->ScrollToCaret();
+	if (m_currentIndex == layer-1) {
+		drawLogItem(type, msg->message());
+		richTextBox1->SelectionStart = richTextBox1->Text->Length;
+		richTextBox1->ScrollToCaret();
+	}
 
 	if (type == MSG_NEW_INPUT_NEURON) {
 		CallbackMsg<MSG_NEW_INPUT_NEURON>* m = (CallbackMsg<MSG_NEW_INPUT_NEURON>*)msg;
