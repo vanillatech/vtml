@@ -20,6 +20,6 @@ public:
 	ActivationQueue *aqueue;
 	RecoveryQueue *recQueue;
 	
-private:
+//private:
 	bool idle;
 };

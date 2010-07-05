@@ -30,7 +30,7 @@ class Neuron {
 	  char outputData;
 	  unsigned int lastfired;
 	  unsigned int blockActivation;
-	  int type; //0:input, 1:intrinsic, 2:output
+	  int type; //0:input, 1:intermediate, 2:output
 	  float threshold;
 	  
 	  //Constructor

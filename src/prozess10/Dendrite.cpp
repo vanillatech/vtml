@@ -53,7 +53,7 @@ void Dendrite::stimulate (float tWeight) {
 }
 
 void Dendrite::stimulate(float tWeight, int aDelay) {
-	this->layer->aqueue->schedActivation(this, aDelay, tWeight);
+	this->dendriteTo->layer->aqueue->schedActivation(this, aDelay, tWeight);
 	this->lastUsed = this->layer->step;
 	this->synapses++;
 }

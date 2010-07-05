@@ -160,7 +160,8 @@ void Neuron::fire (void) {
 
 					} else {
 					  //WTA: Winner Takes All - inhibit
-					  (*dendrites[n]).dendriteFrom->inhibit();
+					  //(*dendrites[n]).dendriteFrom->inhibit();
+						
 					}
 					(*dendrites[n]).synapses--;
 				}
@@ -208,7 +209,7 @@ void Neuron::fire (void) {
 			  this->propagateDown(0);
 		  } */
 		  //look what neurons were fired in current layer in last step and connect them to this neuron
-		  if (this->layer->recQueue->setFocusStep(-1) != -1) {
+		  /*if (this->layer->recQueue->setFocusStep(-1) != -1) {
 			Neuron *n;
 			while ((n = this->layer->recQueue->getNext()) != 0) {
 				if (this->type == 1) {
@@ -217,7 +218,7 @@ void Neuron::fire (void) {
 					}
 				}
 			}
-		  }
+		  }*/
 		  globals.lastFiredNeuron = this;
 
 		  //} *

@@ -104,16 +104,14 @@ void RecoveryQueue::checkNewPattern() {
 				}
 			}
 			if (!patternIsAlreadyKnown) {
-				//new neuron in same layer, type intrinsic.
+				//new neuron in same layer, type intermediate.
 				Neuron *newNeuron = new Neuron(this->layer,1);
 				Dendrite *newDend;
 				for (unsigned int n=0;n<queue[this->counter].size();n++ ) {
 
 					newDend = queue[this->counter][n]->newLink(newNeuron);
-					//newDend->stimulate(0);
+					newDend->stimulate(0);
 				}
-
-				
 			}
 			
 		}
