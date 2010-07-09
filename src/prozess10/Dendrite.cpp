@@ -1,6 +1,7 @@
 //#include "stdafx.h"
 #include "globals.h"
 #include "ActivationQueue.h"
+#include "Neuron.h"
 #include "Dendrite.h"
 
 Dendrite::Dendrite (Layer *nLayer){
@@ -53,7 +54,7 @@ void Dendrite::stimulate (float tWeight) {
 }
 
 void Dendrite::stimulate(float tWeight, int aDelay) {
-	this->dendriteTo->layer->aqueue->schedActivation(this, aDelay, tWeight);
+	this->dendriteTo->getLayer()->aqueue->schedActivation(this, aDelay, tWeight);
 	this->lastUsed = this->layer->step;
 	this->synapses++;
 }
