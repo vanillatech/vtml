@@ -23,7 +23,7 @@ void ActivationQueue::schedActivation (Dendrite* dendrite, int aDelay, double aV
 		#else
 		callback->onCallback(
 			new CallbackMsg<MSG_ACTIVATION_SCHEDULED>(
-				dendrite->dendriteTo->getLayer()->number, dendrite->dendriteTo->id, dendrite->activationDelay, aVal
+				dendrite->dendriteTo->getLayer()->number, dendrite->dendriteTo->id, dendrite->activationDelay, (float)aVal
 			)
 		);
 		#endif

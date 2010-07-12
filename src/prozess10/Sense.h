@@ -13,6 +13,10 @@ class Sense {
 	Sense (Layer* nLayer);
 
 	void init();
+
+	// initializes input #c
+	void init(int c);
+
 	void input (int c);
 	void nextStep (void);
 };
