@@ -1,13 +1,5 @@
 
-- learning process not yet working properly. E.g. if there is a neuron 196 connecting to 512 and 513, in case 196 and (in next step) 512 is fired, the connection between 196 and 513 isn't weakened. We have to introduce a rule there, Probably this can be done by WidrowHoff supervised learning as we know the desired results:
-In this example 196 is fired that is activating 512 and 513. Now, the activation of 512 leads to a depolarization because the activation was bigger than for 513. As 512 is fired it inhibits its neightbourhood (winner takes all), so 513 is not fired. Because 513 would have been fired if inhibition of 512 would not have been applied we could adapt the weights of 196-513 according to WidrowHoff learning rule.
+- implement SOFM features better (according to email)
 
-- colors in debug
-
-- debugging of different layers
-
-- chr13 automatically presses 'go' button
-
-- debug output of schedule activation is wrong, should show neuron to be activated and also scheduled activation value
-
-- debug output for function Neuron::newOutput
+(- learning process not yet working properly. E.g. if there is a neuron 196 connecting to 512 and 513, in case 196 and (in next step) 512 is fired, the connection between 196 and 513 isn't weakened. We have to introduce a rule there, Probably this can be done by WidrowHoff supervised learning as we know the desired results:
+In this example 196 is fired that is activating 512 and 513. Now, the activation of 512 leads to a depolarization because the activation was bigger than for 513. As 512 is fired it inhibits its neightbourhood (winner takes all), so 513 is not fired. Because 513 would have been fired if inhibition of 512 would not have been applied we could adapt the weights of 196-513 according to WidrowHoff learning rule.)
