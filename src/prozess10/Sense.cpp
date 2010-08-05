@@ -80,7 +80,7 @@ void Sense::init(int c)
 		inputNeurons[c] = new  Neuron (layer,0);
 		outputNeurons[c] = new  Neuron (layer,2);
 
-		this->inputNeurons[c]->dendrites.push_back(new Dendrite(this->layer,1));
+		this->inputNeurons[c]->dendrites.push_back(new Dendrite(this->layer));
 		 this->inputNeurons[c]->dendrites[0]->dendriteTo = this->inputNeurons[c];
 		 this->inputNeurons[c]->dendrites[0]->dendriteFrom = this->outputNeurons[c];
 		 this->inputNeurons[c]->dendrites[0]->synapses = 1;

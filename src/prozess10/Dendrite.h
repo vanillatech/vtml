@@ -14,7 +14,7 @@ class Dendrite {
 	int activationDelay;
 	float weight;
 	Dendrite(Layer *);
-	Dendrite(Layer *, int);
+	Dendrite(Layer *, float);
 	void changeWeights (void);
 	void stimulate (void);
 	void stimulate (int);

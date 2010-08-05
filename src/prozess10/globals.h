@@ -22,6 +22,7 @@ struct Globals
 	const float minActivation;
 	const float fireMargin;
 	const float learnRate;
+	const float defaultWeight;
 
 	//vector <RecoveryQueue> recQueue;
 	//RecoveryQueue *recQueue = new RecoveryQueue[1];
@@ -48,7 +49,8 @@ struct Globals
 		inputLayer(new Layer(0)),
 		neuronCounter(0),
 		stepCounter(recoveryTime+1),
-		recQueueIdle(-1)
+		recQueueIdle(-1),
+		defaultWeight(0.6f)
 	{}
 };
 

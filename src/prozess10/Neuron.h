@@ -40,7 +40,8 @@ class Neuron {
 	  ~Neuron();
 
 	  //Functions
-	  Dendrite* newLink (Neuron *, int, int);
+	  Dendrite* newLink (Neuron *, int, int, float);
+	  Dendrite* newLink (Neuron *, float);
 	  Dendrite* newLink (Neuron *);
 	  int countSynapses ();
 	  int countSynapsesOnAxons(void);

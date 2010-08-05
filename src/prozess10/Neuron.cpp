@@ -34,13 +34,17 @@ Neuron::~Neuron()
 }
 
 Dendrite* Neuron::newLink (Neuron *toNeuron) {
-		return this->newLink(toNeuron,1,0);
+		return this->newLink(toNeuron,1,0,globals.defaultWeight);
 }
 
-Dendrite* Neuron::newLink (Neuron *toNeuron, int ndelay, int countTotal) {
+Dendrite* Neuron::newLink (Neuron *toNeuron, float nWeight) {
+		return this->newLink(toNeuron,1,0,nWeight);
+}
+
+Dendrite* Neuron::newLink (Neuron *toNeuron, int ndelay, int countTotal, float nWeight) {
 
 		  int g = axons.size();
-		  Dendrite *tempDend = new Dendrite(this->layer);
+		  Dendrite *tempDend = new Dendrite(this->layer, nWeight);
 		  axons.push_back(tempDend);
 		  (*axons[g]).dendriteFrom = this;
 		  (*axons[g]).dendriteTo = toNeuron;
@@ -163,7 +167,7 @@ void Neuron::fire (void) {
 					  //(*dendrites[n]).dendriteFrom->inhibit();
 						
 					}
-					(*dendrites[n]).synapses--;
+					//(*dendrites[n]).synapses--;
 				}
 		  }
 		  //}
@@ -186,10 +190,6 @@ void Neuron::fire (void) {
 						weightToStimulate = aWeight * aWeight / totalWeight * wFactor;
 						axons[n]->stimulate(weightToStimulate);
 					}
-
-
-
-
 					//this->activationQueue->schedActivation(&(*axons[n]),(*axons[n]).activationDelay);
 		  }
 		  //only insert into rec.queue when fired twice within recoveryTime
@@ -209,16 +209,16 @@ void Neuron::fire (void) {
 			  this->propagateDown(0);
 		  } */
 		  //look what neurons were fired in current layer in last step and connect them to this neuron
-		  /*if (this->layer->recQueue->setFocusStep(-1) != -1) {
+		  if (this->layer->recQueue->setFocusStep(-1) != -1) {
 			Neuron *n;
 			while ((n = this->layer->recQueue->getNext()) != 0) {
 				if (this->type == 1) {
 					if (!this->containsDendrite(n)) {
-						n->newLink(this);
+						n->newLink(this,0.0f);
 					}
 				}
 			}
-		  }*/
+		  }
 		  globals.lastFiredNeuron = this;
 
 		  //} *

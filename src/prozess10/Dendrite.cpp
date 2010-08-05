@@ -5,22 +5,18 @@
 #include "Dendrite.h"
 
 Dendrite::Dendrite (Layer *nLayer){
+	Dendrite(nLayer,globals.defaultWeight);
+};
+
+
+Dendrite::Dendrite(Layer *nLayer, float nWeight) {
 	this->layer = nLayer;
-	this->weight=0.6f;
 	this->lastUsed = 0;
+	this->weight=nWeight;
 	this->synapses = 1;
 	this->weightFrozen = false;
 	this->activationDelay = 1;
 };
-
-Dendrite::Dendrite(Layer *nLayer, int strength) {
-	this->layer = nLayer;
-	this->lastUsed = 0;
-	this->weight=1;
-	this->synapses = 1;
-	this->weightFrozen = false;
-	this->activationDelay = 1;
-}
 
 void Dendrite::changeWeights (void) {
 		//if (!this->weightFrozen) {
@@ -31,12 +27,12 @@ void Dendrite::changeWeights (void) {
 			// then: learn
 			//this algorithm is taken from James A. Anderson, 'Introduction to Neural Networks' (MIT Press)
 			//related to Kohonen's SOFM.
-			this->weight = this->weight * (1 - globals.learnRate )+    globals.learnRate;
+			this->weight = this->weight - (this->weight - 1) *  globals.learnRate / this->synapses;
 		} else {
 			//don't learn: this dendrite had not been used to activate the neuron
 			//so this dendrite does not belong to the recognized pattern
 			// so forget it
-			this->weight = this->weight * (1 - globals.learnRate );
+			this->weight = this->weight * (1 - globals.learnRate / this->synapses  );
 		}
 		//}
 };
