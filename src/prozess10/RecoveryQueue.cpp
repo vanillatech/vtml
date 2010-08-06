@@ -173,9 +173,9 @@ int RecoveryQueue::getStep(int val) {
 		val -= this->counter;
 		return (val); 
 	}
-	if (this->counter + val <= 0) {
+	if (this->counter + val < 0) {
 		val += this->counter;
-		return ( globals.queueMax - 1 + val);
+		return ( globals.queueMax + val);
 	}
 	return (this->counter + val);
 
