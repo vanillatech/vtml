@@ -27,7 +27,7 @@ void Dendrite::changeWeights (void) {
 			// then: learn
 			//this algorithm is taken from James A. Anderson, 'Introduction to Neural Networks' (MIT Press)
 			//related to Kohonen's SOFM.
-			this->weight = this->weight - (this->weight - 1) *  globals.learnRate / this->synapses;
+			this->weight = this->weight - (this->weight + 1) *  globals.learnRate / this->synapses;
 		} else {
 			//don't learn: this dendrite had not been used to activate the neuron
 			//so this dendrite does not belong to the recognized pattern
