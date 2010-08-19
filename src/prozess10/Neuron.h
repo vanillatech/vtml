@@ -12,7 +12,7 @@ class Neuron {
 
 	  void drainActivation (void);
 	  Layer *layer;
-
+	  vector <Neuron*> neighbors;
 
 	public:
 	  //TDebug1 *debuginst;
@@ -57,6 +57,9 @@ class Neuron {
 	  bool containsDendrite(Neuron *);
 	  bool isOutputNeuron (void);
 	  bool isInhibited(void);
+	  bool newNeighbor(Neuron *);
+	  bool isNeighborOf(Neuron *);
+	  bool hasNeighbors(void);
 	  void newOutput(void);
 	  Layer *getLayer(void);
 	  int axonsRemove(Dendrite *);

@@ -416,3 +416,23 @@ void Neuron::newOutput (void) {
 Layer *Neuron::getLayer (void) {
 	return this->layer;
 }
+
+bool Neuron::newNeighbor (Neuron *n2) {
+	if (this->isNeighborOf(n2)) return false;
+	this->neighbors.push_back(n2);
+	n2->newNeighbor(this);
+	return true;
+};
+
+bool Neuron::isNeighborOf (Neuron *n2) {
+	for (unsigned int n=0; n<this->neighbors.size();n++) {
+		if (this->neighbors[n] == n2)
+			return true;
+	}
+	return false;
+};
+
+bool Neuron::hasNeighbors () {
+	if (this->neighbors.size() == 0) return false;
+	else return true;
+};

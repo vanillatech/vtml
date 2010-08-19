@@ -102,6 +102,19 @@ void RecoveryQueue::checkNewPattern() {
 				if (!queue[this->counter][n-1]->hasSameSuccessor(queue[this->counter][n])) {
 					patternIsAlreadyKnown = false;
 				}
+				
+				//if a (newly created) intermediate neuron has no neighbors yet, 
+				//link it to all input neurons that have recently been fired.
+				if (!queue[this->counter][n-1]->hasNeighbors() && queue[this->counter][n-1]->type == 1) {
+					for (unsigned int m=0;m<queue[this->counter].size();m++ ) {
+						if (queue[this->counter][m]->type == 0 && (n-1) != m)
+							queue[this->counter][m]->newNeighbor(queue[this->counter][n-1]);
+					}
+				}
+				//check for neighborhood connection 
+				if (!queue[this->counter][n-1]->isNeighborOf (queue[this->counter][n])) {
+					patternIsAlreadyKnown = false;
+				}
 			}
 			if (!patternIsAlreadyKnown) {
 				//new neuron in same layer, type intermediate.

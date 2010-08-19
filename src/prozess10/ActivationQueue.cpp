@@ -63,11 +63,13 @@ void ActivationQueue::activate (void) {
 			//activated Neuron didn't fire, so activating neuron (d) is probably representation of a new pattern
 			//therefor we create a new input neuron on higher layer and connect it to this neuron if it
 			//doesn't exist already
-			//only add output if neuron is not an input neuron
-			//only if activated Neuron had not been inhibited before
-			if (!d->dendriteFrom->isOutputNeuron() && d->dendriteFrom->type == 1 && !d->dendriteTo->isInhibited()) {
-				d->dendriteFrom->newOutput();
-			}
+			//if (d->dendriteFrom != 0) {
+				//only add output if neuron is not an input neuron
+				//only if activated Neuron had not been inhibited before
+				if (!d->dendriteFrom->isOutputNeuron() && d->dendriteFrom->type == 1 && !d->dendriteTo->isInhibited()) {
+					d->dendriteFrom->newOutput();
+				}
+			//}
 
 		}
         //d->synapses += 1; //hebbian learning rule - synaptic plasticity
