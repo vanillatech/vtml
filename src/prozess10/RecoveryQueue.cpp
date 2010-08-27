@@ -95,25 +95,38 @@ void RecoveryQueue::checkNewPattern() {
 			//all of the neurons in current time step have a connection to same
 			//successor.
 			bool patternIsAlreadyKnown = true;
-			if (queue[this->counter].size() == 1)
+			//if there is only one neuron without axon in current step
+			/*if (queue[this->counter].size() == 1)
 				if (queue[this->counter][0]->axons.size() == 0)
-					patternIsAlreadyKnown = false;
-			for (unsigned int n=1;n<queue[this->counter].size();n++ ) {
-				if (!queue[this->counter][n-1]->hasSameSuccessor(queue[this->counter][n])) {
-					patternIsAlreadyKnown = false;
-				}
-				
-				//if a (newly created) intermediate neuron has no neighbors yet, 
-				//link it to all input neurons that have recently been fired.
-				if (!queue[this->counter][n-1]->hasNeighbors() && queue[this->counter][n-1]->type == 1) {
-					for (unsigned int m=0;m<queue[this->counter].size();m++ ) {
-						if (queue[this->counter][m]->type == 0 && (n-1) != m)
-							queue[this->counter][m]->newNeighbor(queue[this->counter][n-1]);
+					patternIsAlreadyKnown = false;*/
+			for (unsigned int n=0;n<queue[this->counter].size();n++ ) {
+				for (unsigned int g=0;n<queue[this->counter].size();g++ ) {
+					Neuron *q = queue[this->counter][n];
+					Neuron *q2 = queue[this->counter][g];
+					//if a neuron has no successor yet, insert one and activate
+					if (q->axons.size() == 0) {
+						Neuron *nNew = new Neuron(this->layer,1);
+						Dendrite *d = q->newLink(nNew);
+						d->stimulate();
 					}
-				}
-				//check for neighborhood connection 
-				if (!queue[this->counter][n-1]->isNeighborOf (queue[this->counter][n])) {
-					patternIsAlreadyKnown = false;
+					
+				
+					//if a (newly created) intermediate neuron has no neighbors yet, 
+					//link it to all input neurons that have recently been fired.
+					if (!queue[this->counter][g]->hasNeighbors() && queue[this->counter][g]->type == 1) {
+						for (unsigned int m=0;m<queue[this->counter].size();m++ ) {
+							if (queue[this->counter][m]->type == 0 && (g) != m)
+								queue[this->counter][m]->newNeighbor(queue[this->counter][g]);
+						}
+					}
+					//if a neuron is located next to another neuron and both neurons don't synapse on a commmon successor we insert one
+					if (queue[this->counter][n]->isNeighborOf (queue[this->counter][g]) && !queue[this->counter][n]->hasSameSuccessor(queue[this->counter][g])) {
+						patternIsAlreadyKnown = false;
+					}
+					//check for neighborhood connection 
+					/*if (!queue[this->counter][g]->isNeighborOf (queue[this->counter][n])) {
+						patternIsAlreadyKnown = false;
+					}*/
 				}
 			}
 			if (!patternIsAlreadyKnown) {
