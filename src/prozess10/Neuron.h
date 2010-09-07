@@ -13,6 +13,7 @@ class Neuron {
 	  void drainActivation (void);
 	  Layer *layer;
 	  vector <Neuron*> neighbors;
+	  Dendrite *outputLink;
 
 	public:
 	  //TDebug1 *debuginst;
@@ -43,6 +44,9 @@ class Neuron {
 	  Dendrite* newLink (Neuron *, int, int, float);
 	  Dendrite* newLink (Neuron *, float);
 	  Dendrite* newLink (Neuron *);
+	  Dendrite *newOutputLink(Neuron *);
+	  Dendrite *getOutputLink (void);
+	  Dendrite *setNewOutputLink (void);
 	  int countSynapses ();
 	  int countSynapsesOnAxons(void);
 	  int countMaxSynapsesOnAxons(void);
@@ -60,7 +64,7 @@ class Neuron {
 	  bool newNeighbor(Neuron *);
 	  bool isNeighborOf(Neuron *);
 	  bool hasNeighbors(void);
-	  void newOutput(void);
+	  Dendrite *newOutput(void);
 	  Layer *getLayer(void);
 	  int axonsRemove(Dendrite *);
 	  bool hasSameSuccessor(Neuron *);

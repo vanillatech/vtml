@@ -24,6 +24,7 @@ Neuron::Neuron (Layer *nLayer, int neuronType) {
 		  this->outputData = 0;
 		  this->blockActivation = 0;
 		  this->threshold = 0.5;
+		  this->outputLink = 0;
 }
 
 Neuron::~Neuron()
@@ -46,11 +47,11 @@ Dendrite* Neuron::newLink (Neuron *toNeuron, int ndelay, int countTotal, float n
 		  int g = axons.size();
 		  Dendrite *tempDend = new Dendrite(this->layer, nWeight);
 		  axons.push_back(tempDend);
-		  (*axons[g]).dendriteFrom = this;
-		  (*axons[g]).dendriteTo = toNeuron;
-		  (*axons[g]).synapses = 1;
+		  axons[g]->dendriteFrom = this;
+		  axons[g]->dendriteTo = toNeuron;
+		  axons[g]->synapses = 1;
 
-		  (*axons[g]).activationDelay = ndelay;
+		  axons[g]->activationDelay = ndelay;
 
 		  toNeuron->dendrites.push_back(axons[g]);
 
@@ -71,7 +72,62 @@ Dendrite* Neuron::newLink (Neuron *toNeuron, int ndelay, int countTotal, float n
 		  );	
 
 #endif
+		  toNeuron->getOutputLink ();
 		  return axons[g];
+}
+
+Dendrite* Neuron::newOutputLink (Neuron *toNeuron) {
+
+		  Dendrite *tempDend = new Dendrite(this->layer, globals.defaultWeight);
+		  tempDend->dendriteFrom = this;
+		  tempDend->dendriteTo = toNeuron;
+		  tempDend->synapses = 1;
+		  tempDend->activationDelay = 1;
+
+
+#ifdef BORLAND_GUI
+		  AnsiString captionID = toNeuron->id;
+		  captionID += " layer: ";
+		  //captionID += toNeuron->layer;
+		  toNeuron->debugCallingNode = SDIAppForm->addLink(captionID,this->debugCallingNode);
+		  Debug1->refreshTT();
+
+		  Debug1->ListBox1->Items->Insert(0,"NewLink: " + id + " to " + toNeuron->id);
+#else
+		  std::string captionID = toNeuron->id;
+		  callback->onCallback(
+			  new CallbackMsg<MSG_NEW_LINK>(
+					getLayer()->number, id, toNeuron->getLayer()->number, toNeuron->id
+			  )
+		  );	
+
+#endif
+		  return (tempDend);
+}
+
+Dendrite *Neuron::getOutputLink () {
+	if (this->outputLink != 0) {
+		return this->outputLink;
+	} else {
+		for (unsigned int c=0;c < this->dendrites.size();c++) {
+			if (this->dendrites[c]->dendriteFrom != 0) {
+				Dendrite *nTmp = this->dendrites[c]->dendriteFrom->getOutputLink();
+				if (nTmp != 0) {
+					this->outputLink = nTmp;
+					return nTmp;
+				}
+			} else {
+				//if calling neuron is an input neuron
+				this->setNewOutputLink ();
+			}
+		}
+	    return 0;
+	}
+}
+
+Dendrite *Neuron::setNewOutputLink () {
+	this->outputLink = this->newOutput();
+	return (this->outputLink);
 }
 
 int Neuron::countSynapses () {
@@ -191,6 +247,11 @@ void Neuron::fire (void) {
 						axons[n]->stimulate(weightToStimulate);
 					}
 					//this->activationQueue->schedActivation(&(*axons[n]),(*axons[n]).activationDelay);
+		  }
+		  //new handling of output neurons
+		  Dendrite *nOut = this->getOutputLink ();
+		  if (nOut != 0) {
+				nOut->stimulate(1.0f);
 		  }
 		  //only insert into rec.queue when fired twice within recoveryTime
 		  //--EXPERIMENTAL--
@@ -388,7 +449,7 @@ bool Neuron::isOutputNeuron (void) {
 	return false;
 }
 
-void Neuron::newOutput (void) {
+Dendrite *Neuron::newOutput (void) {
 
 	//create new Neuron type=input
 	Neuron *newNeuron = new Neuron(this->getLayer()->getHigher(), 0);
@@ -410,7 +471,8 @@ void Neuron::newOutput (void) {
 #endif
 
 	//link new Neuron to current Neuron's axon
-	this->newLink(newNeuron);
+	Dendrite *tDend = this->newOutputLink(newNeuron);
+	return (tDend);
 }
 
 Layer *Neuron::getLayer (void) {

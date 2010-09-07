@@ -66,9 +66,9 @@ void ActivationQueue::activate (void) {
 			//if (d->dendriteFrom != 0) {
 				//only add output if neuron is not an input neuron
 				//only if activated Neuron had not been inhibited before
-				if (!d->dendriteFrom->isOutputNeuron() && d->dendriteFrom->type == 1 && !d->dendriteTo->isInhibited()) {
+				/*if (!d->dendriteFrom->isOutputNeuron() && d->dendriteFrom->type == 1 && !d->dendriteTo->isInhibited()) {
 					d->dendriteFrom->newOutput();
-				}
+				}*/
 			//}
 
 		}
