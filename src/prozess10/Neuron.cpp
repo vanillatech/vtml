@@ -72,7 +72,7 @@ Dendrite* Neuron::newLink (Neuron *toNeuron, int ndelay, int countTotal, float n
 		  );	
 
 #endif
-		  toNeuron->getOutputLink ();
+		  
 		  return axons[g];
 }
 
@@ -117,11 +117,11 @@ Dendrite *Neuron::getOutputLink () {
 					return nTmp;
 				}
 			} else {
-				//if calling neuron is an input neuron
-				this->setNewOutputLink ();
+				//if neuron is an input neuron
+				return 0;
 			}
 		}
-	    return 0;
+	    return this->setNewOutputLink ();
 	}
 }
 

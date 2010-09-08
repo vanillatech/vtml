@@ -108,6 +108,7 @@ void RecoveryQueue::checkNewPattern() {
 					if (q->axons.size() == 0) {
 						Neuron *nNew = new Neuron(this->layer,1);
 						Dendrite *d = q->newLink(nNew);
+						nNew->getOutputLink ();
 						//d->stimulate();
 					}
 					
@@ -136,6 +137,7 @@ void RecoveryQueue::checkNewPattern() {
 						patternIsAlreadyKnown = false;
 					}*/
 				}
+				if (tmpNeuron != 0) tmpNeuron->getOutputLink ();
 			}
 			/*if (!patternIsAlreadyKnown) {
 				//new neuron in same layer, type intermediate.
