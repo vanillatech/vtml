@@ -88,6 +88,34 @@ void RecoveryQueue::insert(Neuron *neuron) {
 }
 
 void RecoveryQueue::checkNewPattern() {
+		if (this->countItemsLastStep() > 0) {
+			unsigned int ls = this->getStep(-1);
+			unsigned int cs = this->getStep(0);
+			for (unsigned int n=0;n<queue[ls].size();n++ ) {
+				unsigned int foundSuccessor = 0;
+				for (unsigned int m=0;m<queue[cs].size();m++ ) {
+					if (queue[cs][m]->type == 0) {
+						//is input neuron
+					} else if (!queue[cs][m]->containsDendrite(queue[ls][n])) {
+						//neuron in current step has no connection to neuron in last step yet
+						queue[ls][n]->newLink(queue[cs][m]);
+						foundSuccessor = 1;
+					} else {
+						foundSuccessor = 1;
+					}
+				//- neuronen in letztem schritt verbinden zu neuem neuron in aktuellem schritt
+				//- wenn stärke zum Aktivieren nicht ausreichte oder noch kein Nachfolger vorhanden, neues Neuron
+
+
+				//todo2:- activate() aktiviert das nachfolgende neuron nach folgender formel:
+				//(stärke der aktivierenden synapsen)/(gesamtstärke synapsen an zu aktivierendem neuron)
+				}
+				if (foundSuccessor != 1) {
+					queue[ls][n]->newLink(new Neuron(this->layer,1));		
+				}
+			}
+		}
+		/*
 	//Associate everything in recQueue with a new neuron
 		//check if there are input neurons in current step.
 		if ( this->countInputNeuronsCurrentStep() > 0) {
@@ -95,10 +123,7 @@ void RecoveryQueue::checkNewPattern() {
 			//all of the neurons in current time step have a connection to same
 			//successor.
 			bool patternIsAlreadyKnown = true;
-			//if there is only one neuron without axon in current step
-			/*if (queue[this->counter].size() == 1)
-				if (queue[this->counter][0]->axons.size() == 0)
-					patternIsAlreadyKnown = false;*/
+			
 			for (unsigned int n=0;n<queue[this->counter].size();n++ ) {
 				Neuron *tmpNeuron = 0;
 				for (unsigned int g=0;g<queue[this->counter].size();g++ ) {
@@ -132,29 +157,15 @@ void RecoveryQueue::checkNewPattern() {
 						q2->newLink(tmpNeuron);
 
 					}
-					//check for neighborhood connection 
-					/*if (!queue[this->counter][g]->isNeighborOf (queue[this->counter][n])) {
-						patternIsAlreadyKnown = false;
-					}*/
+					
 				}
 				if (tmpNeuron != 0) tmpNeuron->getOutputLink ();
 			}
-			/*if (!patternIsAlreadyKnown) {
-				//new neuron in same layer, type intermediate.
-				Neuron *newNeuron = new Neuron(this->layer,1);
-				Dendrite *newDend;
-				for (unsigned int n=0;n<queue[this->counter].size();n++ ) {
-
-					newDend = queue[this->counter][n]->newLink(newNeuron);
-					newDend->stimulate(0);
-				}
-			}*/
+			
 			
 		}
 
-		/*if (recQueue.capacity() < recQueue.size() + 3) {
-			recQueue.reserve(recQueue.size()+3);
-		} */
+		*/
 }
 
 void RecoveryQueue::recover(void) {

@@ -109,17 +109,19 @@ Dendrite *Neuron::getOutputLink () {
 	if (this->outputLink != 0) {
 		return this->outputLink;
 	} else {
+		//check if inputneuron
+		if (this->type == 0) return (0);
 		for (unsigned int c=0;c < this->dendrites.size();c++) {
-			if (this->dendrites[c]->dendriteFrom != 0) {
+			if (this->dendrites[c]->dendriteFrom != 0 && this->type == 1) {
 				Dendrite *nTmp = this->dendrites[c]->dendriteFrom->getOutputLink();
 				if (nTmp != 0) {
 					this->outputLink = nTmp;
 					return nTmp;
 				}
-			} else {
-				//if neuron is an input neuron
+			} /*else {
+				//if neuron has an invalid dendrite
 				return 0;
-			}
+			}*/
 		}
 	    return this->setNewOutputLink ();
 	}
@@ -220,7 +222,7 @@ void Neuron::fire (void) {
 
 					} else {
 					  //WTA: Winner Takes All - inhibit
-					  //(*dendrites[n]).dendriteFrom->inhibit();
+					  //dendrites[n]->dendriteFrom->inhibit(true);
 						
 					}
 					//(*dendrites[n]).synapses--;
@@ -249,10 +251,10 @@ void Neuron::fire (void) {
 					//this->activationQueue->schedActivation(&(*axons[n]),(*axons[n]).activationDelay);
 		  }
 		  //new handling of output neurons
-		  Dendrite *nOut = this->getOutputLink ();
+		  /*Dendrite *nOut = this->getOutputLink ();
 		  if (nOut != 0) {
 				nOut->stimulate(1.0f);
-		  }
+		  }*/
 		  //only insert into rec.queue when fired twice within recoveryTime
 		  //--EXPERIMENTAL--
 		  //if (this->lastfired + recoveryTime > stepCounter) {
