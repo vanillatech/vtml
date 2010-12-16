@@ -107,7 +107,6 @@ void RecoveryQueue::checkNewPattern() {
 					queue[ls][n]->newLink(new Neuron(this->layer,1));
 				}
 				
-				//foundSuccessor = 0;
 				//now check again and connect neuron in ls to all fired neurons in cs			
 				for (unsigned int m=0;m<queue[cs].size();m++ ) {
 					if (queue[cs][m]->type == 0) {
@@ -115,17 +114,11 @@ void RecoveryQueue::checkNewPattern() {
 					} else if (!queue[cs][m]->containsDendrite(queue[ls][n])) {
 						//neuron in current step has no connection to neuron in last step yet
 						queue[ls][n]->newLink(queue[cs][m]);
-						//foundSuccessor = 1;
-					} /*else {
-						foundSuccessor = 1;
-					}*/
+					} 
 				
 				//todo2:- activate() aktiviert das nachfolgende neuron nach folgender formel:
 				//(stärke der aktivierenden synapsen)/(gesamtstärke synapsen an zu aktivierendem neuron)
 				}
-				/*if (foundSuccessor != 1) {
-					queue[ls][n]->newLink(new Neuron(this->layer,1));		
-				}*/
 			}
 		}
 		/*
