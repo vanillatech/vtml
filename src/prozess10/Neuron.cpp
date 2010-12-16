@@ -235,6 +235,7 @@ void Neuron::fire (void) {
 		  for (unsigned int n=0;n<axons.size();n++ ) {
 					float weightToStimulate = 0.0f;
 					
+					float totalDWeight = axons[n]->dendriteTo->getDendritesWeight();
 					float aWeight = axons[n]->getWeight();
 					if (axons[n]->dendriteTo->type==0) {
 						//if subsequent neuron is an input neuron we'll activate this with 1
@@ -246,6 +247,7 @@ void Neuron::fire (void) {
 						//wFactor: 'oldest'/strongest Dendrite will get most attention
 						float wFactor = float(axons[n]->synapses) / this->countMaxSynapsesOnAxons();
 						weightToStimulate = aWeight * aWeight / totalWeight * wFactor;
+						//weightToStimulate = aWeight * aWeight / totalWeight * wFactor/totalDWeight;
 						axons[n]->stimulate(weightToStimulate);
 					}
 					//this->activationQueue->schedActivation(&(*axons[n]),(*axons[n]).activationDelay);
@@ -291,6 +293,14 @@ float Neuron::getAxonsWeight (void) {
 	float totalWeight = 0;
 	for (unsigned int n=0;n<axons.size();n++ ) {
 		totalWeight += axons[n]->getWeight();
+	}
+	return totalWeight;
+}
+
+float Neuron::getDendritesWeight (void) {
+	float totalWeight = 0;
+	for (unsigned int n=0;n<dendrites.size();n++ ) {
+		totalWeight += dendrites[n]->getWeight();
 	}
 	return totalWeight;
 }

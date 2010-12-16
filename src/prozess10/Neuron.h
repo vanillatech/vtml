@@ -55,6 +55,7 @@ class Neuron {
 	  void predictNext (void);
 	  void propagateDown(int);
 	  float getAxonsWeight(void);
+	  float getDendritesWeight(void);
 	  int checkActivation (void);
 	  void inhibit (void);
 	  void inhibit (bool);
