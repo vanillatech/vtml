@@ -109,21 +109,25 @@ Dendrite *Neuron::getOutputLink () {
 	if (this->outputLink != 0) {
 		return this->outputLink;
 	} else {
+		//return(0);
 		//check if inputneuron
-		if (this->type == 0) return (0);
-		for (unsigned int c=0;c < this->dendrites.size();c++) {
+		//if (this->type == 0) return (0);
+		/*for (unsigned int c=0;c < this->dendrites.size();c++) {
 			if (this->dendrites[c]->dendriteFrom != 0 && this->type == 1) {
 				Dendrite *nTmp = this->dendrites[c]->dendriteFrom->getOutputLink();
 				if (nTmp != 0) {
 					this->outputLink = nTmp;
 					return nTmp;
 				}
-			} /*else {
-				//if neuron has an invalid dendrite
-				return 0;
-			}*/
-		}
+			} 
+		}*/
 	    return this->setNewOutputLink ();
+	}
+}
+
+void Neuron::activateOutputLink () {
+	if (this->outputLink != 0) {
+		this->outputLink->stimulate(1.0f);
 	}
 }
 
@@ -257,6 +261,7 @@ void Neuron::fire (void) {
 		  if (nOut != 0) {
 				nOut->stimulate(1.0f);
 		  }*/
+		  this->activateOutputLink();
 		  //only insert into rec.queue when fired twice within recoveryTime
 		  //--EXPERIMENTAL--
 		  //if (this->lastfired + recoveryTime > stepCounter) {

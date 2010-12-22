@@ -108,7 +108,8 @@ void RecoveryQueue::checkNewPattern() {
 						//is input neuron
 						queue[ls][n]->newLink(new Neuron(this->layer,1));
 					} else {
-						queue[ls][n]->newLink(new Neuron(this->layer->getHigher(),0));
+						//queue[ls][n]->newLink(new Neuron(this->layer->getHigher(),0));
+						queue[ls][n]->getOutputLink();
 					}
 				}
 				
@@ -126,7 +127,57 @@ void RecoveryQueue::checkNewPattern() {
 				}
 			}
 		}
-		
+		/*
+	//Associate everything in recQueue with a new neuron
+		//check if there are input neurons in current step.
+		if ( this->countInputNeuronsCurrentStep() > 0) {
+			//check if there is a pattern not yet known. Means: check if
+			//all of the neurons in current time step have a connection to same
+			//successor.
+			bool patternIsAlreadyKnown = true;
+			
+			for (unsigned int n=0;n<queue[this->counter].size();n++ ) {
+				Neuron *tmpNeuron = 0;
+				for (unsigned int g=0;g<queue[this->counter].size();g++ ) {
+					Neuron *q = queue[this->counter][n];
+					Neuron *q2 = queue[this->counter][g];
+					//if a neuron has no successor yet, insert one and activate
+					if (q->axons.size() == 0) {
+						Neuron *nNew = new Neuron(this->layer,1);
+						Dendrite *d = q->newLink(nNew);
+						nNew->getOutputLink ();
+						//d->stimulate();
+					}
+					
+				
+					//if a (newly created) intermediate neuron has no neighbors yet, 
+					//link it to all input neurons that have recently been fired.
+					if (!q2->hasNeighbors() && q2->type == 1) {
+						for (unsigned int m=0;m<queue[this->counter].size();m++ ) {
+							if (queue[this->counter][m]->type == 0 && (g) != m)
+								queue[this->counter][m]->newNeighbor(q2);
+						}
+					}
+					//if a neuron is located next to another neuron and both neurons don't synapse on a commmon successor we insert one
+					
+					if (q->isNeighborOf (q2) && !q->hasSameSuccessor(q2)) {
+						//patternIsAlreadyKnown = false;
+						if (tmpNeuron == 0) {
+							tmpNeuron = new Neuron(this->layer,1);
+							q->newLink(tmpNeuron);
+						}
+						q2->newLink(tmpNeuron);
+
+					}
+					
+				}
+				if (tmpNeuron != 0) tmpNeuron->getOutputLink ();
+			}
+			
+			
+		}
+
+		*/
 }
 
 void RecoveryQueue::recover(void) {
