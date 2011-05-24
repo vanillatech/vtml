@@ -114,7 +114,7 @@ void RecoveryQueue::checkNewPattern() {
 				}
 				
 				//now check again and connect neuron in ls to all fired neurons in cs			
-				for (unsigned int m=0;m<queue[cs].size();m++ ) {
+				/*for (unsigned int m=0;m<queue[cs].size();m++ ) {
 					if (queue[cs][m]->type == 0) {
 						//is input neuron
 					} else if (!queue[cs][m]->containsDendrite(queue[ls][n])) {
@@ -124,7 +124,7 @@ void RecoveryQueue::checkNewPattern() {
 				
 				//todo2:- activate() aktiviert das nachfolgende neuron nach folgender formel:
 				//(stärke der aktivierenden synapsen)/(gesamtstärke synapsen an zu aktivierendem neuron)
-				}
+				}*/
 			}
 		}
 		/*
