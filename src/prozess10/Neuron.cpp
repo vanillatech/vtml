@@ -23,7 +23,7 @@ Neuron::Neuron (Layer *nLayer, int neuronType) {
 		  this->id = buf;
 		  this->outputData = 0;
 		  this->blockActivation = 0;
-		  this->threshold = 0.5;
+		  this->threshold = 0.4;
 		  this->outputLink = 0;
 }
 
@@ -284,7 +284,7 @@ void Neuron::fire (void) {
 			while ((n = this->layer->recQueue->getNext()) != 0) {
 				if (this->type == 1) {
 					if (!this->containsDendrite(n)) {
-						n->newLink(this,0.0f);
+						n->newLink(this,0.1f);
 					}
 				}
 			}
