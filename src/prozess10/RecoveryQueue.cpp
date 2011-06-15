@@ -110,6 +110,7 @@ void RecoveryQueue::checkNewPattern() {
 					} else {
 						//queue[ls][n]->newLink(new Neuron(this->layer->getHigher(),0));
 						queue[ls][n]->getOutputLink();
+						queue[ls][n]->activateOutputLink();
 					}
 				}
 				

@@ -261,7 +261,8 @@ void Neuron::fire (void) {
 		  if (nOut != 0) {
 				nOut->stimulate(1.0f);
 		  }*/
-		  this->activateOutputLink();
+		  //activateoutput now with recoveryqueue!
+		  //this->activateOutputLink();
 		  //only insert into rec.queue when fired twice within recoveryTime
 		  //--EXPERIMENTAL--
 		  //if (this->lastfired + recoveryTime > stepCounter) {
