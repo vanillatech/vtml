@@ -46,6 +46,7 @@ class Neuron {
 	  Dendrite* newLink (Neuron *);
 	  Dendrite *newOutputLink(Neuron *);
 	  Dendrite *getOutputLink (void);
+	  Dendrite *getStrongestAxon (void);
 	  Dendrite *setNewOutputLink (void);
 	  void activateOutputLink (void);
 	  int countSynapses ();

@@ -194,14 +194,8 @@ int Neuron::axonsRemove(Dendrite* dent) {
 
 void Neuron::fire (void) {
 
-#ifdef BORLAND_GUI
-          if (this->outputData != 0) {
-			SDIAppForm->Label1->Caption = SDIAppForm->Label1->Caption + this->outputData;
-		  }
-		  Debug1->ListBox1->Items->Insert(0,"Neuron fired: " + id + " ActVal: " + activationVal );
-#else
+
 		callback->onCallback(new CallbackMsg<MSG_NEURON_FIRE>(getLayer()->number, id, (float)activationVal));
-#endif
 
 		  this->activationVal = 0;
 		  this->lastfired = this->layer->step;
@@ -276,9 +270,9 @@ void Neuron::fire (void) {
 		  } */
 		  this->layer->recQueue->insert(this);
 		  //this->predictNext();
-		  /*if (this->layer > 0) {
+		  if (this->type == 0 && this->layer->number != 0) {
 			  this->propagateDown(0);
-		  } */
+		  } 
 		  //look what neurons were fired in current layer in last step and connect them to this neuron
 		  if (this->layer->recQueue->setFocusStep(-1) != -1) {
 			Neuron *n;
@@ -311,24 +305,13 @@ float Neuron::getDendritesWeight (void) {
 	return totalWeight;
 }
 
-void Neuron::predictNext(void) {
-
-#ifdef BORLAND_GUI
-	Debug1->ListBox1->Items->Insert(0,"PredictNext: " + this->id );
-#else
-	callback->onCallback(new CallbackMsg<MSG_PREDICT_NEXT>(getLayer()->number, id));
-#endif
-
-	//0.0.50: select strongest axon
+Dendrite *Neuron::getStrongestAxon(void) {
+//0.0.50: select strongest axon
 	Dendrite *strongestAxon = NULL;
 	for (unsigned int g=0;g<this->axons.size() ;g++ ) {
 		if (g==0 && this->axons[0] != 0) strongestAxon = this->axons[0];
 		if (this->axons[g] != 0) {
 
-#ifdef BORLAND_GUI
-			AnsiString d = this->axons[g]->dendriteFrom->id;
-			AnsiString e = this->axons[g]->dendriteTo->id;
-#endif
 			//a is actually wrong! will only cause to count the lastfired axon to be used for calculation.
 			double a, b;
 			if (strongestAxon->dendriteTo->countSynapses() > 0) {
@@ -338,12 +321,24 @@ void Neuron::predictNext(void) {
 				b = this->axons[g]->synapses / double(this->axons[g]->dendriteTo->countSynapses());
 			} else b = 0;
 			if (a < b) {
-				strongestAxon = this->axons[g];
+				return this->axons[g];
 			}
 		}
 	}
 	//--0.0.50
+	return strongestAxon;
+}
 
+void Neuron::predictNext(void) {
+
+#ifdef BORLAND_GUI
+	Debug1->ListBox1->Items->Insert(0,"PredictNext: " + this->id );
+#else
+	callback->onCallback(new CallbackMsg<MSG_PREDICT_NEXT>(getLayer()->number, id));
+#endif
+
+	
+	Dendrite *strongestAxon = this->getStrongestAxon();
 	if (strongestAxon) {
 		if (strongestAxon->dendriteTo != 0) {
 
@@ -370,19 +365,17 @@ void Neuron::predictNext(void) {
 void Neuron::propagateDown(int timeOffset) {
 	//int toutput = int(timeOffset);
 
-#ifdef BORLAND_GUI
-	Debug1->ListBox1->Items->Insert(0,"PropagateDown: " + this->id + " timeoffset: " + AnsiString(toutput) );
-#else
-	callback->onCallback(new CallbackMsg<MSG_PROPAGATE_DOWN>(getLayer()->number, id, timeOffset));
-#endif
 
+	callback->onCallback(new CallbackMsg<MSG_PROPAGATE_DOWN>(getLayer()->number, id, timeOffset));
+
+	
 	if (this->outputData != 0) {
-			this->layer->aqueue->schedActivation(&(*dendrites[0]), timeOffset);
+			this->layer->aqueue->schedActivation(dendrites[0], timeOffset);
 			//SDIAppForm->Label1->Caption = SDIAppForm->Label1->Caption + this->outputData;
 			//this->fire();
 	}
 	int lastDelay = 0;
-	for (unsigned int m=this->dendrites.size() - 1 ; m>0 ; m--) {
+	for (int m=this->dendrites.size() - 1 ; m>0 ; m--) {
 
 		if (this->dendrites[m]->dendriteFrom != 0) {
 
