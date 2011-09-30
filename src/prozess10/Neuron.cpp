@@ -192,43 +192,9 @@ int Neuron::axonsRemove(Dendrite* dent) {
 	return 0;
 }
 
-void Neuron::fire (void) {
-
-
-		callback->onCallback(new CallbackMsg<MSG_NEURON_FIRE>(getLayer()->number, id, (float)activationVal));
-
-		  this->activationVal = 0;
-		  this->lastfired = this->layer->step;
-          // Neuron abtrennen wenn keine Synapsen mehr 0.0.67
-		  //if (this->layer > 0) {
-		  for (unsigned int n=0;n<dendrites.size();n++) {
-				if (dendrites[n] != 0) {
-                //learn
-				dendrites[n]->changeWeights();
-				  if ((*dendrites[n]).dendriteFrom != 0)
-
-					if ((*dendrites[n]).synapses == 0) {
-						/* If enabled again please be sure that there is not dendrite
-						// in the activation queue anymore. otherwise segfaults.
-						int rettest = (*dendrites[n]).dendriteFrom->axonsRemove(dendrites[n]);
-
-						delete dendrites[n];
-						dendrites.erase(dendrites.begin()+n);*/
-						//(*dendrites[n][m]).dendriteFrom = 0;
-						//(*dendrites[n][m]).dendriteTo = 0;
-
-
-					} else {
-					  //WTA: Winner Takes All - inhibit
-					  //dendrites[n]->dendriteFrom->inhibit(true);
-						
-					}
-					//(*dendrites[n]).synapses--;
-				}
-		  }
-		  //}
+void Neuron::activateSuccessors(void) {
 		  float totalWeight = this->getAxonsWeight();
-		  //int totalSynapses = this->countSynapsesOnAxons();
+		  
 		  //activate parent neurons
 		  for (unsigned int n=0;n<axons.size();n++ ) {
 					float weightToStimulate = 0.0f;
@@ -245,35 +211,17 @@ void Neuron::fire (void) {
 						//wFactor: 'oldest'/strongest Dendrite will get most attention
 						float wFactor = float(axons[n]->synapses) / this->countMaxSynapsesOnAxons();
 						weightToStimulate = aWeight * aWeight / totalWeight * wFactor;
-						//weightToStimulate = aWeight * aWeight / totalWeight * wFactor/totalDWeight;
+						
 						axons[n]->stimulate(weightToStimulate);
 					}
-					//this->activationQueue->schedActivation(&(*axons[n]),(*axons[n]).activationDelay);
+					
 		  }
-		  //new handling of output neurons
-		  /*Dendrite *nOut = this->getOutputLink ();
-		  if (nOut != 0) {
-				nOut->stimulate(1.0f);
-		  }*/
-		  //activateoutput now with recoveryqueue!
-		  //this->activateOutputLink();
-		  //only insert into rec.queue when fired twice within recoveryTime
-		  //--EXPERIMENTAL--
-		  //if (this->lastfired + recoveryTime > stepCounter) {
 
-		  //delete fired pattern from recoveryqueue
-		  /* -- Don't do this anymore 0.2.02
-		  if (this->layer >= 1) {
+}
 
-					  (*recoveryQueue)[this->layer - 1].deletePattern(this,0,0);
+void Neuron::connectFromLastStep(void) {
 
-		  } */
-		  this->layer->recQueue->insert(this);
-		  //this->predictNext();
-		  if (this->type == 0 && this->layer->number != 0) {
-			  this->propagateDown(0);
-		  } 
-		  //look what neurons were fired in current layer in last step and connect them to this neuron
+	//look what neurons were fired in current layer in last step and connect them to this neuron
 		  if (this->layer->recQueue->setFocusStep(-1) != -1) {
 			Neuron *n;
 			while ((n = this->layer->recQueue->getNext()) != 0) {
@@ -284,9 +232,34 @@ void Neuron::fire (void) {
 				}
 			}
 		  }
+
+}
+
+void Neuron::fire (void) {
+
+		callback->onCallback(new CallbackMsg<MSG_NEURON_FIRE>(getLayer()->number, id, (float)activationVal));
+
+		  this->activationVal = 0;
+		  this->lastfired = this->layer->step;
+          
+		  for (unsigned int n=0;n<dendrites.size();n++) {
+				if (dendrites[n] != 0) {
+                //learn
+					dendrites[n]->changeWeights();
+				}
+		  }
+		 
+		  this->activateSuccessors();
+		  
+		  this->layer->recQueue->insert(this);
+		  
+		  if (this->layer->number != 0) {
+			  this->predictNext();
+			  //this->propagateDown(0);
+		  } 
+		  this->connectFromLastStep();
 		  globals.lastFiredNeuron = this;
 
-		  //} *
 }
 
 float Neuron::getAxonsWeight (void) {
@@ -331,31 +304,27 @@ Dendrite *Neuron::getStrongestAxon(void) {
 
 void Neuron::predictNext(void) {
 
-#ifdef BORLAND_GUI
-	Debug1->ListBox1->Items->Insert(0,"PredictNext: " + this->id );
-#else
-	callback->onCallback(new CallbackMsg<MSG_PREDICT_NEXT>(getLayer()->number, id));
-#endif
+
+	//callback->onCallback(new CallbackMsg<MSG_PREDICT_NEXT>(getLayer()->number, id));
+
 
 	
 	Dendrite *strongestAxon = this->getStrongestAxon();
 	if (strongestAxon) {
 		if (strongestAxon->dendriteTo != 0) {
-
+			callback->onCallback(new CallbackMsg<MSG_PREDICT_NEXT>(strongestAxon->dendriteTo->getLayer()->number, strongestAxon->dendriteTo->id));
 			for (unsigned int n=0;n<strongestAxon->dendriteTo->dendrites.size() ;n++ ) {
 				if (strongestAxon->dendriteTo->dendrites[n]->dendriteFrom != 0) {
-						int timeOffset = strongestAxon->activationDelay;
-						timeOffset -= strongestAxon->dendriteTo->dendrites[n]->activationDelay;
-						if (timeOffset > 0) {
-							int tOffset = 0;
-							strongestAxon->dendriteTo->dendrites[n]->dendriteFrom->propagateDown(tOffset);
+					if (strongestAxon != strongestAxon->dendriteTo->dendrites[n]) {
+						Neuron* toNeuron = strongestAxon->dendriteTo->dendrites[n]->dendriteFrom;
+						
+						if (toNeuron->type == 0) {
+							toNeuron->propagateDown(0);
+							
 						}
-				}
-				/*if (this->axons[0]->dendriteTo->dendrites[m][n] == this->axons[0]) {
-					if (this->axons[0]->dendriteTo->dendrites[m][n+1]->dendriteFrom != 0) {
-						this->axons[0]->dendriteTo->dendrites[n+1]->dendriteFrom->propagateDown();
 					}
-				}*/
+				}
+				
 
 			}
 		}
@@ -367,22 +336,27 @@ void Neuron::propagateDown(int timeOffset) {
 
 
 	callback->onCallback(new CallbackMsg<MSG_PROPAGATE_DOWN>(getLayer()->number, id, timeOffset));
-
+	if (this->getLayer()->number == 1) {
+		if (this->type == 0) {
+			this->fire();
+		}
+	}
 	
-	if (this->outputData != 0) {
-			this->layer->aqueue->schedActivation(dendrites[0], timeOffset);
+	//if (this->outputData != 0) {
+			//this->dendrites[0]->dendriteFrom->getLayer()->aqueue->schedActivation(dendrites[0], timeOffset);
 			//SDIAppForm->Label1->Caption = SDIAppForm->Label1->Caption + this->outputData;
 			//this->fire();
-	}
-	int lastDelay = 0;
+	//}
+	//int lastDelay = 0;
 	for (int m=this->dendrites.size() - 1 ; m>0 ; m--) {
 
 		if (this->dendrites[m]->dendriteFrom != 0) {
 
-			if (lastDelay != this->dendrites[m]->activationDelay) {
+			/*if (lastDelay != this->dendrites[m]->activationDelay) {
 				timeOffset += (this->dendrites[m]->activationDelay - lastDelay);
-			}
-			this->dendrites[m]->dendriteFrom->propagateDown(timeOffset);
+			}*/
+			this->dendrites[m]->dendriteFrom->getLayer()->aqueue->schedActivation(dendrites[m], timeOffset);
+			//this->dendrites[m]->dendriteFrom->propagateDown(timeOffset);
 		}
 
 	}

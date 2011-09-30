@@ -54,6 +54,8 @@ class Neuron {
 	  int countMaxSynapsesOnAxons(void);
 	  void activate (double);
 	  void fire (void);
+	  void connectFromLastStep (void);
+	  void activateSuccessors (void);
 	  void predictNext (void);
 	  void propagateDown(int);
 	  float getAxonsWeight(void);
