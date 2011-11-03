@@ -109,7 +109,7 @@ int main(array<System::String ^> ^args)
 	Application::SetCompatibleTextRenderingDefault(false); 
 
 	Sense* sense = new Sense(globals.inputLayer);
-
+	
 	Form1^ form = gcnew Form1(sense);
 
 	Managed_Delegate_Wrapper^ w = gcnew Managed_Delegate_Wrapper;
@@ -120,7 +120,7 @@ int main(array<System::String ^> ^args)
 	//Unmanaged_Wrapper1 u;
 	Marshal::StructureToPtr(w, (System::IntPtr)&u, false);
 	callback = new Callback(u.func);
-
+	
 	// Create the main window and run it
 	Application::Run(form);
 	delete callback;

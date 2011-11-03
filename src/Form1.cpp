@@ -95,18 +95,27 @@ void Form1::drawLogItem(int messageType, const std::string& msg)
 	richTextBox1->SelectionLength = 0;
 }
 
+void Form1::OutputText(char *txt) {
+	textBox2->Text;
+}
+
 void Form1::OnCallback(Odin::ICallbackMsg* msg)
 {
 	if (!msg)
 		return;
 
+	int type = msg->type();
 	int layer = msg->layer();
-	if (layer <= 0 || layer > (int)m_log->size()) {
+	if (type == MSG_NEW_OUTPUTTEXT) {
+		textBox2->Text = msg->message();
+		delete msg;
+		return;
+	} else if (layer <= 0 || layer > (int)m_log->size()) {
 		delete msg;
 		return;
 	}
 
-	int type = msg->type();
+	
 	std::string text = msg->message();
 	(*m_log)[layer-1].push_back(std::make_pair(type, text));
 

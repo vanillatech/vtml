@@ -37,6 +37,10 @@ struct ICallbackMsg
 		m_type(_type),
 		m_layer(_layer)
 	{}
+
+	ICallbackMsg(int _type) : 
+		m_type(_type)
+	{}
 	
 	private:
 		int m_type;
@@ -58,7 +62,8 @@ enum ECallbackTypes {
 	MSG_PROPAGATE_DOWN,
 	MSG_INHIBIT,
 	MSG_DELETE_FROM_RQ,
-	MSG_NEW_OUTPUT
+	MSG_NEW_OUTPUT,
+	MSG_NEW_OUTPUTTEXT
 };
 
 /*Debug1->ListBox1->Items->Insert
@@ -75,6 +80,17 @@ template <> struct CallbackMsg<MSG_STEP_COUNTER> : ICallbackMsg
 	virtual std::string message() const;
 
 	int step;
+};
+
+template <> struct CallbackMsg<MSG_NEW_OUTPUTTEXT> : ICallbackMsg
+{
+	CallbackMsg(const std::string& otext) : 
+		ICallbackMsg(MSG_NEW_OUTPUTTEXT)
+	{}
+
+	virtual std::string message() const;
+
+	std::string otext;
 };
 
 template <> struct CallbackMsg<MSG_NEW_INPUT_NEURON> : ICallbackMsg

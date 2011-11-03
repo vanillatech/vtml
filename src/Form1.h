@@ -62,6 +62,7 @@ namespace srcnew1 {
 	private: System::Windows::Forms::TreeView^  treeView1;
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::ComboBox^  comboBox1;
+	public: System::Windows::Forms::TextBox^  textBox2;
 
 
 	protected: 
@@ -82,10 +83,12 @@ namespace srcnew1 {
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->splitContainer1 = (gcnew System::Windows::Forms::SplitContainer());
+			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
 			this->richTextBox1 = (gcnew System::Windows::Forms::RichTextBox());
 			this->treeView1 = (gcnew System::Windows::Forms::TreeView());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->splitContainer1))->BeginInit();
 			this->splitContainer1->Panel1->SuspendLayout();
 			this->splitContainer1->Panel2->SuspendLayout();
 			this->splitContainer1->SuspendLayout();
@@ -112,7 +115,6 @@ namespace srcnew1 {
 			this->textBox1->Name = L"textBox1";
 			this->textBox1->Size = System::Drawing::Size(379, 22);
 			this->textBox1->TabIndex = 1;
-			this->textBox1->KeyPress += gcnew KeyPressEventHandler(this, &Form1::textBox1_Key);
 			// 
 			// splitContainer1
 			// 
@@ -125,6 +127,7 @@ namespace srcnew1 {
 			// 
 			// splitContainer1.Panel1
 			// 
+			this->splitContainer1->Panel1->Controls->Add(this->textBox2);
 			this->splitContainer1->Panel1->Controls->Add(this->richTextBox1);
 			// 
 			// splitContainer1.Panel2
@@ -134,6 +137,14 @@ namespace srcnew1 {
 			this->splitContainer1->SplitterDistance = 535;
 			this->splitContainer1->TabIndex = 2;
 			// 
+			// textBox2
+			// 
+			this->textBox2->Enabled = false;
+			this->textBox2->Location = System::Drawing::Point(4, 0);
+			this->textBox2->Name = L"textBox2";
+			this->textBox2->Size = System::Drawing::Size(553, 20);
+			this->textBox2->TabIndex = 1;
+			// 
 			// richTextBox1
 			// 
 			this->richTextBox1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom) 
@@ -142,10 +153,10 @@ namespace srcnew1 {
 			this->richTextBox1->BackColor = System::Drawing::SystemColors::Window;
 			this->richTextBox1->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 9.75F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point, 
 				static_cast<System::Byte>(0)));
-			this->richTextBox1->Location = System::Drawing::Point(0, -4);
+			this->richTextBox1->Location = System::Drawing::Point(0, 33);
 			this->richTextBox1->Name = L"richTextBox1";
 			this->richTextBox1->ReadOnly = true;
-			this->richTextBox1->Size = System::Drawing::Size(557, 536);
+			this->richTextBox1->Size = System::Drawing::Size(557, 499);
 			this->richTextBox1->TabIndex = 0;
 			this->richTextBox1->Text = L"";
 			// 
@@ -199,7 +210,9 @@ namespace srcnew1 {
 			this->Text = L"Odin - Prozess10";
 			this->Load += gcnew System::EventHandler(this, &Form1::Form1_Load);
 			this->splitContainer1->Panel1->ResumeLayout(false);
+			this->splitContainer1->Panel1->PerformLayout();
 			this->splitContainer1->Panel2->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->splitContainer1))->EndInit();
 			this->splitContainer1->ResumeLayout(false);
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -209,7 +222,7 @@ namespace srcnew1 {
 
 public:
 	void OnCallback(Odin::ICallbackMsg* message);
-
+	void OutputText(char *txt);
 	//void OnCallback1(int code, const char* param1, const char* param2, const char* param3);
 
 private: 
