@@ -62,7 +62,7 @@ namespace srcnew1 {
 	private: System::Windows::Forms::TreeView^  treeView1;
 	private: System::Windows::Forms::Label^  label1;
 	private: System::Windows::Forms::ComboBox^  comboBox1;
-	public: System::Windows::Forms::TextBox^  textBox2;
+	private: System::Windows::Forms::TextBox^  textBox2;
 
 
 	protected: 
@@ -222,7 +222,7 @@ namespace srcnew1 {
 
 public:
 	void OnCallback(Odin::ICallbackMsg* message);
-	void OutputText(char *txt);
+	//void OutputText(char *txt);
 	//void OnCallback1(int code, const char* param1, const char* param2, const char* param3);
 
 private: 

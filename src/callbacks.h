@@ -84,13 +84,14 @@ template <> struct CallbackMsg<MSG_STEP_COUNTER> : ICallbackMsg
 
 template <> struct CallbackMsg<MSG_NEW_OUTPUTTEXT> : ICallbackMsg
 {
-	CallbackMsg(const std::string& otext) : 
-		ICallbackMsg(MSG_NEW_OUTPUTTEXT)
+	CallbackMsg(const std::string& _value) : 
+		ICallbackMsg(MSG_NEW_OUTPUTTEXT),
+			value(_value)
 	{}
 
 	virtual std::string message() const;
 
-	std::string otext;
+	std::string value;
 };
 
 template <> struct CallbackMsg<MSG_NEW_INPUT_NEURON> : ICallbackMsg

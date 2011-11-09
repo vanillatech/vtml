@@ -140,7 +140,7 @@ std::string CallbackMsg<MSG_NEW_OUTPUT>::message() const
 std::string CallbackMsg<MSG_NEW_OUTPUTTEXT>::message() const
 {
 	char b[BUF_SIZE];
-	sprintf_s(b, BUF_SIZE, "New Output from Neuron: %s to Neuron: %s", fromId.c_str(), toId.c_str());
+	sprintf_s(b, BUF_SIZE, "%s", value.c_str());
 	b[BUF_SIZE-1]=0;
 	return std::string(b);
 }

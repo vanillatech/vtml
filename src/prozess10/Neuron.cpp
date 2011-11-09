@@ -345,7 +345,10 @@ void Neuron::propagateDown(int timeOffset) {
 	if (this->outputData != 0) {
 		//form->OutputText(this->outputData);
 		//textBox2->Text = this->ouputData;
-		callback->onCallback(new CallbackMsg<MSG_NEW_OUTPUTTEXT>(this->outputData));
+		
+		std::string buf = "";
+		buf += this->outputData;
+		callback->onCallback(new CallbackMsg<MSG_NEW_OUTPUTTEXT>(buf));
 	}
 			//this->dendrites[0]->dendriteFrom->getLayer()->aqueue->schedActivation(dendrites[0], timeOffset);
 			//SDIAppForm->Label1->Caption = SDIAppForm->Label1->Caption + this->outputData;
