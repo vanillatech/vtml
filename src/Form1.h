@@ -115,6 +115,7 @@ namespace srcnew1 {
 			this->textBox1->Name = L"textBox1";
 			this->textBox1->Size = System::Drawing::Size(379, 22);
 			this->textBox1->TabIndex = 1;
+			this->textBox1->KeyPress += gcnew KeyPressEventHandler(this, &Form1::textBox1_Key);
 			// 
 			// splitContainer1
 			// 
