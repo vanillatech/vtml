@@ -19,4 +19,5 @@ class Sense {
 
 	void input (int c);
 	void nextStep (void);
+	void nextStep (bool);
 };

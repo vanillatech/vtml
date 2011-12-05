@@ -46,6 +46,12 @@ void Layer::newStep(void) {
 	callback->onCallback(new CallbackMsg<MSG_STEP_COUNTER>(number, step));
 #endif
 	this->aqueue->activate();
+	// if there is still something to do, do it
+	/*if (this->aqueue->layer->number == 0) {
+	if (!(this->aqueue->isEmpty())) {
+		this->newStep();
+	}
+	}*/
 }
 
 void Layer::setIdle(bool val) {

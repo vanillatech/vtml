@@ -140,3 +140,10 @@ void Sense::input (int c) {
 void Sense::nextStep (void) {
      this->layer->newStep();
 }
+
+void Sense::nextStep (bool doTillQueueEmpty) {
+     this->layer->newStep();
+	 while (!(this->layer->aqueue->isEmpty())) {
+		 this->layer->newStep();
+	 }
+}

@@ -307,8 +307,6 @@ void Neuron::predictNext(void) {
 
 	//callback->onCallback(new CallbackMsg<MSG_PREDICT_NEXT>(getLayer()->number, id));
 
-
-	
 	Dendrite *strongestAxon = this->getStrongestAxon();
 	if (strongestAxon) {
 		if (strongestAxon->dendriteTo != 0) {

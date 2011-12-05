@@ -111,7 +111,7 @@ void Form1::OnCallback(Odin::ICallbackMsg* msg)
 	if (type == MSG_NEW_OUTPUTTEXT) {
 		CallbackMsg<MSG_NEW_OUTPUTTEXT>* m = (CallbackMsg<MSG_NEW_OUTPUTTEXT>*)msg;
 		std::string val = m->value;
-		textBox2->Text = gcnew System::String(val.c_str());
+		textBox2->Text += gcnew System::String(val.c_str());
 		delete msg;
 		return;
 	} else if (layer <= 0 || layer > (int)m_log->size()) {
@@ -223,13 +223,15 @@ void Form1::onGo()
 	//	m_sense->init();
 	//	m_initialized = true;
 	//}
+	textBox2->Text = "";
 	System::String^ text = textBox1->Text;
 	for (int i=0; i<text->Length; ++i) {
 		m_sense->input(text[i] & 0xFF);
 		m_sense->nextStep();
 	}
-	m_sense->nextStep();
+	m_sense->nextStep(true);
 	textBox1->Text = "";
+	
 }
 
 }
