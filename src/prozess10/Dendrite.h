@@ -8,7 +8,8 @@ class Dendrite {
 	bool weightFrozen;
 	Neuron *dendriteFrom;
 	Neuron *dendriteTo;
-	int synapses;
+	int eSynapses;
+	int iSynapses;
 	unsigned int lastUsed;
 	//bool inhibitory;
 	int activationDelay;

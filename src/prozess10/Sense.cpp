@@ -88,7 +88,7 @@ void Sense::init(int c)
 		 //svn48: temporarily disable output neurons
 		 this->inputNeurons[c]->dendrites[0]->dendriteFrom = 0;
 		 //this->inputNeurons[c]->dendrites[0]->dendriteFrom = this->outputNeurons[c];
-		 this->inputNeurons[c]->dendrites[0]->synapses = 1;
+		 //this->inputNeurons[c]->dendrites[0]->synapses = 1;
 		 this->inputNeurons[c]->dendrites[0]->weightFrozen = true;
 		 //this->inputNeurons[c]->axons.push_back(new Dendrite());
 		 //this->inputNeurons[c]->axons[0]->dendriteTo = this->outputNeurons[c];

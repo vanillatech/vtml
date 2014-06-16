@@ -49,21 +49,13 @@ Dendrite* Neuron::newLink (Neuron *toNeuron, int ndelay, int countTotal, float n
 		  axons.push_back(tempDend);
 		  axons[g]->dendriteFrom = this;
 		  axons[g]->dendriteTo = toNeuron;
-		  axons[g]->synapses = 1;
+		  //axons[g]->eSynapses = 1;
 
 		  axons[g]->activationDelay = ndelay;
 
 		  toNeuron->dendrites.push_back(axons[g]);
 
-#ifdef BORLAND_GUI
-		  AnsiString captionID = toNeuron->id;
-		  captionID += " layer: ";
-		  //captionID += toNeuron->layer;
-		  toNeuron->debugCallingNode = SDIAppForm->addLink(captionID,this->debugCallingNode);
-		  Debug1->refreshTT();
-
-		  Debug1->ListBox1->Items->Insert(0,"NewLink: " + id + " to " + toNeuron->id);
-#else
+		  //debug
 		  std::string captionID = toNeuron->id;
 		  callback->onCallback(
 			  new CallbackMsg<MSG_NEW_LINK>(
@@ -71,7 +63,7 @@ Dendrite* Neuron::newLink (Neuron *toNeuron, int ndelay, int countTotal, float n
 			  )
 		  );	
 
-#endif
+
 		  
 		  return axons[g];
 }
@@ -81,19 +73,10 @@ Dendrite* Neuron::newOutputLink (Neuron *toNeuron) {
 		  Dendrite *tempDend = new Dendrite(this->layer, globals.defaultWeight);
 		  tempDend->dendriteFrom = this;
 		  tempDend->dendriteTo = toNeuron;
-		  tempDend->synapses = 1;
-		  tempDend->activationDelay = 1;
+		  //tempDend->synapses = 1;
+		  //tempDend->activationDelay = 1;
 
-
-#ifdef BORLAND_GUI
-		  AnsiString captionID = toNeuron->id;
-		  captionID += " layer: ";
-		  //captionID += toNeuron->layer;
-		  toNeuron->debugCallingNode = SDIAppForm->addLink(captionID,this->debugCallingNode);
-		  Debug1->refreshTT();
-
-		  Debug1->ListBox1->Items->Insert(0,"NewLink: " + id + " to " + toNeuron->id);
-#else
+		  //debug
 		  std::string captionID = toNeuron->id;
 		  callback->onCallback(
 			  new CallbackMsg<MSG_NEW_LINK>(
@@ -101,7 +84,7 @@ Dendrite* Neuron::newOutputLink (Neuron *toNeuron) {
 			  )
 		  );	
 
-#endif
+
 		  return (tempDend);
 }
 
@@ -139,7 +122,7 @@ Dendrite *Neuron::setNewOutputLink () {
 int Neuron::countSynapses () {
 		  int countSyn = 0;
 		  for (unsigned int n=0;n<dendrites.size();n++) {
-			countSyn += (*dendrites[n]).synapses;
+			countSyn += dendrites[n]->eSynapses - dendrites[n]->iSynapses;
 		  }
 		  return (countSyn);
 }
@@ -147,7 +130,7 @@ int Neuron::countSynapses () {
 int Neuron::countSynapsesOnAxons () {
 		  int countSyn = 0;
 		  for (unsigned int n=0;n<axons.size();n++) {
-			countSyn += this->axons[n]->synapses;
+			countSyn += this->axons[n]->eSynapses - this->axons[n]->iSynapses;
 		  }
 		  return (countSyn);
 }
@@ -155,8 +138,8 @@ int Neuron::countSynapsesOnAxons () {
 int Neuron::countMaxSynapsesOnAxons () {
 		  int countSyn = 0;
 		  for (unsigned int n=0;n<axons.size();n++) {
-			if (this->axons[n]->synapses > countSyn)
-				countSyn = this->axons[n]->synapses;
+			if ((this->axons[n]->eSynapses - this->axons[n]->iSynapses) > countSyn)
+				countSyn = this->axons[n]->eSynapses - this->axons[n]->iSynapses;
 		  }
 		  return (countSyn);
 }
@@ -166,11 +149,9 @@ void Neuron::activate(double activationValNew) {
   if (this->lastfired < this->layer->step - globals.recoveryTime && this->blockActivation < this->layer->step) {
 	this->activationVal += activationValNew;
 
-#ifdef BORLAND_GUI
-	Debug1->ListBox1->Items->Insert(0,"Activate Neuron: " + id + " (Increase: " + AnsiString (activationValNew)+"; activationVal: " + AnsiString(activationVal) + ") " );
-#else
+	//debug
 	callback->onCallback(new CallbackMsg<MSG_NEURON_ACTIVATE>(getLayer()->number, id, (float)activationVal, (float)activationValNew));
-#endif
+
 
   };
 }
@@ -199,7 +180,7 @@ void Neuron::activateSuccessors(void) {
 		  for (unsigned int n=0;n<axons.size();n++ ) {
 					float weightToStimulate = 0.0f;
 					
-					float totalDWeight = axons[n]->dendriteTo->getDendritesWeight();
+					//float totalDWeight = axons[n]->dendriteTo->getDendritesWeight();
 					float aWeight = axons[n]->getWeight();
 					if (axons[n]->dendriteTo->type==0) {
 						//if subsequent neuron is an input neuron we'll activate this with 1
@@ -209,10 +190,11 @@ void Neuron::activateSuccessors(void) {
 						//otherwise it is within a layer then we'll distribute the activation among the 
 						//subsequent neurons
 						//wFactor: 'oldest'/strongest Dendrite will get most attention
-						float wFactor = float(axons[n]->synapses) / this->countMaxSynapsesOnAxons();
+						/*float wFactor = float(axons[n]->synapses) / this->countMaxSynapsesOnAxons();
 						weightToStimulate = aWeight * aWeight / totalWeight * wFactor;
 						
-						axons[n]->stimulate(weightToStimulate);
+						axons[n]->stimulate(weightToStimulate);*/
+						axons[n]->stimulate(aWeight/totalWeight);
 					}
 					
 		  }
@@ -254,7 +236,7 @@ void Neuron::fire (void) {
 		  this->layer->recQueue->insert(this);
 		  
 		  if (this->layer->number != 0) {
-			  this->predictNext();
+			  //this->predictNext();
 			  //this->propagateDown(0);
 		  } 
 		  this->connectFromLastStep();
@@ -288,10 +270,10 @@ Dendrite *Neuron::getStrongestAxon(void) {
 			//a is actually wrong! will only cause to count the lastfired axon to be used for calculation.
 			double a, b;
 			if (strongestAxon->dendriteTo->countSynapses() > 0) {
-				a = strongestAxon->synapses / double(strongestAxon->dendriteTo->countSynapses());
+				a = (strongestAxon->eSynapses - strongestAxon->iSynapses) / double(strongestAxon->dendriteTo->countSynapses());
 			} else a = 0;
 			if (this->axons[g]->dendriteTo->countSynapses() > 0) {
-				b = this->axons[g]->synapses / double(this->axons[g]->dendriteTo->countSynapses());
+				b = (this->axons[g]->eSynapses - this->axons[g]->iSynapses) / double(this->axons[g]->dendriteTo->countSynapses());
 			} else b = 0;
 			if (a < b) {
 				return this->axons[g];
@@ -387,11 +369,8 @@ void Neuron::inhibit (bool recursive) {
 		  //inhibits current neuron and all successors with the value that had
 		  //been scheduled for activation of the successor before.
 
-#ifdef BORLAND_GUI
-		  Debug1->ListBox1->Items->Insert(0,"Inhibit: " + id );
-#else
+
 	callback->onCallback(new CallbackMsg<MSG_INHIBIT>(getLayer()->number, id));
-#endif
 
 		  this->blockActivation = this->layer->step + globals.blockTime;//-1; //sets recoveryTime
 		  this->activationVal = 0;
@@ -444,9 +423,7 @@ Dendrite *Neuron::newOutput (void) {
 	//create new Neuron type=input
 	Neuron *newNeuron = new Neuron(this->getLayer()->getHigher(), 0);
 
-#ifdef BORLAND_GUI
-	
-#else
+
 
 	callback->onCallback(new CallbackMsg<MSG_NEW_OUTPUT>(
 			getLayer()->number, this->id, newNeuron->getLayer()->number, newNeuron->id
@@ -458,7 +435,7 @@ Dendrite *Neuron::newOutput (void) {
 		)
 	);
 
-#endif
+
 
 	//link new Neuron to current Neuron's axon
 	Dendrite *tDend = this->newOutputLink(newNeuron);
