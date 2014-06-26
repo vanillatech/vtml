@@ -1,0 +1,10 @@
+C:\daten\odin\trunk\odin\bin\Debug\odin.exe.config
+C:\daten\odin\odin-c#\bin\Debug\odin.exe.config
+C:\daten\odin\odin-c#\obj\Debug\odin.csprojResolveAssemblyReference.cache
+C:\daten\odin\odin-c#\obj\Debug\odin.Form1.resources
+C:\daten\odin\odin-c#\obj\Debug\odin.Properties.Resources.resources
+C:\daten\odin\odin-c#\obj\Debug\odin.csproj.GenerateResource.Cache
+C:\daten\odin\odin-c#\bin\Debug\odin.exe
+C:\daten\odin\odin-c#\bin\Debug\odin.pdb
+C:\daten\odin\odin-c#\obj\Debug\odin.exe
+C:\daten\odin\odin-c#\obj\Debug\odin.pdb
