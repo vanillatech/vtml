@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Callback" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAAEAAAAAAAAAQAA=</HashCode>
+      <FileName>src-new-1.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Aqueue" Collapsed="true">
+    <Position X="30.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAQAAAAAAAEQAAIAAAAAIAAAAAAgAABAAAAA=</HashCode>
+      <FileName>prozess10\ActivationQueue.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ActivationQueue" Collapsed="true">
+    <Position X="29" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAQgAAAAAAAAAAACAABAAAQCA=</HashCode>
+      <FileName>prozess10\ActivationQueue.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dendrite" Collapsed="true">
+    <Position X="32.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAEAAAAAAAAAgAgAAACAAAQAAAIAIgAAAEBAIAAAA=</HashCode>
+      <FileName>prozess10\Dendrite.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Layer" Collapsed="true">
+    <Position X="29" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEEQAACAAQAAAAAAAAABAAAAgAABEAEAAAAAAEAA=</HashCode>
+      <FileName>prozess10\Layer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Neuron" Collapsed="true">
+    <Position X="30.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gQIJAIEAEgJBAgcAAECAwAQCAJAxAKg4hACAJRBAQiA=</HashCode>
+      <FileName>prozess10\Neuron.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RecoveryQueue" Collapsed="true">
+    <Position X="32.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QEAABAAAAAJAAFAABABAAAADBAAAEAEAAEgCBAAAAAg=</HashCode>
+      <FileName>prozess10\RecoveryQueue.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Sense" Collapsed="true">
+    <Position X="29" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAEAAAAAAAAAAAAAAAAAAAAAABIAgAAARAAAAAA=</HashCode>
+      <FileName>prozess10\Sense.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Unmanaged_Wrapper" Collapsed="true">
+    <Position X="32.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>src-new-1.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Unmanaged_Wrapper1" Collapsed="true">
+    <Position X="29" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>src-new-1.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Globals" Collapsed="true">
+    <Position X="30.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgCAQAAEEBAAABAAAAAAAAAAIAAAQACAAGAABQAA=</HashCode>
+      <FileName>prozess10\globals.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Odin::ICallbackMsg" Collapsed="true">
+    <Position X="14" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAEAAAAAAAAAAAAAAAABAABAAAAAAAABAAAASA=</HashCode>
+      <FileName>callbacks.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Odin::ICallback" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>callbacks.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Odin::CallbackMsg&lt;Type&gt;" Collapsed="true">
+    <Position X="29" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>callbacks.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Odin::CallbackMsg&lt;MSG_STEP_COUNTER&gt;" Collapsed="true">
+    <Position X="24.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAACA=</HashCode>
+      <FileName>callbacks.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Odin::CallbackMsg&lt;MSG_NEW_OUTPUTTEXT&gt;" Collapsed="true">
+    <Position X="1.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAACA=</HashCode>
+      <FileName>callbacks.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Odin::CallbackMsg&lt;MSG_NEW_INPUT_NEURON&gt;" Collapsed="true">
+    <Position X="6.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAAAAAAgACAAAAAAAAAAAiA=</HashCode>
+      <FileName>callbacks.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Odin::CallbackMsg&lt;MSG_NEW_LINK&gt;" Collapsed="true">
+    <Position X="10.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAACAAAAAAAAAEAAAAAAAAACAAAAAAAAAACA=</HashCode>
+      <FileName>callbacks.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Odin::CallbackMsg&lt;MSG_NEURON_ACTIVATE&gt;" Collapsed="true">
+    <Position X="15.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQABAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAiA=</HashCode>
+      <FileName>callbacks.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Odin::CallbackMsg&lt;MSG_NEURON_FIRE&gt;" Collapsed="true">
+    <Position X="19.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAiA=</HashCode>
+      <FileName>callbacks.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Odin::CallbackMsg&lt;MSG_ACTIVATION_SCHEDULED&gt;" Collapsed="true">
+    <Position X="26.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAgAAAAAAAAAAAAAAACAAiA=</HashCode>
+      <FileName>callbacks.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Odin::CallbackMsg&lt;MSG_PREDICT_NEXT&gt;" Collapsed="true">
+    <Position X="4" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiA=</HashCode>
+      <FileName>callbacks.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Odin::CallbackMsg&lt;MSG_PROPAGATE_DOWN&gt;" Collapsed="true">
+    <Position X="8.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiA=</HashCode>
+      <FileName>callbacks.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Odin::CallbackMsg&lt;MSG_INHIBIT&gt;" Collapsed="true">
+    <Position X="13" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiA=</HashCode>
+      <FileName>callbacks.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Odin::CallbackMsg&lt;MSG_DELETE_FROM_RQ&gt;" Collapsed="true">
+    <Position X="17.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAiA=</HashCode>
+      <FileName>callbacks.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Odin::CallbackMsg&lt;MSG_NEW_OUTPUT&gt;" Collapsed="true">
+    <Position X="22" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAACAAAAAAAAAEAAAAAAAAACAAAAAAAAAACA=</HashCode>
+      <FileName>callbacks.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="Forward" Collapsed="true">
+    <Position X="29" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src-new-1.cpp</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Forward1" Collapsed="true">
+    <Position X="30.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>src-new-1.cpp</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Odin::TNeuronID" Collapsed="true">
+    <Position X="32.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>callbacks.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="TTreeItemIndex" Collapsed="true">
+    <Position X="29" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>treesync.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="THandleSet" Collapsed="true">
+    <Position X="30.75" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>treesync.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="TTreeSync" Collapsed="true">
+    <Position X="30.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>treesync.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="TDebugLogLayer" Collapsed="true">
+    <Position X="29" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>treesync.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="TDebugLog" Collapsed="true">
+    <Position X="32.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>treesync.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Enum Name="Odin::ECallbackTypes" Collapsed="true">
+    <Position X="29" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>GAAAABAMAQAAAAAAAQAIAAAAAAAABAABAQACAAAAAAA=</HashCode>
+      <FileName>callbacks.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>
