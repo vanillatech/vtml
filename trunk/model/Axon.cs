@@ -9,10 +9,12 @@ namespace odin.model
     class Axon
     {
         Neuron fromNeuron;
+        Brain brain;
         List<Synapse> synapses;
-        internal Axon(Neuron neuron)
+        internal Axon(Neuron neuron,Brain mybrain)
         {
             fromNeuron = neuron;
+            brain = mybrain;
         }
     }
 }

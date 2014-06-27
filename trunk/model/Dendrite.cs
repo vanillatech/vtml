@@ -10,14 +10,17 @@ namespace odin.model
     {
         List<Synapse> synapses;
         Neuron toNeuron;
-        internal Dendrite(Neuron neuron)
+        Brain brain;
+        
+        internal Dendrite(Neuron neuron, Brain mybrain)
         {
             toNeuron = neuron;
+            brain = mybrain;
         }
 
         internal void activate()
         {
-            throw new NotImplementedException();
+            brain.activationQueue.addToStep(toNeuron,1);
         }
     }
 }

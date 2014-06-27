@@ -11,38 +11,28 @@ namespace odin.model
     {
         public Brain()
         {
-            this.addSense();
+            this.readSense = new Sense(this);
         }
 
-        private void addSense()
-        {
-            senses.Add(new Sense());
-        }
 
-        List<Sense> senses = new List<Sense>();
-        internal struct aQueue
-        {
-            internal List<Neuron> neuron;
-            internal int stepsLeft;
-        }
-        internal List<aQueue> activationQueue;
-        void addToActivationQueue(Neuron neuron,int when)
-        {
-            this.getActivationQueue(when).neuron.Add(neuron);
-        }
+        Sense readSense;
 
-        private aQueue getActivationQueue(int when)
-        {
-            if (activationQueue.Exists(x => x.stepsLeft == when)) { 
-                return activationQueue.Find(x => x.stepsLeft == when);
-            }
-            else
+        internal ActivationQueue activationQueue = new ActivationQueue();
+        public void input(string inp) {
+            foreach (int n in inp)
             {
-                aQueue tmp = new aQueue();
-                tmp.stepsLeft = when;
-                activationQueue.Add(tmp);
-                return tmp;
+                this.input(n);
             }
         }
+        public void input(int byteRead)
+        {
+            readSense.input(byteRead);
+            activationQueue.nextStep();
+        }
+        public void think()
+        {
+            activationQueue.nextStep();
+        }
+        
     }
 }
