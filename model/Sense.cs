@@ -8,18 +8,47 @@ namespace odin.model
 {
     class Sense
     {
-        List<Dendrite> cInputNeurons;
-
-        public void activate(int index)
+        Brain brain;
+        internal Sense(Brain mybrain)
         {
-            cInputNeurons[index].activate();
+            brain = mybrain;
         }
+        internal struct Inputs
+        {
+            internal Dendrite dendrite;
+            internal int value;
+        }
+        internal List<Inputs> cInputNeurons = new List<Inputs>();
+        public void input(int byteRead)
+        {
+            Dendrite inp = this.getInputDendrite(byteRead);
+            inp.activate();
+        }
+
+        private Dendrite getInputDendrite(int byteRead)
+        {
+            if (cInputNeurons.Exists(x => x.value == byteRead))
+            {
+                return cInputNeurons.Find(x => x.value == byteRead).dendrite;
+            }
+            else
+            {
+                Inputs tmp = new Inputs();
+                tmp.dendrite = new Neuron(brain).getNewDendrite();
+                tmp.value = byteRead;
+                cInputNeurons.Add(tmp);
+                return tmp.dendrite;
+            }
+        }
+        
         public void generateAlphaNumericalInputs()
         {
             for (int n = 0; n < 256; n++)
             {
-                Neuron tmp = new Neuron();
-                cInputNeurons.Add(tmp.getNewDendrite());
+                Inputs tmp = new Inputs();
+                tmp.dendrite = new Neuron(brain).getNewDendrite();
+                tmp.value = n;
+                cInputNeurons.Add(tmp);
                 
             }
         }

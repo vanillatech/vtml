@@ -9,17 +9,21 @@ namespace odin.model
     class Neuron
     {
         Axon axon;
-
-        List<Dendrite> dendrites;
-        internal Neuron()
+        Brain brain;
+        List<Dendrite> dendrites = new List<Dendrite>();
+        internal Neuron(Brain mybrain)
         {
-            axon = new Axon(this);
-            
+            axon = new Axon(this,mybrain);
+            brain = mybrain;
         }
         internal Dendrite getNewDendrite() {
-            Dendrite tmp = new Dendrite(this);
+            Dendrite tmp = new Dendrite(this,brain);
             dendrites.Add(tmp);
             return tmp;
+        }
+        internal void fire()
+        {
+
         }
 
     }

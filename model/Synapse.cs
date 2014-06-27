@@ -10,7 +10,9 @@ namespace odin.model
     {
         Axon fromAxon;
         Dendrite toDendrite;
-        internal Synapse(Axon axon, Dendrite dendrite) {
+        Brain brain;
+        internal Synapse(Axon axon, Dendrite dendrite, Brain mybrain) {
+            this.brain = mybrain;
             this.fromAxon = axon;
             this.toDendrite = dendrite;
         }

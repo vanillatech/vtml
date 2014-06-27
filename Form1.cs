@@ -13,6 +13,7 @@ namespace odin
 {
     public partial class Form1 : Form
     {
+        Brain brain;
         public Form1()
         {
             InitializeComponent();
@@ -20,8 +21,18 @@ namespace odin
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Brain brain = new Brain();
+            brain = new Brain();
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            brain.input(textBox1.Text);
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            brain.think();
         }
     }
 }
