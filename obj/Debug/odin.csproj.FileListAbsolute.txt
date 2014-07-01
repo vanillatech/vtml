@@ -17,3 +17,12 @@ C:\daten\odin\obj\Debug\odin.Form1.resources
 C:\daten\odin\obj\Debug\odin.Properties.Resources.resources
 C:\daten\odin\obj\Debug\odin.csproj.GenerateResource.Cache
 C:\daten\odin\obj\Debug\odin.exe
+C:\daten\odin\trunk\bin\Debug\odin.exe.config
+C:\daten\odin\trunk\obj\Debug\odin.exe
+C:\daten\odin\trunk\obj\Debug\odin.pdb
+C:\daten\odin\trunk\obj\Debug\odin.csprojResolveAssemblyReference.cache
+C:\daten\odin\trunk\obj\Debug\odin.Form1.resources
+C:\daten\odin\trunk\obj\Debug\odin.Properties.Resources.resources
+C:\daten\odin\trunk\obj\Debug\odin.csproj.GenerateResource.Cache
+C:\daten\odin\trunk\bin\Debug\odin.exe
+C:\daten\odin\trunk\bin\Debug\odin.pdb
