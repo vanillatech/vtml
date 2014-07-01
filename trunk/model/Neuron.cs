@@ -16,14 +16,14 @@ namespace odin.model
             axon = new Axon(this,mybrain);
             brain = mybrain;
         }
-        internal Dendrite getNewDendrite() {
-            Dendrite tmp = new Dendrite(this,brain);
+        internal Dendrite getNewDendrite(int length) {
+            Dendrite tmp = new Dendrite(this,brain,length);
             dendrites.Add(tmp);
             return tmp;
         }
         internal void fire()
         {
-
+            brain.addToRecoveryQueue(this);
         }
 
     }

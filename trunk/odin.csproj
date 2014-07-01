@@ -53,6 +53,7 @@
     <Compile Include="model\Axon.cs" />
     <Compile Include="model\Brain.cs" />
     <Compile Include="model\ActivationQueue.cs" />
+    <Compile Include="model\Queues.cs" />
     <Compile Include="model\RecoveryQueue.cs" />
     <Compile Include="model\Sense.cs" />
     <Compile Include="model\Synapse.cs" />

@@ -9,18 +9,20 @@ namespace odin.model
     class Dendrite
     {
         List<Synapse> synapses;
+        int length;
         Neuron toNeuron;
         Brain brain;
         
-        internal Dendrite(Neuron neuron, Brain mybrain)
+        internal Dendrite(Neuron neuron, Brain mybrain, int len)
         {
             toNeuron = neuron;
             brain = mybrain;
+            this.length = len;
         }
 
         internal void activate()
         {
-            brain.activationQueue.addToStep(toNeuron,1);
+            brain.activationQueue.addToStep(toNeuron,length);
         }
     }
 }
