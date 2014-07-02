@@ -15,6 +15,7 @@ namespace odin.model
             this.brain = mybrain;
             this.fromAxon = axon;
             this.toDendrite = dendrite;
+            //toDendrite.addSynapse(this);
         }
         internal void activate()
         {

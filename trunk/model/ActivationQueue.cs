@@ -8,7 +8,11 @@ namespace odin.model
 {
     class ActivationQueue : Queues
     {
-        
+        Brain brain;
+        internal ActivationQueue(Brain mybrain)
+        {
+            this.brain = mybrain;
+        }
         internal void nextStep()
         {
             this.decrementSteps();
@@ -22,7 +26,10 @@ namespace odin.model
         internal void fireCurrentNeurons()
         {
             foreach (Neuron n in getStep(0).neuron) {
-                n.fire(); 
+                if (n.crossesThreshold())
+                {
+                    n.fire();
+                }
 
             }
         }

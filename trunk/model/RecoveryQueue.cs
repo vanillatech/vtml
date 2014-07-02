@@ -8,6 +8,10 @@ namespace odin.model
 {
     class RecoveryQueue : Queues
     {
+        Brain brain;
+        internal RecoveryQueue(Brain mybrain) {
+            this.brain = mybrain;
+        }
         private int maxSteps = 2;
         internal void add(Neuron neuron)
         {
@@ -28,9 +32,17 @@ namespace odin.model
 
         internal void learnNewPatterns()
         {
-            foreach (steps n in aQueue)
+            Neuron tmpNeuron = new Neuron(brain);
+            foreach (aQueue s in steps)
             {
+                
+                Dendrite tmpDendrite = tmpNeuron.getNewDendrite(s.step);
+                foreach (Neuron n in s.neuron)
+                {
+                    n.synapseOn(tmpDendrite);
 
+                }
+                    
             }
         }
     }

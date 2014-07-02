@@ -16,8 +16,17 @@ namespace odin.model
         internal List<aQueue> steps = new List<aQueue>();
         internal void addToStep(Neuron neuron, int when)
         {
+            this.addToStep(neuron, when, 0);
+        }
+        internal void addToStep(Neuron neuron, int when, double value)
+        {
             if (when > 0)
-                this.getStep(when).neuron.Add(neuron);
+            {
+                aQueue tmp = this.getStep(when);
+                tmp.neuron.Add(neuron);
+                tmp.val = value;
+              
+            }
         }
 
         internal aQueue getStep(int when)
