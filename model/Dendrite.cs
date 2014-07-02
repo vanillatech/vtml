@@ -8,8 +8,9 @@ namespace odin.model
 {
     class Dendrite
     {
-        List<Synapse> synapses;
+        List<Axon> synapses = new List<Axon> ();
         int length;
+        double strength;
         Neuron toNeuron;
         Brain brain;
         
@@ -18,11 +19,18 @@ namespace odin.model
             toNeuron = neuron;
             brain = mybrain;
             this.length = len;
+            this.strength = brain.synapseDefaultStrength;
         }
 
         internal void activate()
         {
-            brain.activationQueue.addToStep(toNeuron,length);
+            brain.activationQueue.addToStep(toNeuron,length,strength);
+        }
+
+
+        internal void addSynapse(Axon axon)
+        {
+            this.synapses.Add(axon);
         }
     }
 }

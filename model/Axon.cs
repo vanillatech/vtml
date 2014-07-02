@@ -10,11 +10,21 @@ namespace odin.model
     {
         Neuron fromNeuron;
         Brain brain;
-        List<Synapse> synapses;
+        List<Dendrite> synapses = new List<Dendrite>();
         internal Axon(Neuron neuron,Brain mybrain)
         {
             fromNeuron = neuron;
             brain = mybrain;
+        }
+
+        internal void synapseOn(Dendrite tmpDendrite)
+        {
+            if (!this.synapses.Contains(tmpDendrite))
+            {
+                this.synapses.Add(tmpDendrite);
+                tmpDendrite.addSynapse(this);
+            }
+            
         }
     }
 }

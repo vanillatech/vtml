@@ -9,8 +9,12 @@ namespace odin.model
 
     class Brain
     {
+        public double activationThreshold = 0.5;
+        public double synapseDefaultStrength = 0.1;
         public Brain()
         {
+            this.activationQueue =  new ActivationQueue(this);
+            this.recoveryQueue = new RecoveryQueue(this);
             this.readSense = new Sense(this);
             recoveryQueue.setMaxSteps(2);
         }
@@ -18,8 +22,8 @@ namespace odin.model
 
         Sense readSense;
 
-        internal ActivationQueue activationQueue = new ActivationQueue();
-        internal RecoveryQueue recoveryQueue = new RecoveryQueue();
+        internal ActivationQueue activationQueue; 
+        internal RecoveryQueue recoveryQueue; 
         public void input(string inp) {
             foreach (int n in inp)
             {
@@ -48,5 +52,7 @@ namespace odin.model
         {
             this.activationQueue.addToStep(neuron,when);
         }
+
+        
     }
 }

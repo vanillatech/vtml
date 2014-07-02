@@ -10,6 +10,9 @@ namespace odin.model
     {
         Axon axon;
         Brain brain;
+        double activation = 0;
+
+
         List<Dendrite> dendrites = new List<Dendrite>();
         internal Neuron(Brain mybrain)
         {
@@ -26,5 +29,20 @@ namespace odin.model
             brain.addToRecoveryQueue(this);
         }
 
+
+        internal void synapseOn(Dendrite tmpDendrite)
+        {
+            
+            this.axon.synapseOn(tmpDendrite);
+            
+        }
+
+        internal bool crossesThreshold()
+        {
+            if (this.activation > brain.activationThreshold) {
+                return true;
+            }
+            return false;
+        }
     }
 }
