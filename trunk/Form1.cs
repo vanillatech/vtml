@@ -34,5 +34,18 @@ namespace odin
         {
             brain.think();
         }
+
+        private void Query_Click(object sender, EventArgs e)
+        {
+            Monitor monitor = brain.addMonitor();
+            int val = monitor.getInputNode(textBox2.Text);
+            if (val != 0)
+            {
+                TreeNode n = new TreeNode();
+                n.Text = textBox2.Text + "(" + val + ")";
+                treeView1.Nodes.Add(n);
+
+            }
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace odin.model
 
     class Brain
     {
+        private int nextFreeID = 1;
         public double activationThreshold = 0.5;
         public double synapseDefaultStrength = 0.1;
         public Brain()
@@ -53,6 +54,16 @@ namespace odin.model
             this.activationQueue.addToStep(neuron,when);
         }
 
-        
+
+
+        public Monitor addMonitor()
+        {
+            return new Monitor(this,this.readSense);
+        }
+
+        internal int getNextID()
+        {
+            return nextFreeID++;
+        }
     }
 }

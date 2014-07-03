@@ -32,5 +32,10 @@ namespace odin.model
         {
             this.synapses.Add(axon);
         }
+
+        internal Neuron getNeuron()
+        {
+            return this.toNeuron;
+        }
     }
 }
