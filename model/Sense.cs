@@ -40,6 +40,17 @@ namespace odin.model
                 return tmp.dendrite;
             }
         }
+        internal Neuron getInputNeuronIfExists(int byteRead)
+        {
+            if (cInputNeurons.Exists(x => x.value == byteRead))
+            {
+                return cInputNeurons.Find(x => x.value == byteRead).dendrite.getNeuron();
+            }
+            else
+            {
+                return null;
+            }
+        }
         
         public void generateAlphaNumericalInputs()
         {

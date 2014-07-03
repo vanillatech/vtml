@@ -16,8 +16,10 @@ namespace odin.model
         List<Dendrite> dendrites = new List<Dendrite>();
         internal Neuron(Brain mybrain)
         {
+            this.id = mybrain.getNextID();
             axon = new Axon(this,mybrain);
             brain = mybrain;
+
         }
         internal Dendrite getNewDendrite(int length) {
             Dendrite tmp = new Dendrite(this,brain,length);
@@ -44,5 +46,7 @@ namespace odin.model
             }
             return false;
         }
+
+        public int id { get; set; }
     }
 }

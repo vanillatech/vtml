@@ -33,11 +33,11 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.listBox1 = new System.Windows.Forms.ListBox();
-            this.treeView1 = new System.Windows.Forms.TreeView();
-            this.Query = new System.Windows.Forms.Button();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBox2 = new System.Windows.Forms.TextBox();
+            this.Query = new System.Windows.Forms.Button();
+            this.treeView1 = new System.Windows.Forms.TreeView();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -82,6 +82,14 @@
             this.tabPage1.Text = "Activity Log";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // listBox1
+            // 
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(0, 0);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(690, 355);
+            this.listBox1.TabIndex = 3;
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.textBox2);
@@ -95,21 +103,12 @@
             this.tabPage2.Text = "Model Navigator";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // listBox1
+            // textBox2
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(0, 0);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(690, 355);
-            this.listBox1.TabIndex = 3;
-            // 
-            // treeView1
-            // 
-            this.treeView1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.treeView1.Location = new System.Drawing.Point(0, 41);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(690, 315);
-            this.treeView1.TabIndex = 4;
+            this.textBox2.Location = new System.Drawing.Point(7, 7);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(420, 20);
+            this.textBox2.TabIndex = 6;
             // 
             // Query
             // 
@@ -119,13 +118,15 @@
             this.Query.TabIndex = 5;
             this.Query.Text = "Query Inputneuron";
             this.Query.UseVisualStyleBackColor = true;
+            this.Query.Click += new System.EventHandler(this.Query_Click);
             // 
-            // textBox2
+            // treeView1
             // 
-            this.textBox2.Location = new System.Drawing.Point(7, 7);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(420, 20);
-            this.textBox2.TabIndex = 6;
+            this.treeView1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.treeView1.Location = new System.Drawing.Point(0, 41);
+            this.treeView1.Name = "treeView1";
+            this.treeView1.Size = new System.Drawing.Size(690, 315);
+            this.treeView1.TabIndex = 4;
             // 
             // timer1
             // 
