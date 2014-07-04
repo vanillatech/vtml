@@ -9,7 +9,7 @@ namespace odin.model
     class Dendrite
     {
         List<Axon> synapses = new List<Axon> ();
-        int length;
+        internal int length;
         double strength;
         Neuron toNeuron;
         Brain brain;

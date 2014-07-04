@@ -26,6 +26,17 @@ namespace odin.model
             dendrites.Add(tmp);
             return tmp;
         }
+        internal Dendrite getDendrite(int length)
+        {
+            if (this.dendrites.Exists(l => l.length == length))
+            {
+                return this.dendrites.Find(l => l.length == length);
+            }
+            else
+            {
+                return getNewDendrite(length);
+            }
+        }
         internal void fire()
         {
             brain.addToRecoveryQueue(this);
@@ -48,5 +59,10 @@ namespace odin.model
         }
 
         public int id { get; set; }
+
+        internal List<Neuron> getSuccessors()
+        {
+            return this.axon.getSuccessors();
+        }
     }
 }
