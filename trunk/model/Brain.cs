@@ -40,8 +40,59 @@ namespace odin.model
         {
             activationQueue.fireCurrentNeurons();
             activationQueue.nextStep();
-            recoveryQueue.learnNewPatterns();
+            this.reinforcementLearning();
+            if (this.checkForNewPattern())
+            {
+                this.learnNewPatterns();
+            }
             recoveryQueue.nextStep();
+        }
+
+        private void reinforcementLearning()
+        {
+            
+        }
+
+        private bool checkForNewPattern()
+        {
+            Neuron n;
+            List<Neuron> commonSuccessors = new List<Neuron>();
+            n = recoveryQueue.getNext();
+            if (n != null)
+            {
+                commonSuccessors = n.getSuccessors();
+            }
+            while ((n = recoveryQueue.getNext()) != null)
+            {
+                List<Neuron> compare = n.getSuccessors();
+                foreach (Neuron c in commonSuccessors)
+                {
+                    if (!compare.Contains(c))
+                    {
+                        commonSuccessors.Remove(c);
+                    }
+                }
+                
+
+            } 
+            if (commonSuccessors.Count == 0 && !recoveryQueue.empty()) {
+                return true;
+            } else
+                return false;
+        }
+
+        private void learnNewPatterns()
+        {
+            Neuron tmpNeuron = new Neuron(this);
+            Neuron n;
+            while ((n = recoveryQueue.getNext())!=null)
+            {
+
+                Dendrite tmpDendrite = tmpNeuron.getDendrite(recoveryQueue.getNextCurrentStep());
+                n.synapseOn(tmpDendrite);
+
+            } 
+            
         }
 
 

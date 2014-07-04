@@ -19,16 +19,21 @@ namespace odin.model
         }
 
 
-        internal int getInputNode(string inp)
+        internal Neuron getInputNode(string inp)
         {
             int p = char.Parse(inp);
             Neuron n = sense.getInputNeuronIfExists(p);
             if (n != null)
             {
-                return n.id;
+                return n;
             }
-            else return 0;
+            else return null;
 
+        }
+
+        internal List<Neuron> getSubNodes(Neuron node)
+        {
+            return node.getSuccessors();
         }
     }
 }

@@ -26,5 +26,15 @@ namespace odin.model
             }
             
         }
+
+        internal List<Neuron> getSuccessors()
+        {
+            List<Neuron> tmp = new List<Neuron>();
+            foreach (Dendrite d in this.synapses)
+            {
+                tmp.Add(d.getNeuron());
+            }
+            return tmp;
+        }
     }
 }
