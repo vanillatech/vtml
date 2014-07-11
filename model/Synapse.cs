@@ -11,15 +11,38 @@ namespace odin.model
         Axon fromAxon;
         Dendrite toDendrite;
         Brain brain;
+        internal int countExcitatorySynapses;
+        internal int countInhibitiveSynapses = 0;
+
         internal Synapse(Axon axon, Dendrite dendrite, Brain mybrain) {
             this.brain = mybrain;
             this.fromAxon = axon;
             this.toDendrite = dendrite;
+            this.countExcitatorySynapses = brain.synapseDefaultCount;
             //toDendrite.addSynapse(this);
+        }
+        internal Axon getFromAxon()
+        {
+            return this.fromAxon;
         }
         internal void activate()
         {
-            throw new NotImplementedException();
+            toDendrite.activate(this.getStrength());
+        }
+
+        internal Neuron getPredecessor()
+        {
+            Axon a = this.getFromAxon();
+            return (a.getParentNeuron());
+        }
+
+        internal void reinforce(bool excitatory)
+        {
+            if (excitatory) this.countExcitatorySynapses++;
+            else this.countInhibitiveSynapses++;
+        }
+        internal double getStrength() {
+            return brain.synapseDefaultStrength * (this.countExcitatorySynapses - this.countInhibitiveSynapses) / (this.countExcitatorySynapses +this.countInhibitiveSynapses);
         }
     }
 }

@@ -36,5 +36,10 @@ namespace odin.model
             }
             return tmp;
         }
+
+        internal Neuron getParentNeuron()
+        {
+            return (this.fromNeuron);
+        }
     }
 }

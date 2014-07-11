@@ -7,29 +7,35 @@ namespace odin.model
 {
     class Queues
     {
-        internal struct aQueue
+        internal struct QueueElement
         {
-            internal List<Neuron> neuron;
-            internal int step;
+            internal Neuron neuron;
             internal double val;
         }
-        internal List<aQueue> steps = new List<aQueue>();
+        internal struct Step
+        {
+            internal List<QueueElement> element;
+            internal int step;
+        
+        }
+        internal List<Step> steps = new List<Step>();
         internal void addToStep(Neuron neuron, int when)
         {
             this.addToStep(neuron, when, 0);
         }
         internal void addToStep(Neuron neuron, int when, double value)
         {
-            if (when > 0)
-            {
-                aQueue tmp = this.getStep(when);
-                tmp.neuron.Add(neuron);
-                tmp.val = value;
-              
-            }
+            
+                Step tmp = this.getStep(when);
+                QueueElement aqe = new QueueElement();
+                aqe.neuron = neuron;
+                aqe.val = value;
+                tmp.element.Add(aqe);
+                         
+            
         }
 
-        internal aQueue getStep(int when)
+        internal Step getStep(int when)
         {
             if (steps.Exists(x => x.step == when))
             {
@@ -37,18 +43,28 @@ namespace odin.model
             }
             else
             {
-                aQueue tmp = new aQueue();
-                tmp.neuron = new List<Neuron>();
+                Step tmp = new Step();
+                tmp.element = new List<QueueElement>();
                 tmp.step = when;
                 steps.Add(tmp);
                 return tmp;
             }
         }
+
+        internal List<Neuron> getNeuronsInStep(int when)
+        {
+            List<Neuron> neurons = new List<Neuron>();
+            foreach (QueueElement e in this.getStep(when).element)
+            {
+                neurons.Add(e.neuron);
+            }
+            return neurons;
+        }
         internal void decrementSteps()
         {
             for (int s = 0; s < steps.Count; s++)
             {
-                aQueue tmp = steps[s];
+                Step tmp = steps[s];
                 tmp.step--;
                 steps[s] = tmp;
             }
@@ -57,7 +73,7 @@ namespace odin.model
         {
             for (int s = 0; s < steps.Count; s++)
             {
-                aQueue tmp = steps[s];
+                Step tmp = steps[s];
                 tmp.step++;
                 steps[s] = tmp;
             }

@@ -59,14 +59,16 @@ namespace odin
         private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             TreeNode n = e.Node;
-            
+            n.Nodes.Clear();
             List<Neuron> subnodes = monitor.getSubNodes((Neuron)n.Tag);
             foreach (Neuron subnode in subnodes)
             {
                 TreeNode m = new TreeNode();
                 m.Text = subnode.id.ToString();
                 m.Name = subnode.id.ToString();
-                treeView1.Nodes.Add(m);
+                m.Tag = subnode;
+                n.Nodes.Add(m);
+                
 
             }
         }

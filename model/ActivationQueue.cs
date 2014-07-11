@@ -17,7 +17,7 @@ namespace odin.model
         {
             this.decrementSteps();
            
-            this.removeStep(0);
+            this.removeStep(-1);
             
         }
 
@@ -25,11 +25,29 @@ namespace odin.model
 
         internal void fireCurrentNeurons()
         {
-            foreach (Neuron n in getStep(0).neuron) {
-                if (n.crossesThreshold())
+            foreach (QueueElement a in getStep(0).element) {
+                if (a.neuron.crossesThreshold())
                 {
-                    n.fire();
+                    a.neuron.fire();
                 }
+
+            }
+        }
+
+        internal void processActivation()
+        {
+            foreach (QueueElement a in getStep(0).element)
+            {
+                a.neuron.polarize(a.val);
+
+            }
+        }
+
+        internal void leakActivation()
+        {
+            foreach (QueueElement a in getStep(0).element)
+            {
+                a.neuron.leakActivation();
 
             }
         }

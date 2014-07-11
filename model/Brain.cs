@@ -11,7 +11,10 @@ namespace odin.model
     {
         private int nextFreeID = 1;
         public double activationThreshold = 0.5;
-        public double synapseDefaultStrength = 0.1;
+        public double synapseDefaultStrength = 0.5;
+        public int synapseDefaultCount = 5;
+        public double leakageFactor = 0.9;
+        public UInt64 currentStep = 0;
         public Brain()
         {
             this.activationQueue =  new ActivationQueue(this);
@@ -38,6 +41,8 @@ namespace odin.model
         }
         public void think()
         {
+            activationQueue.leakActivation();
+            activationQueue.processActivation();
             activationQueue.fireCurrentNeurons();
             activationQueue.nextStep();
             this.reinforcementLearning();
@@ -46,26 +51,52 @@ namespace odin.model
                 this.learnNewPatterns();
             }
             recoveryQueue.nextStep();
+            this.currentStep++;
         }
 
         private void reinforcementLearning()
         {
-            
+            foreach (Neuron n in recoveryQueue.getNeuronsInStep(0))
+            {
+                foreach (Dendrite dendrite in n.getDendrites())
+                {
+                    foreach (Synapse synapse in dendrite.getSynapses()) {
+                        Neuron predecessor = synapse.getPredecessor();
+                    
+                        if ((int)(currentStep - predecessor.lastFired) == dendrite.length)
+                        {
+                            //Hebbian learning:
+                            //if neuron has been involved in firing the successor reinforce
+                            synapse.reinforce(true);
+                        }
+                        else
+                        {
+                            //if neuron has not been involved create an inhibitive synapse
+                            synapse.reinforce(false);
+                        }
+                    
+                    }
+                }
+            }
         }
 
         private bool checkForNewPattern()
         {
             Neuron n;
             List<Neuron> commonSuccessors = new List<Neuron>();
+                       
             n = recoveryQueue.getNext();
             if (n != null)
             {
                 commonSuccessors = n.getSuccessors();
+                
             }
+            List<Neuron> commonSuccessorsIterate = new List<Neuron>(commonSuccessors);
             while ((n = recoveryQueue.getNext()) != null)
             {
                 List<Neuron> compare = n.getSuccessors();
-                foreach (Neuron c in commonSuccessors)
+                
+                foreach (Neuron c in commonSuccessorsIterate)
                 {
                     if (!compare.Contains(c))
                     {
