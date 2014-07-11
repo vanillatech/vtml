@@ -57,9 +57,9 @@
     <Compile Include="model\Queues.cs" />
     <Compile Include="model\RecoveryQueue.cs" />
     <Compile Include="model\Sense.cs" />
-    <Compile Include="model\Synapse.cs" />
     <Compile Include="model\Dendrite.cs" />
     <Compile Include="model\Neuron.cs" />
+    <Compile Include="model\Synapse.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

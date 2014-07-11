@@ -33,7 +33,8 @@ namespace odin.model
 
         internal List<Neuron> getSubNodes(Neuron node)
         {
-            return node.getSuccessors();
+            if (node != null) return node.getSuccessors();
+            return null;
         }
     }
 }

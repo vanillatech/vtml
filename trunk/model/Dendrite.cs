@@ -8,9 +8,10 @@ namespace odin.model
 {
     class Dendrite
     {
-        List<Axon> synapses = new List<Axon> ();
+        
+        List<Synapse> synapses = new List<Synapse>();
         internal int length;
-        double strength;
+        
         Neuron toNeuron;
         Brain brain;
         
@@ -19,23 +20,40 @@ namespace odin.model
             toNeuron = neuron;
             brain = mybrain;
             this.length = len;
-            this.strength = brain.synapseDefaultStrength;
+            
         }
 
-        internal void activate()
+        internal void activate(double activationVal)
         {
-            brain.activationQueue.addToStep(toNeuron,length,strength);
+            brain.activationQueue.addToStep(toNeuron,length,activationVal);
         }
 
 
         internal void addSynapse(Axon axon)
         {
-            this.synapses.Add(axon);
+            Synapse s = new Synapse(axon,this,brain);
+          
+            this.synapses.Add(s);
         }
 
         internal Neuron getNeuron()
         {
             return this.toNeuron;
+        }
+
+        internal List<Neuron> getPredecessors()
+        {
+            List<Neuron> neurons = new List<Neuron>();
+            foreach (Synapse s in this.synapses)
+            {
+                neurons.Add(s.getPredecessor());
+            }
+            return neurons;
+        }
+
+        internal IEnumerable<Synapse> getSynapses()
+        {
+            return this.synapses;
         }
     }
 }

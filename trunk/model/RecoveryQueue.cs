@@ -32,31 +32,17 @@ namespace odin.model
             this.maxSteps = p;
         }
 
-        internal void learnNewPatterns()
-        {
-            Neuron tmpNeuron = new Neuron(brain);
-            foreach (aQueue s in steps)
-            {
-                
-                Dendrite tmpDendrite = tmpNeuron.getNewDendrite(s.step);
-                foreach (Neuron n in s.neuron)
-                {
-                    n.synapseOn(tmpDendrite);
-
-                }
-                    
-            }
-        }
+       
 
        
 
         internal Neuron getNext()
         {
-            if (steps.Count < getNextCurrentStepPointer) {
-                List<Neuron> n = steps[getNextCurrentStepPointer].neuron;
-                if (n.Count < getNextCurrentPos)
+            if (steps.Count > getNextCurrentStepPointer) {
+                List<QueueElement> n = steps[getNextCurrentStepPointer].element;
+                if (n.Count > getNextCurrentPos)
                 {
-                    return n[getNextCurrentPos++];
+                    return n[getNextCurrentPos++].neuron;
                 }
                 else
                 {
@@ -79,7 +65,10 @@ namespace odin.model
 
         internal bool empty()
         {
-            if (steps.Count == 0) return true; else return false;
+            foreach (Step s in steps) {
+                if (s.element.Count() > 0) return false; 
+            }
+            return true;
         }
     }
 }
