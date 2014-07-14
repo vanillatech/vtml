@@ -25,7 +25,8 @@ namespace odin.model
 
         internal void fireCurrentNeurons()
         {
-            foreach (QueueElement a in getStep(0).element) {
+            
+            foreach (QueueElement a in this.getElementsInStep(0)) {
                 if (a.neuron.crossesThreshold())
                 {
                     a.neuron.fire();
@@ -36,7 +37,7 @@ namespace odin.model
 
         internal void processActivation()
         {
-            foreach (QueueElement a in getStep(0).element)
+            foreach (QueueElement a in this.getElementsInStep(0))
             {
                 a.neuron.polarize(a.val);
 
@@ -45,7 +46,7 @@ namespace odin.model
 
         internal void leakActivation()
         {
-            foreach (QueueElement a in getStep(0).element)
+            foreach (QueueElement a in this.getElementsInStep(0))
             {
                 a.neuron.leakActivation();
 

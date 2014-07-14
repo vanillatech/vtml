@@ -24,6 +24,9 @@ namespace odin
         {
             brain = new Brain();
             monitor = brain.addMonitor();
+            BindingList<String> ds = new BindingList<String>();
+            monitor.addLog(ref ds);
+            listBox1.DataSource = ds;
         }
 
         private void button1_Click(object sender, EventArgs e)

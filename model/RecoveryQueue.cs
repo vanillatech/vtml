@@ -39,7 +39,7 @@ namespace odin.model
         internal Neuron getNext()
         {
             if (steps.Count > getNextCurrentStepPointer) {
-                List<QueueElement> n = steps[getNextCurrentStepPointer].element;
+                List<QueueElement> n = steps[getNextCurrentStepPointer].elements;
                 if (n.Count > getNextCurrentPos)
                 {
                     return n[getNextCurrentPos++].neuron;
@@ -66,7 +66,7 @@ namespace odin.model
         internal bool empty()
         {
             foreach (Step s in steps) {
-                if (s.element.Count() > 0) return false; 
+                if (s.elements.Count() > 0) return false; 
             }
             return true;
         }

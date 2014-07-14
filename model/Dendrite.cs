@@ -29,11 +29,12 @@ namespace odin.model
         }
 
 
-        internal void addSynapse(Axon axon)
+        internal Synapse addSynapse(Axon axon)
         {
             Synapse s = new Synapse(axon,this,brain);
           
             this.synapses.Add(s);
+            return s;
         }
 
         internal Neuron getNeuron()
@@ -54,6 +55,16 @@ namespace odin.model
         internal IEnumerable<Synapse> getSynapses()
         {
             return this.synapses;
+        }
+
+        internal Synapse getSynapse(Axon axon)
+        {
+            foreach (Synapse s in this.synapses)
+            {
+                if (s.getFromAxon() == axon) return s;
+
+            }
+            return this.addSynapse(axon);
         }
     }
 }
