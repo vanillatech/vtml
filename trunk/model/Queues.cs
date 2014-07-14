@@ -14,7 +14,7 @@ namespace odin.model
         }
         internal struct Step
         {
-            internal List<QueueElement> element;
+            internal List<QueueElement> elements;
             internal int step;
         
         }
@@ -30,7 +30,7 @@ namespace odin.model
                 QueueElement aqe = new QueueElement();
                 aqe.neuron = neuron;
                 aqe.val = value;
-                tmp.element.Add(aqe);
+                tmp.elements.Add(aqe);
                          
             
         }
@@ -44,17 +44,23 @@ namespace odin.model
             else
             {
                 Step tmp = new Step();
-                tmp.element = new List<QueueElement>();
+                tmp.elements = new List<QueueElement>();
                 tmp.step = when;
                 steps.Add(tmp);
                 return tmp;
             }
         }
 
+        internal List<QueueElement> getElementsInStep(int when)
+        {
+            //return copy of list because List could be changed
+            return new List<QueueElement>(getStep(when).elements);
+        }
+
         internal List<Neuron> getNeuronsInStep(int when)
         {
             List<Neuron> neurons = new List<Neuron>();
-            foreach (QueueElement e in this.getStep(when).element)
+            foreach (QueueElement e in this.getStep(when).elements)
             {
                 neurons.Add(e.neuron);
             }

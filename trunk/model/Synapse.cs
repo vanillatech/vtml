@@ -44,5 +44,10 @@ namespace odin.model
         internal double getStrength() {
             return brain.synapseDefaultStrength * (this.countExcitatorySynapses - this.countInhibitiveSynapses) / (this.countExcitatorySynapses +this.countInhibitiveSynapses);
         }
+
+        internal Neuron getNeuron()
+        {
+            return (this.toDendrite.getNeuron());
+        }
     }
 }

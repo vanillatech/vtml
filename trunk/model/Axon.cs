@@ -10,7 +10,7 @@ namespace odin.model
     {
         Neuron fromNeuron;
         Brain brain;
-        List<Dendrite> synapses = new List<Dendrite>();
+        List<Synapse> synapses = new List<Synapse>();
         internal Axon(Neuron neuron,Brain mybrain)
         {
             fromNeuron = neuron;
@@ -19,10 +19,11 @@ namespace odin.model
 
         internal void synapseOn(Dendrite tmpDendrite)
         {
-            if (!this.synapses.Contains(tmpDendrite))
+            Synapse s = tmpDendrite.getSynapse(this);
+            if (!this.synapses.Contains(s))
             {
-                this.synapses.Add(tmpDendrite);
-                tmpDendrite.addSynapse(this);
+                this.synapses.Add(s);
+                
             }
             
         }
@@ -30,9 +31,9 @@ namespace odin.model
         internal List<Neuron> getSuccessors()
         {
             List<Neuron> tmp = new List<Neuron>();
-            foreach (Dendrite d in this.synapses)
+            foreach (Synapse s in this.synapses)
             {
-                tmp.Add(d.getNeuron());
+                tmp.Add(s.getNeuron());
             }
             return tmp;
         }
@@ -40,6 +41,14 @@ namespace odin.model
         internal Neuron getParentNeuron()
         {
             return (this.fromNeuron);
+        }
+
+        internal void propagateActionPotential()
+        {
+            foreach (Synapse s in this.synapses)
+            {
+                s.activate();
+            }
         }
     }
 }

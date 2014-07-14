@@ -9,6 +9,7 @@ namespace odin.model
 
     class Brain
     {
+        private Monitor monitor;
         private int nextFreeID = 1;
         public double activationThreshold = 0.5;
         public double synapseDefaultStrength = 0.5;
@@ -22,7 +23,12 @@ namespace odin.model
             this.readSense = new Sense(this);
             recoveryQueue.setMaxSteps(2);
         }
-
+        internal void log(String s) {
+            if (this.monitor != null)
+            {
+                monitor.log(s);
+            }
+        }
 
         Sense readSense;
 
@@ -46,12 +52,24 @@ namespace odin.model
             activationQueue.fireCurrentNeurons();
             activationQueue.nextStep();
             this.reinforcementLearning();
-            if (this.checkForNewPattern())
+            if (this.checkForRecentlyFiredNeuronsWithoutCommonSuccessor())
             {
-                this.learnNewPatterns();
+                this.associateLastFiredNeuronsWithNewNeuron();
             }
+            this.associateLastStepNeuronsWithCurrentStep();
             recoveryQueue.nextStep();
             this.currentStep++;
+        }
+
+        private void associateLastStepNeuronsWithCurrentStep()
+        {
+            foreach (Neuron n in recoveryQueue.getNeuronsInStep(1))
+            {
+                foreach (Neuron c in recoveryQueue.getNeuronsInStep(0))
+                {
+                    n.synapseOn(c.getDendrite(1));
+                }
+            }
         }
 
         private void reinforcementLearning()
@@ -80,7 +98,7 @@ namespace odin.model
             }
         }
 
-        private bool checkForNewPattern()
+        private bool checkForRecentlyFiredNeuronsWithoutCommonSuccessor()
         {
             Neuron n;
             List<Neuron> commonSuccessors = new List<Neuron>();
@@ -112,7 +130,7 @@ namespace odin.model
                 return false;
         }
 
-        private void learnNewPatterns()
+        private void associateLastFiredNeuronsWithNewNeuron()
         {
             Neuron tmpNeuron = new Neuron(this);
             Neuron n;
@@ -140,7 +158,8 @@ namespace odin.model
 
         public Monitor addMonitor()
         {
-            return new Monitor(this,this.readSense);
+            this.monitor = new Monitor(this,this.readSense);
+            return monitor;
         }
 
         internal int getNextID()

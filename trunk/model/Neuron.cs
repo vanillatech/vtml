@@ -40,9 +40,11 @@ namespace odin.model
         }
         internal void fire()
         {
+            brain.log("Fired: " + this.id);
             this.activation = 0;
             this.lastFired = brain.currentStep;
             brain.addToRecoveryQueue(this);
+            this.axon.propagateActionPotential();
         }
 
 
@@ -55,7 +57,7 @@ namespace odin.model
 
         internal bool crossesThreshold()
         {
-            if (this.activation > brain.activationThreshold) {
+            if (this.activation >= brain.activationThreshold) {
                 return true;
             }
             return false;
@@ -70,6 +72,7 @@ namespace odin.model
 
         internal void polarize(double p)
         {
+            brain.log("Polarized: " + this.id + " with Activation: " + p);
             this.activation += p;
         }
 
