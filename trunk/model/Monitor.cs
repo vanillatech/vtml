@@ -12,6 +12,7 @@ namespace odin.model
         private Brain brain;
         private Sense sense;
         private BindingList<String> logEntries;
+        private String outputString;
 
         public Monitor(Brain mybrain, Sense senseToMonitor)
         {
@@ -49,6 +50,16 @@ namespace odin.model
         {
             if (node != null) return node.getSuccessors();
             return null;
+        }
+
+        internal void output(int p)
+        {
+            this.outputString += (Char)(p);
+        }
+
+        internal void attachOutput(ref string p)
+        {
+            this.outputString = p;
         }
     }
 }

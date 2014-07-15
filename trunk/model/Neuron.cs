@@ -10,8 +10,10 @@ namespace odin.model
     {
         Axon axon;
         Brain brain;
-        double activation = 0;
+        internal double activation = 0;
         internal UInt64 lastFired = 0;
+        internal int layer;
+        internal int tag;
 
 
         List<Dendrite> dendrites = new List<Dendrite>();
@@ -20,6 +22,8 @@ namespace odin.model
             this.id = mybrain.getNextID();
             axon = new Axon(this,mybrain);
             brain = mybrain;
+            this.layer = 1;
+            this.tag = 0;
 
         }
         internal Dendrite getNewDendrite(int length) {
@@ -41,9 +45,11 @@ namespace odin.model
         internal void fire()
         {
             brain.log("Fired: " + this.id);
+            brain.monitorOutput(this.tag);
             this.activation = 0;
             this.lastFired = brain.currentStep;
             brain.addToRecoveryQueue(this);
+            brain.lateralInhibition(this.layer);
             this.axon.propagateActionPotential();
         }
 
@@ -72,8 +78,9 @@ namespace odin.model
 
         internal void polarize(double p)
         {
-            brain.log("Polarized: " + this.id + " with Activation: " + p);
             this.activation += p;
+            brain.log("Polarized: " + this.id + " with Activation: " + p + " now having " + this.activation);
+            
         }
 
         internal List<Neuron> getPredecessors()
@@ -96,7 +103,12 @@ namespace odin.model
 
         internal void leakActivation()
         {
-            this.activation *= brain.leakageFactor;
+            this.activation *= Math.Pow(brain.leakageFactor, (brain.currentStep - this.lastFired));
+        }
+
+        internal void inhibit()
+        {
+            this.activation *= 0.5;
         }
     }
 }

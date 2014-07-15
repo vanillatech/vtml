@@ -34,7 +34,9 @@ namespace odin.model
             else
             {
                 Inputs tmp = new Inputs();
-                tmp.dendrite = new Neuron(brain).getNewDendrite(1);
+                Neuron tmpNeuron = new Neuron(brain);
+                tmpNeuron.tag = byteRead;
+                tmp.dendrite = tmpNeuron.getNewDendrite(1);
                 tmp.value = byteRead;
                 cInputNeurons.Add(tmp);
                 return tmp.dendrite;

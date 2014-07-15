@@ -12,7 +12,7 @@ namespace odin.model
         Dendrite toDendrite;
         Brain brain;
         internal int countExcitatorySynapses;
-        internal int countInhibitiveSynapses = 0;
+        internal int countInhibitorySynapses = 0;
 
         internal Synapse(Axon axon, Dendrite dendrite, Brain mybrain) {
             this.brain = mybrain;
@@ -39,10 +39,10 @@ namespace odin.model
         internal void reinforce(bool excitatory)
         {
             if (excitatory) this.countExcitatorySynapses++;
-            else this.countInhibitiveSynapses++;
+            else this.countInhibitorySynapses++;
         }
         internal double getStrength() {
-            return brain.synapseDefaultStrength * (this.countExcitatorySynapses - this.countInhibitiveSynapses) / (this.countExcitatorySynapses +this.countInhibitiveSynapses);
+            return brain.synapseDefaultStrength * (this.countExcitatorySynapses - this.countInhibitorySynapses);
         }
 
         internal Neuron getNeuron()
