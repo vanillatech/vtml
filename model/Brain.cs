@@ -12,10 +12,12 @@ namespace odin.model
         private Monitor monitor;
         private int nextFreeID = 1;
         public double activationThreshold = 0.5;
-        public double synapseDefaultStrength = 0.5;
-        public int synapseDefaultCount = 5;
+        public double synapseDefaultStrength = 0.1;
+        public int synapseDefaultCount = 1;
         public double leakageFactor = 0.9;
         public UInt64 currentStep = 0;
+        public int maxLayer = 8;
+
         public Brain()
         {
             this.activationQueue =  new ActivationQueue(this);
@@ -133,12 +135,14 @@ namespace odin.model
         private void associateLastFiredNeuronsWithNewNeuron()
         {
             Neuron tmpNeuron = new Neuron(this);
+            tmpNeuron.layer = this.maxLayer;
             Neuron n;
             while ((n = recoveryQueue.getNext())!=null)
             {
 
                 Dendrite tmpDendrite = tmpNeuron.getDendrite(recoveryQueue.getNextCurrentStep());
                 n.synapseOn(tmpDendrite);
+                if (n.layer < tmpNeuron.layer - 1) tmpNeuron.layer = n.layer + 1;
 
             } 
             
@@ -165,6 +169,18 @@ namespace odin.model
         internal int getNextID()
         {
             return nextFreeID++;
+        }
+
+        internal void lateralInhibition(int layer)
+        {
+            activationQueue.inhibitNeuronsInStep(0,layer);
+        }
+
+        internal void monitorOutput(int p)
+        {
+            if (p > 0 && this.monitor != null) {
+                monitor.output(p);
+            }
         }
     }
 }
