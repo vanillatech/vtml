@@ -24,17 +24,20 @@ namespace odin
         {
             brain = new Brain();
             monitor = brain.addMonitor();
-            BindingList<String> ds = new BindingList<String>();
-            monitor.addLog(ref ds);
-            
+           // BindingList<String> ds = new BindingList<String>();
+            //monitor.addLog(ref ds);
+            monitor.attachLog(onNewLogEntry);
             monitor.attachOutput(onOutputChanged);
            // textBox3.DataBindings.Add(new Binding("Text", monitor, "OutputString"));
-            listBox1.DataSource = ds;
+            //listBox1.DataSource = ds;
         }
         private void onOutputChanged (String output) {
             textBox3.Text = output;
-        } 
-
+        }
+        private void onNewLogEntry(String logEntry)
+        {
+            listBox1.Items.Insert(0, logEntry);
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             monitor.clearOutput();
