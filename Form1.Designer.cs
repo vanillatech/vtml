@@ -41,9 +41,11 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.monitorBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.monitorBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -100,7 +102,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(690, 356);
+            this.tabPage2.Size = new System.Drawing.Size(690, 358);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Model Navigator";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -155,6 +157,10 @@
             this.label1.TabIndex = 6;
             this.label1.Text = "Output";
             // 
+            // monitorBindingSource
+            // 
+            this.monitorBindingSource.DataSource = typeof(odin.model.Monitor);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -172,6 +178,7 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.monitorBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -191,6 +198,7 @@
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.BindingSource monitorBindingSource;
     }
 }
 

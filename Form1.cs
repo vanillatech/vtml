@@ -26,15 +26,18 @@ namespace odin
             monitor = brain.addMonitor();
             BindingList<String> ds = new BindingList<String>();
             monitor.addLog(ref ds);
-            String outp = "";
-            monitor.attachOutput(ref outp);
-            textBox3.DataBindings.Add(new Binding("Text", outp, ""));
             
+            monitor.attachOutput(onOutputChanged);
+           // textBox3.DataBindings.Add(new Binding("Text", monitor, "OutputString"));
             listBox1.DataSource = ds;
         }
+        private void onOutputChanged (String output) {
+            textBox3.Text = output;
+        } 
 
         private void button1_Click(object sender, EventArgs e)
         {
+            monitor.clearOutput();
             brain.input(textBox1.Text);
         }
 
