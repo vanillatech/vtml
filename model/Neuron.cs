@@ -108,7 +108,7 @@ namespace odin.model
 
         internal void inhibit()
         {
-            this.activation *= 0.5;
+            this.activation = 0;//*= 0.5;
         }
     }
 }

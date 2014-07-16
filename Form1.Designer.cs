@@ -64,6 +64,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(323, 20);
             this.textBox1.TabIndex = 1;
+            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
             // 
             // tabControl1
             // 
@@ -91,6 +92,7 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(0, 0);
             this.listBox1.Name = "listBox1";
+            this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.listBox1.Size = new System.Drawing.Size(690, 355);
             this.listBox1.TabIndex = 3;
             // 

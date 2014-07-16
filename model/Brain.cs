@@ -13,7 +13,7 @@ namespace odin.model
         private int nextFreeID = 1;
         public double activationThreshold = 0.5;
         public double synapseDefaultStrength = 0.1;
-        public int synapseDefaultCount = 1;
+        public int synapseDefaultCount = 3;
         public double leakageFactor = 0.9;
         public UInt64 currentStep = 0;
         public int maxLayer = 8;
@@ -135,14 +135,15 @@ namespace odin.model
         private void associateLastFiredNeuronsWithNewNeuron()
         {
             Neuron tmpNeuron = new Neuron(this);
-            tmpNeuron.layer = this.maxLayer;
+            
             Neuron n;
             while ((n = recoveryQueue.getNext())!=null)
             {
 
-                Dendrite tmpDendrite = tmpNeuron.getDendrite(recoveryQueue.getNextCurrentStep());
+                Dendrite tmpDendrite = tmpNeuron.getDendrite(recoveryQueue.getCurrentStep()+1);
                 n.synapseOn(tmpDendrite);
-                if (n.layer < tmpNeuron.layer - 1) tmpNeuron.layer = n.layer + 1;
+                if (n.layer >= tmpNeuron.layer) tmpNeuron.layer = n.layer + 1;
+                if (n.layer == this.maxLayer) tmpNeuron.layer = n.layer;
 
             } 
             
