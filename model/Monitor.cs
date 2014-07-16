@@ -11,7 +11,7 @@ namespace odin.model
     {
         private Brain brain;
         private Sense sense;
-        private BindingList<String> logEntries;
+        private String lastLogEntry;
         private String outputString;
         
         /*public String OutputString { get { return outputString; } set { outputString = value; } }
@@ -30,18 +30,11 @@ namespace odin.model
             this.sense = senseToMonitor;
             this.outputString = "";
         }
-        public void addLog(ref BindingList<String> debugLog)
-        {
-            this.logEntries = debugLog;
-            
-            
-        }
+        
         internal void log(String s)
         {
-            if (this.logEntries != null)
-            {
-                logEntries.Insert(0,s);
-            }
+            this.lastLogEntry = s;
+            NewLogEntry(s);
         }
 
         internal Neuron getInputNode(string inp)
@@ -86,6 +79,13 @@ namespace odin.model
         {
             OutputChanged = onOutputChanged;
             
+        }
+
+        private Action<string> NewLogEntry;
+        internal void attachLog(Action<string> onNewLogEntry)
+        {
+            NewLogEntry = onNewLogEntry;
+
         }
 
         internal void clearOutput()
