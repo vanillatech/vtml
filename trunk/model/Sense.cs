@@ -22,7 +22,7 @@ namespace odin.model
         public void input(int byteRead)
         {
             Dendrite inp = this.getInputDendrite(byteRead);
-            inp.activate(1.0);
+            inp.activate(100.0);
         }
 
         private Dendrite getInputDendrite(int byteRead)

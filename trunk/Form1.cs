@@ -39,6 +39,7 @@ namespace odin
         {
             monitor.clearOutput();
             brain.input(textBox1.Text);
+            textBox1.Text = "";
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -80,6 +81,13 @@ namespace odin
                 n.Nodes.Add(m);
                 
 
+            }
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)(13)) {
+            button1_Click(this,new EventArgs());
             }
         }
     }

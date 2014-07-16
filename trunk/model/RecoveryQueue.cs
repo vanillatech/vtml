@@ -58,7 +58,7 @@ namespace odin.model
             }
         }
 
-        internal int getNextCurrentStep()
+        internal int getCurrentStep()
         {
             return steps[getNextCurrentStepPointer].step;
         }
