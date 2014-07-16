@@ -13,12 +13,22 @@ namespace odin.model
         private Sense sense;
         private BindingList<String> logEntries;
         private String outputString;
-
+        
+        /*public String OutputString { get { return outputString; } set { outputString = value; } }
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, e);
+            }
+        }*/
         public Monitor(Brain mybrain, Sense senseToMonitor)
         {
             
             this.brain = mybrain;
             this.sense = senseToMonitor;
+            this.outputString = "";
         }
         public void addLog(ref BindingList<String> debugLog)
         {
@@ -55,11 +65,32 @@ namespace odin.model
         internal void output(int p)
         {
             this.outputString += (Char)(p);
+            OutputChanged(this.outputString);
+            /*var handler = PropertyChanged;
+            if (handler != null)
+            { 
+                handler(this, new PropertyChangedEventArgs(OutputString)); 
+            }*/
         }
 
         internal void attachOutput(ref string p)
         {
             this.outputString = p;
+            
+        }
+
+
+        private Action<string> OutputChanged;
+        
+        internal void attachOutput(Action<string> onOutputChanged)
+        {
+            OutputChanged = onOutputChanged;
+            
+        }
+
+        internal void clearOutput()
+        {
+            this.outputString = "";
         }
     }
 }
