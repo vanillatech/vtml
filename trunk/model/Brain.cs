@@ -11,12 +11,21 @@ namespace odin.model
     {
         private Monitor monitor;
         private int nextFreeID = 1;
-        public double activationThreshold = 0.5;
-        public double synapseDefaultStrength = 0.1;
-        public int synapseDefaultCount = 3;
-        public double leakageFactor = 0.9;
         public UInt64 currentStep = 0;
+        //Model parameters
+        public double activationThreshold = 0.8;
+        public double synapseDefaultStrength = 0.4;
+        public int synapseDefaultCount = 1;
+        public int synapseMaxCount = 999;
+        public double leakageFactor = 0.3;
         public int maxLayer = 8;
+        public double adaptionRate = 0.4;
+        public bool learnOnActivate = false;
+        public bool learnOnFire = true;
+        public double inhibitFactor = 0.5;
+        public int temporalPatternLength = 3;
+        public bool distributeActivationAmongSynapses = false;
+        //--
 
         public Brain()
         {
@@ -87,7 +96,7 @@ namespace odin.model
                         {
                             //Hebbian learning:
                             //if neuron has been involved in firing the successor reinforce
-                            synapse.reinforce(true);
+                            if (this.learnOnFire) synapse.reinforce(true);
                         }
                         else
                         {
