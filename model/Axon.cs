@@ -47,7 +47,8 @@ namespace odin.model
         {
             foreach (Synapse s in this.synapses)
             {
-                s.activate();
+                if (brain.distributeActivationAmongSynapses) s.activate(this.synapses.Count);
+                else s.activate();
             }
         }
     }

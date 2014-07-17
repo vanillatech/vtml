@@ -13,8 +13,9 @@ namespace odin.model
         private int getNextCurrentPos = 0;
         internal RecoveryQueue(Brain mybrain) {
             this.brain = mybrain;
+            this.maxSteps = brain.temporalPatternLength;
         }
-        private int maxSteps = 2;
+        private int maxSteps;
         internal void add(Neuron neuron)
         {
             this.addToStep(neuron,0);

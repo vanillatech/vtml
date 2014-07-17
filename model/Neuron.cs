@@ -12,6 +12,7 @@ namespace odin.model
         Brain brain;
         internal double activation = 0;
         internal UInt64 lastFired = 0;
+        internal UInt64 lastLeakEvent = 0;
         internal int layer;
         internal int tag;
 
@@ -63,7 +64,7 @@ namespace odin.model
 
         internal bool crossesThreshold()
         {
-            if (this.activation >= brain.activationThreshold) {
+            if (this.activation > brain.activationThreshold) {
                 return true;
             }
             return false;
@@ -103,12 +104,13 @@ namespace odin.model
 
         internal void leakActivation()
         {
-            this.activation *= Math.Pow(brain.leakageFactor, (brain.currentStep - this.lastFired));
+            this.activation *= Math.Pow(brain.leakageFactor, (brain.currentStep - this.lastLeakEvent));
+            this.lastLeakEvent = brain.currentStep;
         }
 
         internal void inhibit()
         {
-            this.activation = 0;//*= 0.5;
+            this.activation = brain.inhibitFactor;
         }
     }
 }
