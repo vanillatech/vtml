@@ -61,7 +61,14 @@ namespace odin.model
 
         internal void activate(int p)
         {
-            toDendrite.activate(this.getStrength()/p);
+            if (brain.activateNeuronBasedOnInputSynapses)
+            {
+                toDendrite.activate(this.getStrength() / p / toDendrite.countSynapses());
+            }
+            else
+            {
+                toDendrite.activate(this.getStrength() / p);
+            }
             if (brain.learnOnActivate) this.reinforce(true);
         }
         internal void activate()

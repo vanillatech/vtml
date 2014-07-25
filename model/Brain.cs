@@ -13,11 +13,11 @@ namespace odin.model
         private int nextFreeID = 1;
         public UInt64 currentStep = 0;
         //Model parameters
-        public double activationThreshold = 0.8;
-        public double synapseDefaultStrength = 0.4;
+        public double activationThreshold = 0.5;
+        public double synapseDefaultStrength = 0.8;
         public int synapseDefaultCount = 1;
         public int synapseMaxCount = 999;
-        public double leakageFactor = 0.3;
+        public double leakageFactor = 0.9;
         public int maxLayer = 8;
         public double adaptionRate = 0.4;
         public bool learnOnActivate = false;
@@ -25,6 +25,7 @@ namespace odin.model
         public double inhibitFactor = 0.5;
         public int temporalPatternLength = 3;
         public bool distributeActivationAmongSynapses = false;
+        public bool activateNeuronBasedOnInputSynapses = true;
         //--
 
         public Brain()

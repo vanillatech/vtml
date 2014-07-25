@@ -12,6 +12,7 @@ namespace odin.model
         List<Synapse> synapses = new List<Synapse>();
         internal int length;
         
+        
         Neuron toNeuron;
         Brain brain;
         
@@ -20,6 +21,7 @@ namespace odin.model
             toNeuron = neuron;
             brain = mybrain;
             this.length = len;
+            
             
         }
 
@@ -65,6 +67,11 @@ namespace odin.model
 
             }
             return this.addSynapse(axon);
+        }
+
+        internal double countSynapses()
+        {
+            return (this.synapses.Count);
         }
     }
 }
