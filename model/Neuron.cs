@@ -47,20 +47,22 @@ namespace odin.model
         internal void fire()
         {
 
-            if (this.type == 2)
-                brain.addToOutputStack(this.tag);
+        
+                if (this.type == 2)
+                    brain.addToOutputStack(this.tag);
 
-            brain.log("Fired: " + this.id);
-            brain.monitorOutput(this.tag);
-            this.activation = 0;
-            this.lastFired = brain.currentStep;
+                brain.log("Fired: " + this.id);
+                brain.monitorOutput(this.tag);
+                this.activation = 0;
+                this.lastFired = brain.currentStep;
 
-            if (this.type != 2)
-            {
-                brain.addToRecoveryQueue(this);
-                brain.lateralInhibition(this.layer);
-                this.axon.propagateActionPotential();
-            }
+                if (this.type != 2)
+                {
+                   brain.addToRecoveryQueue(this);
+                   brain.lateralInhibition(this.layer);
+                   this.axon.propagateActionPotential();
+                }
+            
         }
 
 
@@ -120,6 +122,11 @@ namespace odin.model
         internal void inhibit()
         {
             this.activation = this.activation * brain.inhibitFactor;
+        }
+
+        internal bool isWithinRefractoryPeriod()
+        {
+            return (!(this.lastFired < brain.currentStep - (ulong)(brain.refractoryPeriod) || this.lastFired == 0 || this.type > 0)); 
         }
     }
 }

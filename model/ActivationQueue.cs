@@ -31,7 +31,10 @@ namespace odin.model
             foreach (QueueElement a in this.getElementsInStepOrderByActivation(0)) {
                 if (a.neuron.crossesThreshold())
                 {
-                    a.neuron.fire();
+                    if (!a.neuron.isWithinRefractoryPeriod())
+                    {
+                        a.neuron.fire();
+                    }
                 }
 
             }
