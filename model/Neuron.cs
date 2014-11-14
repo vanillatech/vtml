@@ -15,7 +15,7 @@ namespace odin.model
         internal UInt64 lastLeakEvent = 0;
         internal int layer;
         internal int tag;
-        private int value;
+        internal int type = 0; //1: input, 2: output
 
         List<Dendrite> dendrites = new List<Dendrite>();
         internal Neuron(Brain mybrain)
@@ -47,23 +47,27 @@ namespace odin.model
         internal void fire()
         {
 
-            brain.addToOutputStack(this.tag);
+            if (this.type == 2)
+                brain.addToOutputStack(this.tag);
 
             brain.log("Fired: " + this.id);
             brain.monitorOutput(this.tag);
             this.activation = 0;
             this.lastFired = brain.currentStep;
 
-            brain.addToRecoveryQueue(this);
-            brain.lateralInhibition(this.layer);
-            this.axon.propagateActionPotential();
+            if (this.type != 2)
+            {
+                brain.addToRecoveryQueue(this);
+                brain.lateralInhibition(this.layer);
+                this.axon.propagateActionPotential();
+            }
         }
 
 
-        internal void synapseOn(Dendrite tmpDendrite)
+        internal void synapseOn(Dendrite tmpDendrite,bool inhibitory = false)
         {
             
-            this.axon.synapseOn(tmpDendrite);
+            this.axon.synapseOn(tmpDendrite, inhibitory);
             
         }
 
