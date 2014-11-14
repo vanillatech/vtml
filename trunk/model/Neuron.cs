@@ -115,7 +115,7 @@ namespace odin.model
 
         internal void inhibit()
         {
-            this.activation = brain.inhibitFactor;
+            this.activation = this.activation * brain.inhibitFactor;
         }
     }
 }
