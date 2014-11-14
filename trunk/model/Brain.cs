@@ -30,6 +30,7 @@ namespace odin.model
         public int temporalPatternLength = 1;
         public bool distributeActivationAmongSynapses = false;
         public bool activateNeuronBasedOnInputSynapses = false;
+        public int refractoryPeriod = 1;
         //--
 
         public Brain()
@@ -177,7 +178,7 @@ namespace odin.model
                 
                 foreach (Neuron c in commonSuccessorsIterate)
                 {
-                    if (!compare.Contains(c))
+                    if (c.type == 2 || !compare.Contains(c))
                     {
                         commonSuccessors.Remove(c);
                     }
