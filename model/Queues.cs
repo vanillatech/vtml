@@ -38,7 +38,7 @@ namespace odin.model
         {
             if (steps.Exists(x => x.step == inStep))
             {
-                return steps.Find(x => x.step == 1).elements.Count;
+                return steps.Find(x => x.step == inStep).elements.Count;
             }
        
             return 0;
