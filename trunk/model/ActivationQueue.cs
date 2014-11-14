@@ -15,10 +15,12 @@ namespace odin.model
         }
         internal void nextStep()
         {
-            this.decrementSteps();
-           
-            this.removeStep(-1);
+                   
             
+            this.decrementSteps();
+            
+
+            brain.log("next Step in ActivationQueue");
         }
 
         
@@ -35,6 +37,7 @@ namespace odin.model
             }
         }
 
+
         internal void processActivation()
         {
             foreach (QueueElement a in this.getElementsInStep(0))
@@ -42,6 +45,7 @@ namespace odin.model
                 a.neuron.polarize(a.val);
 
             }
+            
         }
 
         internal void leakActivation()
@@ -63,5 +67,6 @@ namespace odin.model
 
             }
         }
+
     }
 }

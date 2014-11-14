@@ -34,7 +34,28 @@ namespace odin.model
                          
             
         }
-
+        internal int countElements(int inStep)
+        {
+            if (steps.Exists(x => x.step == inStep))
+            {
+                return steps.Find(x => x.step == 1).elements.Count;
+            }
+       
+            return 0;
+        }
+        internal int countElements() {
+            int elements = 0;
+            foreach (Step s in steps)
+            {
+                elements += s.elements.Count();
+            }
+            return elements; 
+        }
+        
+        internal bool empty()
+        {
+            return (this.countElements() == 0);
+        }
         internal Step getStep(int when)
         {
             if (steps.Exists(x => x.step == when))
@@ -70,6 +91,16 @@ namespace odin.model
             foreach (QueueElement e in this.getStep(when).elements)
             {
                 neurons.Add(e.neuron);
+            }
+            return neurons;
+        }
+        internal List<Neuron> getInputNeuronsInStep(int when)
+        {
+            List<Neuron> neurons = new List<Neuron>();
+            foreach (QueueElement e in this.getStep(when).elements)
+            {
+                if (e.neuron.layer == 0)
+                    neurons.Add(e.neuron);
             }
             return neurons;
         }

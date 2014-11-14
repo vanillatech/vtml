@@ -41,15 +41,11 @@ namespace odin
         private void button1_Click(object sender, EventArgs e)
         {
             monitor.clearOutput();
-            brain.input(textBox1.Text);
+            textBox4.Text = brain.query(textBox1.Text);
             textBox1.Text = "";
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            brain.think();
-        }
-
+        
         private void Query_Click(object sender, EventArgs e)
         {
             
@@ -92,6 +88,11 @@ namespace odin
             if (e.KeyChar == (char)(13)) {
             button1_Click(this,new EventArgs());
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            textBox4.Text = brain.query(textBox1.Text, true);
         }
     }
 }
