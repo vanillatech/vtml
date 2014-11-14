@@ -17,14 +17,16 @@ namespace odin.model
             brain = mybrain;
         }
 
-        internal void synapseOn(Dendrite tmpDendrite)
+        internal void synapseOn(Dendrite tmpDendrite, bool inhibitory = false)
         {
             Synapse s = tmpDendrite.getSynapse(this);
+            if (inhibitory) s.weight = -s.weight;
             if (!this.synapses.Contains(s))
             {
                 this.synapses.Add(s);
-                
+
             }
+           
             
         }
 

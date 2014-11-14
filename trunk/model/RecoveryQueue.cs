@@ -34,7 +34,16 @@ namespace odin.model
             this.maxSteps = p;
         }
 
-
+        internal Neuron getFirst(int step)
+        {
+            this.getNextCurrentPos = 0;
+            return getNext(step);
+        }
+        internal Neuron getFirst()
+        {
+            this.getNextCurrentPos = 0;
+            return getNext();
+        }
         internal Neuron getNext(int step)
         {
 

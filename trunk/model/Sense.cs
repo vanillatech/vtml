@@ -43,6 +43,7 @@ namespace odin.model
 
                 Neuron tmpNeuron = new Neuron(brain);
                 tmpNeuron.tag = byteRead;
+                tmpNeuron.type = 1;
                 tmp.dendrite = tmpNeuron.getNewDendrite(1);
 
                 tmp.value = byteRead;

@@ -17,19 +17,19 @@ namespace odin.model
 
         public UInt64 currentStep = 0;
         //Model parameters
-        public double activationThreshold = 0.49;
+        public double activationThreshold = 0.99;
         public double synapseDefaultStrength = 1.0;
         public int synapseDefaultCount = 1;
         public int synapseMaxCount = 999;
         public double leakageFactor = 0;
-        public int maxLayer = 8;
+        public int maxLayer = 2;
         public double adaptionRate = 0.4;
         public bool learnOnActivate = false;
         public bool learnOnFire = true;
-        public double inhibitFactor = 0.5; // 1==no inhibition
+        public double inhibitFactor = 0; // 1==no inhibition
         public int temporalPatternLength = 1;
         public bool distributeActivationAmongSynapses = false;
-        public bool activateNeuronBasedOnInputSynapses = true;
+        public bool activateNeuronBasedOnInputSynapses = false;
         //--
 
         public Brain()
@@ -160,7 +160,7 @@ namespace odin.model
             Neuron n;
             List<Neuron> commonSuccessors = new List<Neuron>();
                        
-            n = recoveryQueue.getNext(0);
+            n = recoveryQueue.getFirst(0);
             if (n == null)
             { //if recoveryQueue is empty we don't have commonSuccessors
                 return false;
@@ -201,9 +201,25 @@ namespace odin.model
 
                 Dendrite tmpDendrite = tmpNeuron.getDendrite(recoveryQueue.getCurrentStep()+1);
                 n.synapseOn(tmpDendrite);
+                
                 if (n.layer >= tmpNeuron.layer) tmpNeuron.layer = n.layer + 1;
                 if (n.layer == this.maxLayer) tmpNeuron.layer = n.layer;
-                
+                if (n.type == 1) //if n is an input neuron
+                {
+                    //create an output neuron that gets inhibited by current inputneuron and that gets excited by tmpNeuron
+                    //this causes the outputneuron only to be fired in case we didn't input the same value
+                    Neuron outputNeuron = new Neuron(this);
+                    Dendrite od1 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 2);
+                    n.synapseOn(od1,true);
+                    outputNeuron.tag = n.tag;
+                    outputNeuron.type = 2;
+                    Dendrite od2 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 1);
+                    tmpNeuron.synapseOn(od2);
+                }
+                else
+                {
+
+                }
             }
             return tmpNeuron;
         }
