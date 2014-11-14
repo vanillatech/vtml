@@ -11,20 +11,24 @@ namespace odin.model
     {
         private Monitor monitor;
         private int nextFreeID = 1;
+        
+        public bool isInLearnMode = false;
+        private string outPutStack = "";
+
         public UInt64 currentStep = 0;
         //Model parameters
-        public double activationThreshold = 0.5;
-        public double synapseDefaultStrength = 0.8;
+        public double activationThreshold = 1.0;
+        public double synapseDefaultStrength = 1.0;
         public int synapseDefaultCount = 1;
         public int synapseMaxCount = 999;
-        public double leakageFactor = 0.9;
+        public double leakageFactor = 0;
         public int maxLayer = 8;
         public double adaptionRate = 0.4;
         public bool learnOnActivate = false;
         public bool learnOnFire = true;
         public double inhibitFactor = 0.5;
-        public int temporalPatternLength = 3;
-        public bool distributeActivationAmongSynapses = false;
+        public int temporalPatternLength = 1;
+        public bool distributeActivationAmongSynapses = true;
         public bool activateNeuronBasedOnInputSynapses = true;
         //--
 
@@ -33,7 +37,7 @@ namespace odin.model
             this.activationQueue =  new ActivationQueue(this);
             this.recoveryQueue = new RecoveryQueue(this);
             this.readSense = new Sense(this);
-            recoveryQueue.setMaxSteps(2);
+            //recoveryQueue.setMaxSteps(temporalPatternLength);
         }
         internal void log(String s) {
             if (this.monitor != null)
@@ -46,31 +50,56 @@ namespace odin.model
 
         internal ActivationQueue activationQueue; 
         internal RecoveryQueue recoveryQueue; 
-        public void input(string inp) {
+        public string query(string inp, bool learnMode = false) {
+            this.outPutStack = "";
+            this.isInLearnMode = learnMode;
             foreach (int n in inp)
             {
-                this.input(n);
+                if (this.input(n) == 1)
+                    return(null);
+                this.thinkToEnd();
+
             }
+            //this.thinkToEnd();
+            return (this.outPutStack);
+            
         }
-        public void input(int byteRead)
+
+        private void thinkToEnd()
         {
-            readSense.input(byteRead);
+            while (!activationQueue.empty() || recoveryQueue.countElements(0) > 0)
+                think();
+        }
+        public int input(int byteRead)
+        {
+            if (readSense.input(byteRead) == 1)
+                    return(1);
             think();
+            return (0);
         }
         public void think()
         {
+
+            activationQueue.nextStep();
             activationQueue.leakActivation();
             activationQueue.processActivation();
             activationQueue.fireCurrentNeurons();
-            activationQueue.nextStep();
-            this.reinforcementLearning();
-            if (this.checkForRecentlyFiredNeuronsWithoutCommonSuccessor())
+            activationQueue.removeStep(0);
+
+            //this.reinforcementLearning();
+            if (this.isInLearnMode)
             {
-                this.associateLastFiredNeuronsWithNewNeuron();
+                if (this.checkForRecentlyFiredNeuronsWithoutCommonSuccessor())
+                {
+                    Neuron tmpNeuron = this.associateLastFiredNeuronsWithNewNeuron();
+
+                    activationQueue.addToStep(tmpNeuron, 1, this.synapseMaxCount * 1);
+                }
+                //this.associateLastStepNeuronsWithCurrentStepInputNeurons();
             }
-            this.associateLastStepNeuronsWithCurrentStep();
             recoveryQueue.nextStep();
             this.currentStep++;
+            this.log("-----Next thinkstep: " + this.currentStep + " -----");
         }
 
         private void associateLastStepNeuronsWithCurrentStep()
@@ -79,7 +108,23 @@ namespace odin.model
             {
                 foreach (Neuron c in recoveryQueue.getNeuronsInStep(0))
                 {
-                    n.synapseOn(c.getDendrite(1));
+                    if (n.layer > c.layer)
+                    {
+                        n.synapseOn(c.getDendrite(1));
+                    }
+                }
+            }
+        }
+        private void associateLastStepNeuronsWithCurrentStepInputNeurons()
+        {
+            foreach (Neuron n in recoveryQueue.getNeuronsInStep(1))
+            {
+                foreach (Neuron c in recoveryQueue.getInputNeuronsInStep(0))
+                {
+                    if (n.layer > c.layer)
+                    {
+                        n.synapseOn(c.getDendrite(1));
+                    }
                 }
             }
         }
@@ -115,15 +160,19 @@ namespace odin.model
             Neuron n;
             List<Neuron> commonSuccessors = new List<Neuron>();
                        
-            n = recoveryQueue.getNext();
-            if (n != null)
-            {
-                commonSuccessors = n.getSuccessors();
-                
+            n = recoveryQueue.getNext(0);
+            if (n == null)
+            { //if recoveryQueue is empty we don't have commonSuccessors
+                return false;
             }
+            commonSuccessors = n.getSuccessors();
+            // if only 1 element left wo input neuron 
+            if (n.layer > 1 && recoveryQueue.countElements(0) == 1)
+                return false;
+            
             List<Neuron> commonSuccessorsIterate = new List<Neuron>(commonSuccessors);
-            while ((n = recoveryQueue.getNext()) != null)
-            {
+            while ((n = recoveryQueue.getNext(0)) != null)
+            { // every pair must have at least one common successor
                 List<Neuron> compare = n.getSuccessors();
                 
                 foreach (Neuron c in commonSuccessorsIterate)
@@ -142,7 +191,7 @@ namespace odin.model
                 return false;
         }
 
-        private void associateLastFiredNeuronsWithNewNeuron()
+        private Neuron associateLastFiredNeuronsWithNewNeuron()
         {
             Neuron tmpNeuron = new Neuron(this);
             
@@ -154,9 +203,9 @@ namespace odin.model
                 n.synapseOn(tmpDendrite);
                 if (n.layer >= tmpNeuron.layer) tmpNeuron.layer = n.layer + 1;
                 if (n.layer == this.maxLayer) tmpNeuron.layer = n.layer;
-
-            } 
-            
+                
+            }
+            return tmpNeuron;
         }
 
 
@@ -180,6 +229,11 @@ namespace odin.model
         internal int getNextID()
         {
             return nextFreeID++;
+        }
+        
+        internal void addToOutputStack(int p)
+        {
+            this.outPutStack += (Char)(p);
         }
 
         internal void lateralInhibition(int layer)

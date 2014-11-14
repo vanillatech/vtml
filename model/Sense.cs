@@ -19,10 +19,16 @@ namespace odin.model
             internal int value;
         }
         internal List<Inputs> cInputNeurons = new List<Inputs>();
-        public void input(int byteRead)
+        public int input(int byteRead)
         {
             Dendrite inp = this.getInputDendrite(byteRead);
+
+            if (inp == null)
+                return (1);       
+            
             inp.activate(brain.synapseMaxCount*1);
+
+            return (0);
         }
 
         private Dendrite getInputDendrite(int byteRead)
@@ -31,16 +37,19 @@ namespace odin.model
             {
                 return cInputNeurons.Find(x => x.value == byteRead).dendrite;
             }
-            else
+            else if (brain.isInLearnMode)
             {
                 Inputs tmp = new Inputs();
+
                 Neuron tmpNeuron = new Neuron(brain);
                 tmpNeuron.tag = byteRead;
                 tmp.dendrite = tmpNeuron.getNewDendrite(1);
+
                 tmp.value = byteRead;
                 cInputNeurons.Add(tmp);
                 return tmp.dendrite;
             }
+            else return null;
         }
         internal Neuron getInputNeuronIfExists(int byteRead)
         {

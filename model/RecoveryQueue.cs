@@ -26,6 +26,7 @@ namespace odin.model
         {
             this.incrementSteps();
             this.removeStep(maxSteps);
+            brain.log("next Step in RecoveryQueue");
         }
 
         internal void setMaxSteps(int p)
@@ -33,8 +34,29 @@ namespace odin.model
             this.maxSteps = p;
         }
 
-       
 
+        internal Neuron getNext(int step)
+        {
+
+            if (steps.Exists(x => x.step == step))
+            {
+                List<QueueElement> n = steps.Find(x => x.step == step).elements;
+                if (n.Count > getNextCurrentPos)
+                {
+                    return n[getNextCurrentPos++].neuron;
+                }
+                else
+                {
+                    getNextCurrentPos = 0;
+                    
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
        
 
         internal Neuron getNext()
@@ -64,12 +86,21 @@ namespace odin.model
             return steps[getNextCurrentStepPointer].step;
         }
 
-        internal bool empty()
+        internal int countElementsInLastStep()
         {
-            foreach (Step s in steps) {
-                if (s.elements.Count() > 0) return false; 
+            if (steps.Exists(x => x.step == 1))
+            {
+                return steps.Find(x => x.step == 1).elements.Count;
             }
+            return 0;
+        }
+        internal bool containsElementsInLastStep()
+        {
+            if (this.countElementsInLastStep() == 0)
+                return false;
             return true;
         }
+
+        
     }
 }
