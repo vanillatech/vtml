@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
 using odin.model;
 
 namespace odin
@@ -14,7 +17,11 @@ namespace odin
     public partial class Form1 : Form
     {
         Brain brain;
-        Monitor monitor;
+        odin.model.Monitor monitor;
+        
+        
+        private Thread listenThread;
+
         public Form1()
         {
             InitializeComponent();
@@ -23,13 +30,92 @@ namespace odin
         private void Form1_Load(object sender, EventArgs e)
         {
             brain = new Brain();
-            monitor = brain.addMonitor();
-           // BindingList<String> ds = new BindingList<String>();
-            //monitor.addLog(ref ds);
-            monitor.attachLog(onNewLogEntry);
-            monitor.attachOutput(onOutputChanged);
-           // textBox3.DataBindings.Add(new Binding("Text", monitor, "OutputString"));
-            //listBox1.DataSource = ds;
+            //monitor = brain.addMonitor();
+           
+            //monitor.attachLog(onNewLogEntry);
+            //monitor.attachOutput(onOutputChanged);
+           
+
+
+            this.listenThread = new Thread(new ThreadStart(ListenForClients));
+            this.listenThread.Start();
+
+            
+
+
+
+            
+            
+        }
+        private void ListenForClients()
+        {
+            IPAddress hostIP = Dns.GetHostEntry(Dns.GetHostName()).AddressList[1];
+            TcpListener serverSocket = new TcpListener(hostIP, 11202);
+            serverSocket.Start();
+            while (true)
+            {
+                //blocks until a client has connected to the server
+                TcpClient client = serverSocket.AcceptTcpClient();
+
+                //create a thread to handle communication 
+                //with connected client
+                Thread clientThread = new Thread(new ParameterizedThreadStart(HandleClientComm));
+                clientThread.Start(client);
+            }
+            
+        }
+        private void HandleClientComm(object client)
+        {
+            TcpClient tcpClient = (TcpClient)client;
+            NetworkStream clientStream = tcpClient.GetStream();
+
+            byte[] message = new byte[4096];
+            int bytesRead;
+            string dataFromClient = "";
+
+            while (true)
+            {
+                bytesRead = 0;
+
+                try
+                {
+                    //blocks until a client sends a message
+                    bytesRead = clientStream.Read(message, 0, 4096);
+                }
+                catch
+                {
+                    //a socket error has occured
+                    break;
+                }
+
+                if (bytesRead == 0)
+                {
+                    //the client has disconnected from the server
+                    break;
+                }
+
+                //message has successfully been received
+                ASCIIEncoding encoder = new ASCIIEncoding();
+                dataFromClient += encoder.GetString(message, 0, bytesRead);
+                if (dataFromClient.IndexOf("\n") > -1)
+                {
+                    dataFromClient = dataFromClient.Substring(0, dataFromClient.IndexOf("\n")-1);
+                    if (dataFromClient != null)
+                    {
+                        String datarec = brain.query(dataFromClient,true);
+                        if (datarec != null)
+                        {
+                            byte[] sendBytes = Encoding.ASCII.GetBytes(datarec + "\n");
+                            clientStream.Write(sendBytes, 0, sendBytes.Length);
+                        }
+
+                    }
+                    dataFromClient = "";
+                }
+                
+            }
+
+            tcpClient.Close();
         }
         private void onOutputChanged (String output) {
             textBox3.Text = output;
@@ -40,7 +126,7 @@ namespace odin
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            monitor.clearOutput();
+            //monitor.clearOutput();
             textBox4.Text = brain.query(textBox1.Text);
             textBox1.Text = "";
         }
@@ -94,5 +180,10 @@ namespace odin
         {
             textBox4.Text = brain.query(textBox1.Text, true);
         }
+
+        
+        
+
+        
     }
 }
