@@ -17,8 +17,8 @@ namespace odin.model
 
         public UInt64 currentStep = 0;
         //Model parameters
-        public double activationThreshold = 0.99;
-        public double synapseDefaultStrength = 1.0;
+        public double activationThreshold = 0.8;
+        public double synapseDefaultStrength = 0.9;
         public int synapseDefaultCount = 1;
         public int synapseMaxCount = 999;
         public double leakageFactor = 0;
@@ -87,9 +87,10 @@ namespace odin.model
             activationQueue.fireCurrentNeurons();
             activationQueue.removeStep(0);
 
-            //this.reinforcementLearning();
+            
             if (this.isInLearnMode)
             {
+                this.reinforcementLearning();
                 if (this.checkForRecentlyFiredNeuronsWithoutCommonSuccessor())
                 {
                     Neuron tmpNeuron = this.associateLastFiredNeuronsWithNewNeuron();

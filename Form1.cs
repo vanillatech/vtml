@@ -30,10 +30,10 @@ namespace odin
         private void Form1_Load(object sender, EventArgs e)
         {
             brain = new Brain();
-            //monitor = brain.addMonitor();
+            monitor = brain.addMonitor();
            
-            //monitor.attachLog(onNewLogEntry);
-            //monitor.attachOutput(onOutputChanged);
+            monitor.attachLog(onNewLogEntry);
+            monitor.attachOutput(onOutputChanged);
            
 
 
