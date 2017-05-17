@@ -130,5 +130,12 @@ namespace odin.model
                 steps.Remove(getStep(p));
             }
         }
+        internal void clear()
+        {
+            for (int n = steps.Count - 1; n > 0; n-- )
+            {
+                steps.RemoveAt(n);
+            }
+        }
     }
 }

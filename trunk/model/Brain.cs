@@ -61,15 +61,56 @@ namespace odin.model
                 //this.thinkToEnd();
 
             }
-            this.thinkToEnd();
+            //this.thinkToEnd();
             return (this.outPutStack);
             
         }
+        public string query(int[] inp, bool learnMode = false)
+        {
+            this.outPutStack = "";
+            this.isInLearnMode = learnMode;
+            foreach (int n in inp)
+            {
+                if (this.input(n) == 1)
+                    return (null);
+                //this.thinkToEnd();
 
-        private void thinkToEnd()
+            }
+            //this.thinkToEnd();
+            return (this.outPutStack);
+
+        }
+        public string query(int inp, bool learnMode = false)
+        {
+            this.outPutStack = "";
+            this.isInLearnMode = learnMode;
+            if(this.input(inp) == 1)
+                return (null);
+                
+            return (this.outPutStack);
+
+        }
+
+        public void thinkToEnd()
         {
             while (!activationQueue.empty() || !recoveryQueue.empty())
                 think();
+        }
+        public void think(int outputLMT)
+        {
+            if (outputLMT > 0)
+            {
+                for (int n = 0; n <= outputLMT + 1 && (!activationQueue.empty() || !recoveryQueue.empty()); n++)
+                    think();
+                this.stopThinking();
+            }
+        }
+
+        private void stopThinking()
+        {
+            activationQueue.clear();
+            recoveryQueue.clear();
+
         }
         public int input(int byteRead)
         {
@@ -251,7 +292,7 @@ namespace odin.model
         
         internal void addToOutputStack(int p)
         {
-            this.outPutStack += (Char)(p);
+            this.outPutStack += p + ", ";
         }
 
         internal void lateralInhibition(int layer)
@@ -264,6 +305,13 @@ namespace odin.model
             if (p > 0 && this.monitor != null) {
                 monitor.output(p);
             }
+        }
+
+        internal string getOutput()
+        {
+            String tmpop = this.outPutStack;
+            this.outPutStack = "";
+            return tmpop;
         }
     }
 }

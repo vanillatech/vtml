@@ -10,10 +10,26 @@ using System.Windows.Forms;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Web.Script.Serialization;
 using odin.model;
 
 namespace odin
 {
+    class templateQueryData
+    {
+        public bool learnmode;
+        public int outputLMT;
+        public int[] input;
+        /*
+        public Result[] results;
+
+        public class Result
+        {
+            public String message_id;
+            public String registration_id;
+            public String error;
+        };*/
+    }
     public partial class Form1 : Form
     {
         Brain brain;
@@ -30,11 +46,12 @@ namespace odin
         private void Form1_Load(object sender, EventArgs e)
         {
             brain = new Brain();
-            monitor = brain.addMonitor();
+            /* debug */
+            //monitor = brain.addMonitor();
            
-            monitor.attachLog(onNewLogEntry);
-            monitor.attachOutput(onOutputChanged);
-           
+            //monitor.attachLog(onNewLogEntry);
+            //monitor.attachOutput(onOutputChanged);
+            /* --debug */
 
 
             this.listenThread = new Thread(new ThreadStart(ListenForClients));
@@ -102,7 +119,13 @@ namespace odin
                     dataFromClient = dataFromClient.Substring(0, dataFromClient.IndexOf("\n")-1);
                     if (dataFromClient != null)
                     {
-                        String datarec = brain.query(dataFromClient,true);
+                        
+                        templateQueryData inp = new JavaScriptSerializer().Deserialize<templateQueryData>(dataFromClient);
+
+                        
+                        string datarec = brain.query(inp.input,inp.learnmode);
+                        brain.think(inp.outputLMT );
+                        datarec = brain.getOutput();
                         if (datarec != null)
                         {
                             byte[] sendBytes = Encoding.ASCII.GetBytes(datarec + "\n");
@@ -127,7 +150,7 @@ namespace odin
         private void button1_Click(object sender, EventArgs e)
         {
             //monitor.clearOutput();
-            textBox4.Text = brain.query(textBox1.Text);
+            textBox4.Text = brain.query(Int32.Parse(textBox1.Text));
             textBox1.Text = "";
         }
 
@@ -178,7 +201,13 @@ namespace odin
 
         private void button2_Click(object sender, EventArgs e)
         {
-            textBox4.Text = brain.query(textBox1.Text, true);
+            textBox4.Text = brain.query(Int32.Parse(textBox1.Text), true);
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            brain.thinkToEnd();
+            textBox4.Text = brain.getOutput();
         }
 
         
