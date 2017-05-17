@@ -41,6 +41,6 @@ T:\askMoni\neuronal database\src\trunk\obj\Debug\odin.pdb
 T:\askMoni\neuronal database\src\trunk\bin\Debug\odin.exe
 T:\askMoni\neuronal database\src\trunk\bin\Debug\odin.pdb
 T:\askMoni\neuronal database\src\trunk\obj\Debug\odin.csprojResolveAssemblyReference.cache
-T:\askMoni\neuronal database\src\trunk\obj\Debug\odin.Form1.resources
 T:\askMoni\neuronal database\src\trunk\obj\Debug\odin.Properties.Resources.resources
 T:\askMoni\neuronal database\src\trunk\obj\Debug\odin.csproj.GenerateResource.Cache
+T:\askMoni\neuronal database\src\trunk\obj\Debug\odin.templateQueryData.resources
