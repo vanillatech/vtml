@@ -39,7 +39,7 @@ namespace odin.model
 
         internal Neuron getInputNode(string inp)
         {
-            int p = char.Parse(inp);
+            int p = int.Parse(inp);
             Neuron n = sense.getInputNeuronIfExists(p);
             if (n != null)
             {
@@ -57,7 +57,7 @@ namespace odin.model
 
         internal void output(int p)
         {
-            this.outputString += (Char)(p);
+            this.outputString += p+", ";
             OutputChanged(this.outputString);
             /*var handler = PropertyChanged;
             if (handler != null)
