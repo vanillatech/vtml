@@ -9,9 +9,11 @@ namespace odin.model
     class Sense
     {
         Brain brain;
-        internal Sense(Brain mybrain)
+        bool noOutput;
+        internal Sense(Brain mybrain,bool noOutput=false)
         {
             brain = mybrain;
+            this.noOutput = noOutput;
         }
         internal struct Inputs
         {
@@ -43,7 +45,9 @@ namespace odin.model
 
                 Neuron tmpNeuron = new Neuron(brain);
                 tmpNeuron.tag = byteRead;
-                tmpNeuron.type = 1;
+                if (this.noOutput) tmpNeuron.type = 3;
+                else tmpNeuron.type = 1;
+                
                 tmp.dendrite = tmpNeuron.getNewDendrite(1);
 
                 tmp.value = byteRead;

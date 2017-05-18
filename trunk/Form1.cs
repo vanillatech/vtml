@@ -15,21 +15,7 @@ using odin.model;
 
 namespace odin
 {
-    class templateQueryData
-    {
-        public bool learnmode;
-        public int outputLMT;
-        public int[] input;
-        /*
-        public Result[] results;
 
-        public class Result
-        {
-            public String message_id;
-            public String registration_id;
-            public String error;
-        };*/
-    }
     public partial class Form1 : Form
     {
         Brain brain;
@@ -123,7 +109,7 @@ namespace odin
                         templateQueryData inp = new JavaScriptSerializer().Deserialize<templateQueryData>(dataFromClient);
 
                         
-                        string datarec = brain.query(inp.input,inp.learnmode);
+                        string datarec = brain.query(inp.input,inp.context,inp.learnmode);
                         brain.think(inp.outputLMT );
                         datarec = brain.getOutput();
                         if (datarec != null)
@@ -147,12 +133,7 @@ namespace odin
         {
             listBox1.Items.Insert(0, logEntry);
         }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //monitor.clearOutput();
-            textBox4.Text = brain.query(Int32.Parse(textBox1.Text));
-            textBox1.Text = "";
-        }
+        
 
         
         private void Query_Click(object sender, EventArgs e)
@@ -199,9 +180,47 @@ namespace odin
             }
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //monitor.clearOutput();
+            String[] splitted = textBox1.Text.Split(',');
+
+            int[] nums = new int[splitted.Length];
+
+            for (int i = 0; i < splitted.Length; i++)
+            {
+                nums[i] = int.Parse(splitted[i]);
+            }
+            String[] splitted2 = textBox5.Text.Split(',');
+
+            int[] nums2 = new int[splitted2.Length];
+
+            for (int i = 0; i < splitted2.Length; i++)
+            {
+                nums2[i] = int.Parse(splitted2[i]);
+            }
+            textBox4.Text = brain.query(nums,nums2);
+            //textBox1.Text = "";
+        }
         private void button2_Click(object sender, EventArgs e)
         {
-            textBox4.Text = brain.query(Int32.Parse(textBox1.Text), true);
+            String[] splitted = textBox1.Text.Split(',');
+            
+            int[] nums = new int[splitted.Length];
+
+            for(int i = 0 ; i < splitted.Length ; i++)
+            {
+                nums[i] = int.Parse(splitted[i]);
+            }
+            String[] splitted2 = textBox5.Text.Split(',');
+
+            int[] nums2 = new int[splitted2.Length];
+
+            for (int i = 0; i < splitted2.Length; i++)
+            {
+                nums2[i] = int.Parse(splitted2[i]);
+            }
+            textBox4.Text = brain.query(nums,nums2,true);
         }
 
         private void button3_Click(object sender, EventArgs e)

@@ -38,6 +38,7 @@ namespace odin.model
             this.activationQueue =  new ActivationQueue(this);
             this.recoveryQueue = new RecoveryQueue(this);
             this.readSense = new Sense(this);
+            this.contextSense = new Sense(this,true);
             //recoveryQueue.setMaxSteps(temporalPatternLength);
         }
         internal void log(String s) {
@@ -47,7 +48,7 @@ namespace odin.model
             }
         }
 
-        Sense readSense;
+        Sense readSense,contextSense;
 
         internal ActivationQueue activationQueue; 
         internal RecoveryQueue recoveryQueue; 
@@ -65,10 +66,11 @@ namespace odin.model
             return (this.outPutStack);
             
         }
-        public string query(int[] inp, bool learnMode = false)
+        public string query(int[] inp, int[] context=null, bool learnMode = false)
         {
             this.outPutStack = "";
             this.isInLearnMode = learnMode;
+            
             foreach (int n in inp)
             {
                 if (this.input(n) == 1)
@@ -76,6 +78,14 @@ namespace odin.model
                 //this.thinkToEnd();
 
             }
+            foreach (int n in context)
+            {
+                if (contextSense.input(n) == 1)
+                    return (null);
+                //this.thinkToEnd();
+
+            }
+            think();
             //this.thinkToEnd();
             return (this.outPutStack);
 
@@ -86,7 +96,7 @@ namespace odin.model
             this.isInLearnMode = learnMode;
             if(this.input(inp) == 1)
                 return (null);
-                
+            think();
             return (this.outPutStack);
 
         }
@@ -116,7 +126,7 @@ namespace odin.model
         {
             if (readSense.input(byteRead) == 1)
                     return(1);
-            think();
+            //think();
             return (0);
         }
         public void think()
