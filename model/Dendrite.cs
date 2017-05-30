@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace odin.model
 {
+    [Serializable()] 
     class Dendrite
     {
         
@@ -72,6 +73,11 @@ namespace odin.model
         internal double countSynapses()
         {
             return (this.synapses.Count);
+        }
+
+        internal void removeSynapse(Synapse synapse)
+        {
+            this.synapses.Remove(synapse);
         }
     }
 }

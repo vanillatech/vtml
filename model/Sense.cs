@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace odin.model
 {
+    [Serializable()] 
     class Sense
     {
         Brain brain;
@@ -15,6 +16,7 @@ namespace odin.model
             brain = mybrain;
             this.noOutput = noOutput;
         }
+        [Serializable()] 
         internal struct Inputs
         {
             internal Dendrite dendrite;

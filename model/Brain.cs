@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace odin.model
 {
-
+    [Serializable()]  
     class Brain
     {
         private Monitor monitor;
@@ -31,6 +31,8 @@ namespace odin.model
         public bool distributeActivationAmongSynapses = false;
         public bool activateNeuronBasedOnInputSynapses = false;
         public int refractoryPeriod = 1;
+        public double forgetRate = 1;
+        public UInt64 forgetAfterSteps = 10; //0 to disable
         //--
 
         public Brain()
@@ -78,12 +80,15 @@ namespace odin.model
                 //this.thinkToEnd();
 
             }
-            foreach (int n in context)
+            if (context != null)
             {
-                if (contextSense.input(n) == 1)
-                    return (null);
-                //this.thinkToEnd();
+                foreach (int n in context)
+                {
+                    if (contextSense.input(n) == 1)
+                        return (null);
+                    //this.thinkToEnd();
 
+                }
             }
             think();
             //this.thinkToEnd();

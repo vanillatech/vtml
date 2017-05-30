@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace odin.model
 {
+    [Serializable()] 
     class Axon
     {
         Neuron fromNeuron;
@@ -52,6 +53,11 @@ namespace odin.model
                 if (brain.distributeActivationAmongSynapses) s.activate(this.synapses.Count);
                 else s.activate();
             }
+        }
+
+        internal void removeSynapse(Synapse synapse)
+        {
+            this.synapses.Remove(synapse);
         }
     }
 }
