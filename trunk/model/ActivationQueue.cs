@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace odin.model
 {
+    [Serializable()] 
     class ActivationQueue : Queues
     {
         Brain brain;

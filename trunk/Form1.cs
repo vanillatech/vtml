@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Web.Script.Serialization;
+using System.IO;
 using odin.model;
 
 namespace odin
@@ -20,7 +21,7 @@ namespace odin
     {
         Brain brain;
         odin.model.Monitor monitor;
-        
+        Stream braindump = null;
         
         private Thread listenThread;
 
@@ -33,16 +34,16 @@ namespace odin
         {
             brain = new Brain();
             /* debug */
-            //monitor = brain.addMonitor();
+            monitor = brain.addMonitor();
            
-            //monitor.attachLog(onNewLogEntry);
-            //monitor.attachOutput(onOutputChanged);
+            monitor.attachLog(onNewLogEntry);
+            monitor.attachOutput(onOutputChanged);
             /* --debug */
 
 
             this.listenThread = new Thread(new ThreadStart(ListenForClients));
             this.listenThread.Start();
-
+            listenThread.IsBackground = true;
             
 
 
@@ -197,7 +198,10 @@ namespace odin
 
             for (int i = 0; i < splitted2.Length; i++)
             {
-                nums2[i] = int.Parse(splitted2[i]);
+                if (splitted2[i] != "")
+                {
+                    nums2[i] = int.Parse(splitted2[i]);
+                }
             }
             textBox4.Text = brain.query(nums,nums2);
             //textBox1.Text = "";
@@ -218,7 +222,9 @@ namespace odin
 
             for (int i = 0; i < splitted2.Length; i++)
             {
-                nums2[i] = int.Parse(splitted2[i]);
+                if (splitted2[i] != "") { 
+                    nums2[i] = int.Parse(splitted2[i]);
+                }
             }
             textBox4.Text = brain.query(nums,nums2,true);
         }
@@ -227,6 +233,105 @@ namespace odin
         {
             brain.thinkToEnd();
             textBox4.Text = brain.getOutput();
+
+            /*using (Stream stream = File.Open("brain.dump", true ? FileMode.Append : FileMode.Create))
+            {
+                var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                binaryFormatter.Serialize(stream, brain);
+            }*/
+            
+
+
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+
+            //openFileDialog1.InitialDirectory = "c:\\";
+            openFileDialog1.Filter = "brain dump (*.dump)|*.dump|All files (*.*)|*.*";
+            //openFileDialog1.FilterIndex = 2;
+            openFileDialog1.RestoreDirectory = true;
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    if ((braindump = openFileDialog1.OpenFile()) != null)
+                    {
+                        using (braindump)
+                        {
+                            var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                            brain = (Brain)binaryFormatter.Deserialize(braindump);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                }
+            }
+        }
+
+        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveAsDump();
+        }
+
+        private void saveAsDump()
+        {
+            SaveFileDialog openFileDialog1 = new SaveFileDialog ();
+
+            //openFileDialog1.InitialDirectory = "c:\\";
+            openFileDialog1.Filter = "brain dump (*.dump)|*.dump|All files (*.*)|*.*";
+            //openFileDialog1.FilterIndex = 2;
+            openFileDialog1.RestoreDirectory = true;
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                if ((braindump = openFileDialog1.OpenFile()) != null)
+                {
+                    saveDump();
+                }
+            }
+        }
+
+        private void saveDump()
+        {
+ 	        try
+                {
+                    if ((braindump) != null)
+                    {
+                        using (braindump)
+                        {
+                            var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                            binaryFormatter.Serialize(braindump, brain);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could not write file to disk. Original error: " + ex.Message);
+                }
+        }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            if (braindump == null) saveAsDump();
+            else
+            {
+                
+                saveAsDump();
+            }
+
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+            Application.Exit();
         }
 
         

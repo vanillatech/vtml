@@ -5,13 +5,16 @@ using System.Text;
 
 namespace odin.model
 {
+    [Serializable()] 
     class Queues
     {
+        [Serializable()]
         internal struct QueueElement
         {
             internal Neuron neuron;
             internal double val;
         }
+        [Serializable()] 
         internal struct Step
         {
             internal List<QueueElement> elements;

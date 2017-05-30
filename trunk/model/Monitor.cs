@@ -7,6 +7,7 @@ using System.ComponentModel;
 
 namespace odin.model
 {
+    [Serializable()] 
     class Monitor
     {
         private Brain brain;
