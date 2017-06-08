@@ -19,6 +19,7 @@ namespace odin
 
     public partial class Form1 : Form
     {
+        Dictionary<String,Brain> brains = new Dictionary<string,Brain>();
         Brain brain;
         odin.model.Monitor monitor;
         Stream braindump = null;
@@ -33,11 +34,9 @@ namespace odin
         private void Form1_Load(object sender, EventArgs e)
         {
             brain = new Brain();
+            brains.Add("ide", brain);
             /* debug */
-            monitor = brain.addMonitor();
-           
-            monitor.attachLog(onNewLogEntry);
-            monitor.attachOutput(onOutputChanged);
+            
             /* --debug */
 
 
@@ -106,21 +105,51 @@ namespace odin
                     dataFromClient = dataFromClient.Substring(0, dataFromClient.IndexOf("\n")-1);
                     if (dataFromClient != null)
                     {
-                        
-                        templateQueryData inp = new JavaScriptSerializer().Deserialize<templateQueryData>(dataFromClient);
 
-                        
-                        string datarec = brain.query(inp.input,inp.context,inp.learnmode);
-                        brain.think(inp.outputLMT );
-                        datarec = brain.getOutput();
+                        templateQueryData inp = new JavaScriptSerializer().Deserialize<templateQueryData>(dataFromClient);
+                        string datarec = "";
+                        if (inp.token != null)
+                        {
+                            if (!brains.ContainsKey(inp.token))
+                            {
+                                if (File.Exists(inp.token + ".dump"))
+                                {
+                                    try
+                                    {
+                                        FileStream bd = File.OpenRead(inp.token + ".dump");
+                                        var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                                        brains.Add(inp.token, (Brain)binaryFormatter.Deserialize(bd));
+                                        bd.Close();
+
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        datarec = "Error: Could not read file from disk. Original error: " + ex.Message;
+                                    }
+                                }
+                                else
+                                {
+                                    brains.Add(inp.token, new Brain());
+                                }
+                            }
+                            if (inp.activationThreshold > 0)
+                            {
+                                brains[inp.token].activationThreshold = inp.activationThreshold;
+                            }
+                            datarec = brains[inp.token].query(inp.input, inp.context, inp.learnmode);
+                            brains[inp.token].think(inp.outputLMT);
+                            datarec = brains[inp.token].getOutput();
+                        }
+                        else datarec = "token required.";
                         if (datarec != null)
                         {
                             byte[] sendBytes = Encoding.ASCII.GetBytes(datarec + "\n");
                             clientStream.Write(sendBytes, 0, sendBytes.Length);
                         }
 
+                        
+                        dataFromClient = "";
                     }
-                    dataFromClient = "";
                 }
                 
             }
@@ -128,11 +157,18 @@ namespace odin
             tcpClient.Close();
         }
         private void onOutputChanged (String output) {
+            try { 
             textBox3.Text = output;
+            }
+            catch (System.InvalidOperationException) { }
         }
         private void onNewLogEntry(String logEntry)
         {
-            listBox1.Items.Insert(0, logEntry);
+            try
+            {
+                listBox1.Items.Insert(0, logEntry);
+            }
+            catch (System.InvalidOperationException) { }
         }
         
 
@@ -226,7 +262,8 @@ namespace odin
                     nums2[i] = int.Parse(splitted2[i]);
                 }
             }
-            textBox4.Text = brain.query(nums,nums2,true);
+            textBox4.Text = brain.query(nums, nums2, true);
+            
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -332,6 +369,110 @@ namespace odin
         {
             
             Application.Exit();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            for (int n = 0; n < 30; n++)
+            {
+                int m = 0;
+                Random rnd = new Random();
+                
+                for (; m < rnd.Next(12); m++)
+                {
+                    brain.query(rnd.Next(50),true); 
+
+                }
+                brain.query(1, true);
+                brain.query(2, true);
+                brain.query(3, true);
+                brain.query(4, true);
+                brain.query(5, true);
+                brain.query(6, true);
+                brain.query(7, true); 
+                
+                for (m++; m < 20; m++)
+                {
+                    brain.query(rnd.Next(50), true); 
+
+                }
+                
+                brain.think(20);
+                //textBox4.Text = string.Join(",", nums);
+            }
+            for (int n = 0; n < 20; n++)
+            {
+                int m = 0;
+                Random rnd = new Random();
+
+                for (; m < rnd.Next(12); m++)
+                {
+                    brain.query(rnd.Next(50), true);
+
+                }
+                brain.query(1, true);
+                brain.query(3, true);
+                brain.query(5, true);
+                brain.query(7, true);
+                brain.query(9, true);
+                brain.query(11, true);
+                brain.query(13, true);
+
+                for (m++; m < 20; m++)
+                {
+                    brain.query(rnd.Next(50), true);
+
+                }
+
+                brain.think(20);
+                //textBox4.Text = string.Join(",", nums);
+            }
+        }
+
+        private void debugToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            monitor = brain.addMonitor();
+
+            monitor.attachLog(onNewLogEntry);
+            monitor.attachOutput(onOutputChanged);
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            for (int n = brains.Count() - 1; n >= 0; n--)
+            {
+                if (brains.ElementAt(n).Value.inactiveSince.AddMinutes(60) < DateTime.Now && brains.ElementAt(n).Key != "ide")
+                {
+                    this.saveBrain(brains.ElementAt(n).Key);
+                    brains.Remove(brains.ElementAt(n).Key);
+                }
+            }
+        }
+        private void saveBrain(String b)
+        {
+            try
+            {
+                if (File.Exists(b + ".dump"))
+                {
+                    File.Delete(b + ".dump");
+                }
+                FileStream bd = File.OpenWrite(b + ".dump");
+                if (bd != null)
+                {
+                    using (bd)
+                    {
+
+
+                        var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                        binaryFormatter.Serialize(bd, brains[b]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                
+                listBox1.Items.Insert(0,"Error: Could not write file to disk. Original error: " + ex.Message);
+            }
         }
 
         

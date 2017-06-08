@@ -12,6 +12,8 @@ namespace odin
         public int outputLMT;
         public int[] input;
         public int[] context;
+        public string token;
+        public double activationThreshold;
         /*
         public Result[] results;
 

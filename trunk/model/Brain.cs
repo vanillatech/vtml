@@ -12,33 +12,38 @@ namespace odin.model
         private Monitor monitor;
         private int nextFreeID = 1;
         
-        public bool isInLearnMode = false;
+        public UInt64 leaveLearnModeAfter = 0; //0 to disable
+        public bool isInLearnMode { get { return lm; } set { if (leaveLearnModeAfter > currentStep || leaveLearnModeAfter == 0) lm = value; else lm = false; } }
+        private bool lm = false;
         private string outPutStack = "";
 
         public UInt64 currentStep = 0;
         //Model parameters
-        public double activationThreshold = 0.8;
-        public double synapseDefaultStrength = 0.9;
+        public double activationThreshold = 0.60;
+        public double activationThresholdInLearnMode = 0.49;
+        public double synapseDefaultStrength = 0.5;
         public int synapseDefaultCount = 1;
         public int synapseMaxCount = 999;
-        public double leakageFactor = 0;
+        public double leakageFactor = 0; //0==remove all activation after each step, 1==store activation forever
         public int maxLayer = 2;
-        public double adaptionRate = 0.4;
+        public double adaptionRate = 0.1;
         public bool learnOnActivate = false;
         public bool learnOnFire = true;
-        public double inhibitFactor = 0; // 1==no inhibition
+        public double inhibitFactor = 0; // 0==WTA, 1==no lateral inhibition
         public int temporalPatternLength = 1;
         public bool distributeActivationAmongSynapses = false;
         public bool activateNeuronBasedOnInputSynapses = false;
         public int refractoryPeriod = 1;
-        public double forgetRate = 1;
-        public UInt64 forgetAfterSteps = 10; //0 to disable
+        public double forgetRate = 0.1;
+        public UInt64 forgetAfterSteps = 0; //0 to disable
+        public DateTime inactiveSince = DateTime.Now;
         //--
 
         public Brain()
         {
             this.activationQueue =  new ActivationQueue(this);
             this.recoveryQueue = new RecoveryQueue(this);
+            
             this.readSense = new Sense(this);
             this.contextSense = new Sense(this,true);
             //recoveryQueue.setMaxSteps(temporalPatternLength);
@@ -53,7 +58,8 @@ namespace odin.model
         Sense readSense,contextSense;
 
         internal ActivationQueue activationQueue; 
-        internal RecoveryQueue recoveryQueue; 
+        internal RecoveryQueue recoveryQueue;
+
         public string query(string inp, bool learnMode = false) {
             this.outPutStack = "";
             this.isInLearnMode = learnMode;
@@ -75,8 +81,9 @@ namespace odin.model
             
             foreach (int n in inp)
             {
-                if (this.input(n) == 1)
-                    return (null);
+                //if (this.input(n) == 1)
+                //    return (null);
+                this.input(n);
                 //this.thinkToEnd();
 
             }
@@ -84,8 +91,9 @@ namespace odin.model
             {
                 foreach (int n in context)
                 {
-                    if (contextSense.input(n) == 1)
-                        return (null);
+                    //if (contextSense.input(n) == 1)
+                    //return (null);
+                    contextSense.input(n);
                     //this.thinkToEnd();
 
                 }
@@ -137,6 +145,8 @@ namespace odin.model
         public void think()
         {
 
+
+            this.inactiveSince = DateTime.Now;
             activationQueue.nextStep();
             activationQueue.leakActivation();
             activationQueue.processActivation();
@@ -189,25 +199,29 @@ namespace odin.model
 
         private void reinforcementLearning()
         {
-            foreach (Neuron n in recoveryQueue.getNeuronsInStep(0))
+            if (this.learnOnFire)
             {
-                foreach (Dendrite dendrite in n.getDendrites())
+                foreach (Neuron n in recoveryQueue.getNeuronsInStep(0))
                 {
-                    foreach (Synapse synapse in dendrite.getSynapses()) {
-                        Neuron predecessor = synapse.getPredecessor();
-                    
-                        if ((int)(currentStep - predecessor.lastFired) == dendrite.length)
+                    foreach (Dendrite dendrite in n.getDendrites())
+                    {
+                        foreach (Synapse synapse in dendrite.getSynapses())
                         {
-                            //Hebbian learning:
-                            //if neuron has been involved in firing the successor reinforce
-                            if (this.learnOnFire) synapse.reinforce(true);
+                            Neuron predecessor = synapse.getPredecessor();
+
+                            if ((int)(currentStep - predecessor.lastFired) == dendrite.length)
+                            {
+                                //Hebbian learning:
+                                //if neuron has been involved in firing the successor reinforce
+                                synapse.reinforce(true);
+                            }
+                            else
+                            {
+                                //if neuron has not been involved create an inhibitive synapse
+                                synapse.reinforce(false);
+                            }
+
                         }
-                        else
-                        {
-                            //if neuron has not been involved create an inhibitive synapse
-                            synapse.reinforce(false);
-                        }
-                    
                     }
                 }
             }
@@ -269,6 +283,7 @@ namespace odin.model
                     Neuron outputNeuron = new Neuron(this);
                     Dendrite od1 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 2);
                     n.synapseOn(od1,true);
+                    
                     outputNeuron.tag = n.tag;
                     outputNeuron.type = 2;
                     Dendrite od2 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 1);
@@ -328,5 +343,7 @@ namespace odin.model
             this.outPutStack = "";
             return tmpop;
         }
+
+        
     }
 }
