@@ -63,7 +63,7 @@ namespace odin.model
 
         internal void activate(int p)
         {
-            if (brain.isInLearnMode && brain.forgetAfterSteps > 0)
+            if (brain.forgetAfterSteps > 0)
             //if (brain.forgetAfterSteps > 0)
             {
                 this.forget();
@@ -84,7 +84,7 @@ namespace odin.model
         {
             if (this.lastActivation + brain.forgetAfterSteps < brain.currentStep)
             {
-                this.weight *= (1 - brain.forgetRate);
+                if (this.countExcitatorySynapses <= brain.synapseDefaultCount && this.countInhibitorySynapses <= brain.synapseDefaultCount) this.weight *= (1 - brain.forgetRate);
                 /*this.countExcitatorySynapses--;
                 this.countInhibitorySynapses--;
                 if (countExcitatorySynapses < 0) countExcitatorySynapses = 0;

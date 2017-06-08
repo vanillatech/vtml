@@ -16,7 +16,7 @@ namespace odin.model
         internal UInt64 lastLeakEvent = 0;
         internal int layer;
         internal int tag;
-        internal int type = 0; //1: input, 2: output
+        internal int type = 0; //1: input, 2: output, 3: context with no output
 
         List<Dendrite> dendrites = new List<Dendrite>();
         internal Neuron(Brain mybrain)
@@ -74,6 +74,10 @@ namespace odin.model
 
         internal bool crossesThreshold()
         {
+            if ((brain.isInLearnMode||this.type==2) && this.activation > brain.activationThresholdInLearnMode)
+            {
+                return true;
+            }
             if (this.activation > brain.activationThreshold) {
                 return true;
             }
