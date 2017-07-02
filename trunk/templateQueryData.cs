@@ -14,6 +14,9 @@ namespace odin
         public int[] context;
         public string token;
         public double activationThreshold;
+        public int temporalPatternLength;
+        public int maxlayer;
+        public double leakageFactor;
         /*
         public Result[] results;
 
