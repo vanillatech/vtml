@@ -106,48 +106,70 @@ namespace odin
                     if (dataFromClient != null)
                     {
 
-                        templateQueryData inp = new JavaScriptSerializer().Deserialize<templateQueryData>(dataFromClient);
                         string datarec = "";
-                        if (inp.token != null)
+                        try
                         {
-                            if (!brains.ContainsKey(inp.token))
-                            {
-                                if (File.Exists(inp.token + ".dump"))
-                                {
-                                    try
-                                    {
-                                        FileStream bd = File.OpenRead(inp.token + ".dump");
-                                        var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                                        brains.Add(inp.token, (Brain)binaryFormatter.Deserialize(bd));
-                                        bd.Close();
+                            templateQueryData inp = new JavaScriptSerializer().Deserialize<templateQueryData>(dataFromClient);
 
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        datarec = "Error: Could not read file from disk. Original error: " + ex.Message;
-                                    }
-                                }
-                                else
-                                {
-                                    brains.Add(inp.token, new Brain());
-                                }
-                            }
-                            if (inp.activationThreshold > 0)
+
+                            if (inp.token != null)
                             {
-                                brains[inp.token].activationThreshold = inp.activationThreshold;
+                                if (!brains.ContainsKey(inp.token))
+                                {
+                                    if (File.Exists(inp.token + ".dump"))
+                                    {
+                                        try
+                                        {
+                                            FileStream bd = File.OpenRead(inp.token + ".dump");
+                                            var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                                            brains.Add(inp.token, (Brain)binaryFormatter.Deserialize(bd));
+                                            bd.Close();
+
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            datarec = "Error: Could not read file from disk. Original error: " + ex.Message;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        brains.Add(inp.token, new Brain());
+                                    }
+                                }
+                                if (inp.activationThreshold > 0)
+                                {
+                                    brains[inp.token].activationThreshold = inp.activationThreshold;
+                                }
+                                if (inp.maxlayer > 0)
+                                {
+                                    brains[inp.token].maxLayer = inp.maxlayer;
+                                }
+                                if (inp.temporalPatternLength > 0)
+                                {
+                                    brains[inp.token].temporalPatternLength = inp.temporalPatternLength;
+                                }
+                                if (inp.leakageFactor > 0)
+                                {
+                                    brains[inp.token].leakageFactor = inp.leakageFactor;
+                                }
+                                if (inp.token.Contains("READONLY"))
+                                {
+                                    inp.learnmode = false;
+                                }
+                                datarec = brains[inp.token].query(inp.input, inp.context, inp.learnmode);
+                                brains[inp.token].think(inp.outputLMT);
+                                datarec = brains[inp.token].getOutput();
                             }
-                            datarec = brains[inp.token].query(inp.input, inp.context, inp.learnmode);
-                            brains[inp.token].think(inp.outputLMT);
-                            datarec = brains[inp.token].getOutput();
+                            else datarec = "token required.";
                         }
-                        else datarec = "token required.";
+                        catch (Exception e) { datarec = "Input Format error."; }
                         if (datarec != null)
                         {
                             byte[] sendBytes = Encoding.ASCII.GetBytes(datarec + "\n");
                             clientStream.Write(sendBytes, 0, sendBytes.Length);
                         }
 
-                        
+
                         dataFromClient = "";
                     }
                 }
@@ -389,7 +411,9 @@ namespace odin
                 brain.query(4, true);
                 brain.query(5, true);
                 brain.query(6, true);
-                brain.query(7, true); 
+                brain.query(7, true);
+                brain.query(8, true);
+                brain.query(9, true); 
                 
                 for (m++; m < 20; m++)
                 {
@@ -397,7 +421,7 @@ namespace odin
 
                 }
                 
-                brain.think(20);
+                //brain.think(20);
                 //textBox4.Text = string.Join(",", nums);
             }
             for (int n = 0; n < 20; n++)
@@ -424,7 +448,36 @@ namespace odin
 
                 }
 
-                brain.think(20);
+                //brain.think(20);
+                //textBox4.Text = string.Join(",", nums);
+            }
+            for (int n = 0; n < 30; n++)
+            {
+                int m = 0;
+                Random rnd = new Random();
+
+                for (; m < rnd.Next(12); m++)
+                {
+                    brain.query(rnd.Next(50), true);
+
+                }
+                brain.query(1, true);
+                brain.query(2, true);
+                brain.query(3, true);
+                
+                
+                brain.query(6, true);
+                brain.query(9, true);
+                brain.query(12, true);
+                brain.query(15, true);
+
+                for (m++; m < 20; m++)
+                {
+                    brain.query(rnd.Next(50), true);
+
+                }
+
+                //brain.think(20);
                 //textBox4.Text = string.Join(",", nums);
             }
         }
@@ -465,6 +518,7 @@ namespace odin
 
                         var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                         binaryFormatter.Serialize(bd, brains[b]);
+                        bd.Close();
                     }
                 }
             }

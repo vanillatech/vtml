@@ -19,7 +19,7 @@ namespace odin.model
 
         public UInt64 currentStep = 0;
         //Model parameters
-        public double activationThreshold = 0.60;
+        public double activationThreshold = 0.52;
         public double activationThresholdInLearnMode = 0.49;
         public double synapseDefaultStrength = 0.5;
         public int synapseDefaultCount = 1;
@@ -78,14 +78,17 @@ namespace odin.model
         {
             this.outPutStack = "";
             this.isInLearnMode = learnMode;
-            
-            foreach (int n in inp)
-            {
-                //if (this.input(n) == 1)
-                //    return (null);
-                this.input(n);
-                //this.thinkToEnd();
 
+            if (inp != null)
+            {
+                foreach (int n in inp)
+                {
+                    //if (this.input(n) == 1)
+                    //    return (null);
+                    this.input(n);
+                    //this.thinkToEnd();
+
+                }
             }
             if (context != null)
             {
@@ -161,7 +164,7 @@ namespace odin.model
                 {
                     Neuron tmpNeuron = this.associateLastFiredNeuronsWithNewNeuron();
 
-                    activationQueue.addToStep(tmpNeuron, 1, this.synapseMaxCount * 1);
+                    //activationQueue.addToStep(tmpNeuron, 1, this.synapseMaxCount * 1);
                 }
                 //this.associateLastStepNeuronsWithCurrentStepInputNeurons();
             }
@@ -243,7 +246,7 @@ namespace odin.model
                 return false;
             
             List<Neuron> commonSuccessorsIterate = new List<Neuron>(commonSuccessors);
-            while ((n = recoveryQueue.getNext(0)) != null)
+            while ((n = recoveryQueue.getNext()) != null)
             { // every pair must have at least one common successor
                 List<Neuron> compare = n.getSuccessors();
                 
@@ -266,7 +269,7 @@ namespace odin.model
         private Neuron associateLastFiredNeuronsWithNewNeuron()
         {
             Neuron tmpNeuron = new Neuron(this);
-            
+            //tmpNeuron.lastFired = currentStep+1;
             Neuron n;
             while ((n = recoveryQueue.getNext())!=null)
             {
