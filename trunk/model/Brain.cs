@@ -16,6 +16,7 @@ namespace odin.model
         public bool isInLearnMode { get { return lm; } set { if (leaveLearnModeAfter > currentStep || leaveLearnModeAfter == 0) lm = value; else lm = false; } }
         private bool lm = false;
         private string outPutStack = "";
+        internal Dictionary<int,Neuron> outputNeurons = new Dictionary<int,Neuron> ();
 
         public UInt64 currentStep = 0;
         //Model parameters
@@ -283,21 +284,30 @@ namespace odin.model
                 {
                     //create an output neuron that gets inhibited by current inputneuron and that gets excited by tmpNeuron
                     //this causes the outputneuron only to be fired in case we didn't input the same value
-                    Neuron outputNeuron = new Neuron(this);
+                    Neuron outputNeuron = this.getOutputNeuron(n.tag);
                     Dendrite od1 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 2);
                     n.synapseOn(od1,true);
                     
-                    outputNeuron.tag = n.tag;
-                    outputNeuron.type = 2;
+                    //outputNeuron.tag = n.tag;
+                    //outputNeuron.type = 2;
                     Dendrite od2 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 1);
                     tmpNeuron.synapseOn(od2);
                 }
-                else
-                {
-
-                }
             }
             return tmpNeuron;
+        }
+
+        private Neuron getOutputNeuron(int p)
+        {
+            if (!this.outputNeurons.ContainsKey(p))
+            {
+                
+                this.outputNeurons.Add(p, new Neuron(this));
+                this.outputNeurons[p].tag = p;
+                this.outputNeurons[p].type = 2;
+
+            }
+            return this.outputNeurons[p];
         }
 
 
