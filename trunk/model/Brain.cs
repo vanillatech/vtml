@@ -165,7 +165,7 @@ namespace odin.model
                 {
                     Neuron tmpNeuron = this.associateLastFiredNeuronsWithNewNeuron();
 
-                    //activationQueue.addToStep(tmpNeuron, 1, this.synapseMaxCount * 1);
+                    activationQueue.addToStep(tmpNeuron, 1, this.synapseMaxCount * 1);
                 }
                 //this.associateLastStepNeuronsWithCurrentStepInputNeurons();
             }
