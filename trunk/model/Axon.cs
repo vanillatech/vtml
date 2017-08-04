@@ -21,9 +21,10 @@ namespace odin.model
         internal void synapseOn(Dendrite tmpDendrite, bool inhibitory = false)
         {
             Synapse s = tmpDendrite.getSynapse(this);
-            if (inhibitory) s.weight = -s.weight;
+            
             if (!this.synapses.Contains(s))
             {
+                if (inhibitory) s.weight = -s.weight;
                 this.synapses.Add(s);
 
             }

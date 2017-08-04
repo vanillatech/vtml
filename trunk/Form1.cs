@@ -274,14 +274,19 @@ namespace odin
             {
                 nums[i] = int.Parse(splitted[i]);
             }
-            String[] splitted2 = textBox5.Text.Split(',');
-
-            int[] nums2 = new int[splitted2.Length];
-
-            for (int i = 0; i < splitted2.Length; i++)
+            int[] nums2 = null;
+            if (textBox5.Text != "")
             {
-                if (splitted2[i] != "") { 
-                    nums2[i] = int.Parse(splitted2[i]);
+                String[] splitted2 = textBox5.Text.Split(',');
+
+                nums2 = new int[splitted2.Length];
+
+                for (int i = 0; i < splitted2.Length; i++)
+                {
+                    if (splitted2[i] != "")
+                    {
+                        nums2[i] = int.Parse(splitted2[i]);
+                    }
                 }
             }
             textBox4.Text = brain.query(nums, nums2, true);
