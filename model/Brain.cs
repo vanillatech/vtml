@@ -20,7 +20,7 @@ namespace odin.model
 
         public UInt64 currentStep = 0;
         //Model parameters
-        public double activationThreshold = 0.52;
+        public double activationThreshold = 0.49;
         public double activationThresholdInLearnMode = 0.49;
         public double synapseDefaultStrength = 0.5;
         public int synapseDefaultCount = 1;
@@ -287,6 +287,8 @@ namespace odin.model
                     Neuron outputNeuron = this.getOutputNeuron(n.tag);
                     Dendrite od1 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 2);
                     n.synapseOn(od1,true);
+                    //avoid intial activation after adding connection
+                    activationQueue.addToStep(outputNeuron, 2,-od1.countSynapses());
                     
                     //outputNeuron.tag = n.tag;
                     //outputNeuron.type = 2;
