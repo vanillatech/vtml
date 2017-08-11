@@ -140,6 +140,10 @@ namespace odin
                                 {
                                     brains[inp.token].activationThreshold = inp.activationThreshold;
                                 }
+                                if (inp.activateNewNeurons  == true)
+                                {
+                                    brains[inp.token].activateNewNeurons = inp.activateNewNeurons;
+                                }
                                 if (inp.maxlayer > 0)
                                 {
                                     brains[inp.token].maxLayer = inp.maxlayer;
@@ -295,7 +299,7 @@ namespace odin
 
         private void button3_Click(object sender, EventArgs e)
         {
-            brain.thinkToEnd();
+            brain.think (20);
             textBox4.Text = brain.getOutput();
 
             /*using (Stream stream = File.Open("brain.dump", true ? FileMode.Append : FileMode.Create))
@@ -426,7 +430,7 @@ namespace odin
 
                 }
                 
-                //brain.think(20);
+                brain.think(20);
                 //textBox4.Text = string.Join(",", nums);
             }
             for (int n = 0; n < 20; n++)
@@ -453,7 +457,7 @@ namespace odin
 
                 }
 
-                //brain.think(20);
+                brain.think(20);
                 //textBox4.Text = string.Join(",", nums);
             }
             for (int n = 0; n < 30; n++)
@@ -482,7 +486,7 @@ namespace odin
 
                 }
 
-                //brain.think(20);
+                brain.think(20);
                 //textBox4.Text = string.Join(",", nums);
             }
         }

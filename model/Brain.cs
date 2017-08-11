@@ -20,7 +20,7 @@ namespace odin.model
 
         public UInt64 currentStep = 0;
         //Model parameters
-        public double activationThreshold = 0.49;
+        public double activationThreshold = 0.52;
         public double activationThresholdInLearnMode = 0.49;
         public double synapseDefaultStrength = 0.5;
         public int synapseDefaultCount = 1;
@@ -30,6 +30,7 @@ namespace odin.model
         public double adaptionRate = 0.1;
         public bool learnOnActivate = false;
         public bool learnOnFire = true;
+        public bool activateNewNeurons = false;
         public double inhibitFactor = 0; // 0==WTA, 1==no lateral inhibition
         public int temporalPatternLength = 1;
         public bool distributeActivationAmongSynapses = false;
@@ -165,7 +166,9 @@ namespace odin.model
                 {
                     Neuron tmpNeuron = this.associateLastFiredNeuronsWithNewNeuron();
 
-                    activationQueue.addToStep(tmpNeuron, 1, this.synapseMaxCount * 1);
+                    if (this.activateNewNeurons) { 
+                        activationQueue.addToStep(tmpNeuron, 1, this.synapseMaxCount * 1); 
+                    }
                 }
                 //this.associateLastStepNeuronsWithCurrentStepInputNeurons();
             }
