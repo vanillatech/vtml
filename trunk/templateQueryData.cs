@@ -17,6 +17,7 @@ namespace odin
         public int temporalPatternLength;
         public int maxlayer;
         public double leakageFactor;
+        public bool activateNewNeurons;
         /*
         public Result[] results;
 
