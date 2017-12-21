@@ -160,6 +160,10 @@ namespace odin
                                 {
                                     inp.learnmode = false;
                                 }
+                                if (inp.temporary == true)
+                                {
+                                    brains[inp.token].temporary = inp.temporary;
+                                }
                                 datarec = brains[inp.token].query(inp.input, inp.context, inp.learnmode);
                                 brains[inp.token].think(inp.outputLMT);
                                 datarec = brains[inp.token].getOutput();
@@ -430,7 +434,7 @@ namespace odin
 
                 }
                 
-                brain.think(20);
+                //brain.think(20);
                 //textBox4.Text = string.Join(",", nums);
             }
             for (int n = 0; n < 20; n++)
@@ -457,7 +461,7 @@ namespace odin
 
                 }
 
-                brain.think(20);
+                //brain.think(20);
                 //textBox4.Text = string.Join(",", nums);
             }
             for (int n = 0; n < 30; n++)
@@ -505,7 +509,10 @@ namespace odin
             {
                 if (brains.ElementAt(n).Value.inactiveSince.AddMinutes(60) < DateTime.Now && brains.ElementAt(n).Key != "ide")
                 {
-                    this.saveBrain(brains.ElementAt(n).Key);
+                    if (!brains.ElementAt(n).Value.temporary)
+                    {
+                        this.saveBrain(brains.ElementAt(n).Key);
+                    }
                     brains.Remove(brains.ElementAt(n).Key);
                 }
             }

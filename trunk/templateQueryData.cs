@@ -18,6 +18,7 @@ namespace odin
         public int maxlayer;
         public double leakageFactor;
         public bool activateNewNeurons;
+        public bool temporary;
         /*
         public Result[] results;
 

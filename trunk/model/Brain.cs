@@ -39,6 +39,7 @@ namespace odin.model
         public double forgetRate = 0.1;
         public UInt64 forgetAfterSteps = 0; //0 to disable
         public DateTime inactiveSince = DateTime.Now;
+        public bool temporary = false;
         //--
 
         public Brain()
