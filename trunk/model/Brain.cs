@@ -25,13 +25,13 @@ namespace odin.model
         public double synapseDefaultStrength = 0.5;
         public int synapseDefaultCount = 1;
         public int synapseMaxCount = 999;
-        public double leakageFactor = 0; //0==remove all activation after each step, 1==store activation forever
+        public double leakageFactor = 0.1; //0==remove all activation after each step, 1==store activation forever
         public int maxLayer = 2;
         public double adaptionRate = 0.1;
         public bool learnOnActivate = false;
         public bool learnOnFire = true;
-        public bool activateNewNeurons = false;
-        public double inhibitFactor = 0; // 0==WTA, 1==no lateral inhibition
+        public bool activateNewNeurons = true;
+        public double inhibitFactor = 0.1; // 0==WTA, 1==no lateral inhibition
         public int temporalPatternLength = 1;
         public bool distributeActivationAmongSynapses = false;
         public bool activateNeuronBasedOnInputSynapses = false;
@@ -46,10 +46,15 @@ namespace odin.model
         {
             this.activationQueue =  new ActivationQueue(this);
             this.recoveryQueue = new RecoveryQueue(this);
-            
+            this.addFeature();
             this.readSense = new Sense(this);
-            this.contextSense = new Sense(this,true);
+            
             //recoveryQueue.setMaxSteps(temporalPatternLength);
+        }
+
+        private void addFeature()
+        {
+            this.featureMatrix.Add(new Sense(this, true));
         }
         internal void log(String s) {
             if (this.monitor != null)
@@ -58,7 +63,8 @@ namespace odin.model
             }
         }
 
-        Sense readSense,contextSense;
+        Sense readSense;
+        List <Sense> featureMatrix = new List<Sense>();
 
         internal ActivationQueue activationQueue; 
         internal RecoveryQueue recoveryQueue;
@@ -95,11 +101,13 @@ namespace odin.model
             }
             if (context != null)
             {
-                foreach (int n in context)
+                for (int n = 0; n < context.Count();n++ )
                 {
+                    if (this.featureMatrix.Count < (n + 1))
+                        this.addFeature();
                     //if (contextSense.input(n) == 1)
                     //return (null);
-                    contextSense.input(n);
+                    this.featureMatrix[n].input(context[n]);
                     //this.thinkToEnd();
 
                 }
