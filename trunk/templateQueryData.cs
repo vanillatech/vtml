@@ -10,6 +10,7 @@ namespace odin
     {
         public bool learnmode;
         public int outputLMT;
+        public int desiredOutput;
         public int[] input;
         public int[] context;
         public string token;

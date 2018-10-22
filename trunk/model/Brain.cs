@@ -68,6 +68,7 @@ namespace odin.model
 
         internal ActivationQueue activationQueue; 
         internal RecoveryQueue recoveryQueue;
+        public int desiredOutput;
 
         public string query(string inp, bool learnMode = false) {
             this.outPutStack = "";
@@ -291,8 +292,17 @@ namespace odin.model
                 n.synapseOn(tmpDendrite);
                 
                 if (n.layer >= tmpNeuron.layer) tmpNeuron.layer = n.layer + 1;
-                if (n.layer == this.maxLayer) tmpNeuron.layer = n.layer;
-                if (n.type == 1) //if n is an input neuron
+                if (n.layer == this.maxLayer)
+                {
+                    tmpNeuron.layer = n.layer;
+
+                    Neuron outputNeuron = this.getOutputNeuron(this.desiredOutput);
+                    Dendrite od1 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 1);
+                    n.synapseOn(od1);
+                    //avoid intial activation after adding connection
+                    activationQueue.addToStep(outputNeuron, 1, -od1.countSynapses());
+                }
+                /*if (n.type == 1) //if n is an input neuron
                 {
                     //create an output neuron that gets inhibited by current inputneuron and that gets excited by tmpNeuron
                     //this causes the outputneuron only to be fired in case we didn't input the same value
@@ -306,7 +316,7 @@ namespace odin.model
                     //outputNeuron.type = 2;
                     Dendrite od2 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 1);
                     tmpNeuron.synapseOn(od2);
-                }
+                }*/
             }
             return tmpNeuron;
         }
