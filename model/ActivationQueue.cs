@@ -61,11 +61,11 @@ namespace odin.model
             }
         }
 
-        internal void inhibitNeuronsInStep(int p,int l)
+        internal void inhibitNeuronsInStep(int p)
         {
             foreach (QueueElement a in this.getElementsInStep(p))
             {
-                if (a.neuron.layer == l && a.neuron.type != 3)
+                if (a.neuron.type != 3)
                     a.neuron.inhibit();
                 
 

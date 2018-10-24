@@ -28,7 +28,7 @@ namespace odin.model
 
         internal void activate(double activationVal)
         {
-            brain.activationQueue.addToStep(toNeuron,length,activationVal);
+            toNeuron.layer.activationQueue.addToStep(toNeuron,length,activationVal);
         }
 
 

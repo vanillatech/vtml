@@ -14,17 +14,17 @@ namespace odin.model
         internal double activation = 0;
         internal UInt64 lastFired = 0;
         internal UInt64 lastLeakEvent = 0;
-        internal int layer;
+        internal Layer layer;
         internal int tag;
-        internal int type = 0; //1: input, 2: output, 3: context with no output
+        internal int type = 0; //0:intermediate, 1:input, 2:output, 3:context with no output
 
         List<Dendrite> dendrites = new List<Dendrite>();
-        internal Neuron(Brain mybrain)
+        internal Neuron(Brain mybrain,Layer mylayer)
         {
             this.id = mybrain.getNextID();
             axon = new Axon(this,mybrain);
             brain = mybrain;
-            this.layer = 1;
+            this.layer = mylayer;
             this.tag = 0;
 
         }
@@ -54,11 +54,11 @@ namespace odin.model
             brain.log("Fired: " + this.id);
             brain.monitorOutput(this.tag);
             this.activation = 0;
-            this.lastFired = brain.currentStep;
+            this.lastFired = layer.currentStep;
             if (this.type != 2)
             {
-               brain.addToRecoveryQueue(this);
-               brain.lateralInhibition(this.layer);
+               layer.addToRecoveryQueue(this);
+               layer.lateralInhibition();
                this.axon.propagateActionPotential();
             }
             
@@ -118,8 +118,8 @@ namespace odin.model
 
         internal void leakActivation()
         {
-            this.activation *= Math.Pow(brain.leakageFactor, (brain.currentStep - this.lastLeakEvent));
-            this.lastLeakEvent = brain.currentStep;
+            this.activation *= Math.Pow(brain.leakageFactor, (layer.currentStep - this.lastLeakEvent));
+            this.lastLeakEvent = layer.currentStep;
         }
 
         internal void inhibit()
@@ -129,7 +129,7 @@ namespace odin.model
 
         internal bool isWithinRefractoryPeriod()
         {
-            return (!(this.lastFired < brain.currentStep - (ulong)(brain.refractoryPeriod) || this.lastFired == 0 || this.type > 0)); 
+            return (!(this.lastFired < layer.currentStep - (ulong)(brain.refractoryPeriod) || this.lastFired == 0 || this.type > 0)); 
         }
     }
 }

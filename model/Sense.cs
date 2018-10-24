@@ -45,7 +45,7 @@ namespace odin.model
             {
                 Inputs tmp = new Inputs();
 
-                Neuron tmpNeuron = new Neuron(brain);
+                Neuron tmpNeuron = new Neuron(brain,brain.inputLayer);
                 tmpNeuron.tag = byteRead;
                 if (this.noOutput) tmpNeuron.type = 3;
                 else tmpNeuron.type = 1;
@@ -75,7 +75,7 @@ namespace odin.model
             for (int n = 0; n < 256; n++)
             {
                 Inputs tmp = new Inputs();
-                tmp.dendrite = new Neuron(brain).getNewDendrite(1);
+                tmp.dendrite = new Neuron(brain,brain.inputLayer ).getNewDendrite(1);
                 tmp.value = n;
                 cInputNeurons.Add(tmp);
                 

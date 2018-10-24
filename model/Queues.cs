@@ -34,7 +34,7 @@ namespace odin.model
                 aqe.neuron = neuron;
                 aqe.val = value;
                 tmp.elements.Add(aqe);
-                         
+                neuron.layer.setIdle(false);         
             
         }
         internal int countElements(int inStep)
@@ -102,7 +102,7 @@ namespace odin.model
             List<Neuron> neurons = new List<Neuron>();
             foreach (QueueElement e in this.getStep(when).elements)
             {
-                if (e.neuron.layer == 0)
+                if (e.neuron.layer.number == 0)
                     neurons.Add(e.neuron);
             }
             return neurons;

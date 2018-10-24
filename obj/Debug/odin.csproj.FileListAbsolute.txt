@@ -44,3 +44,12 @@ T:\askMoni\neuronal database\src\trunk\obj\Debug\odin.csprojResolveAssemblyRefer
 T:\askMoni\neuronal database\src\trunk\obj\Debug\odin.Properties.Resources.resources
 T:\askMoni\neuronal database\src\trunk\obj\Debug\odin.csproj.GenerateResource.Cache
 T:\askMoni\neuronal database\src\trunk\obj\Debug\odin.Form1.resources
+T:\neuronal database\src\trunk\bin\Debug\odin.exe.config
+T:\neuronal database\src\trunk\obj\Debug\odin.exe
+T:\neuronal database\src\trunk\obj\Debug\odin.pdb
+T:\neuronal database\src\trunk\bin\Debug\odin.exe
+T:\neuronal database\src\trunk\bin\Debug\odin.pdb
+T:\neuronal database\src\trunk\obj\Debug\odin.csprojResolveAssemblyReference.cache
+T:\neuronal database\src\trunk\obj\Debug\odin.Form1.resources
+T:\neuronal database\src\trunk\obj\Debug\odin.Properties.Resources.resources
+T:\neuronal database\src\trunk\obj\Debug\odin.csproj.GenerateResource.Cache

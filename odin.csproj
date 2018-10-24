@@ -54,6 +54,7 @@
     <Compile Include="model\Axon.cs" />
     <Compile Include="model\Brain.cs" />
     <Compile Include="model\ActivationQueue.cs" />
+    <Compile Include="model\Layer.cs" />
     <Compile Include="model\Monitor.cs" />
     <Compile Include="model\Queues.cs" />
     <Compile Include="model\RecoveryQueue.cs" />

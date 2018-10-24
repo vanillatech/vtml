@@ -77,12 +77,12 @@ namespace odin.model
                 toDendrite.activate(this.getStrength() / p);
             }
             if (brain.learnOnActivate) this.reinforce(true);
-            this.lastActivation = brain.currentStep;
+            this.lastActivation = this.getNeuron().layer.currentStep;
         }
 
         private int forget()
         {
-            if (this.lastActivation + brain.forgetAfterSteps < brain.currentStep)
+            if (this.lastActivation + brain.forgetAfterSteps < this.getNeuron().layer.currentStep)
             {
                 if (this.countExcitatorySynapses <= brain.synapseDefaultCount && this.countInhibitorySynapses <= brain.synapseDefaultCount) this.weight *= (1 - brain.forgetRate);
                 /*this.countExcitatorySynapses--;
@@ -95,7 +95,7 @@ namespace odin.model
                     fromAxon.removeSynapse(this);
                     return 1;
                 }*/
-                this.lastActivation = brain.currentStep;
+                this.lastActivation = this.getNeuron().layer.currentStep;
 
             } 
             return 0;
