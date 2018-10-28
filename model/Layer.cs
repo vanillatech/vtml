@@ -47,7 +47,8 @@ namespace odin.model
             if (brain.isInLearnMode)
             {
                 this.reinforcementLearning();
-                if (this.checkForRecentlyFiredNeuronsWithoutCommonSuccessor())
+                
+                /*if (this.checkForRecentlyFiredNeuronsWithoutCommonSuccessor())
                 {
                     Neuron tmpNeuron = this.associateLastFiredNeuronsWithNewNeuron();
 
@@ -55,12 +56,57 @@ namespace odin.model
                     {
                         activationQueue.addToStep(tmpNeuron, 1, brain.synapseMaxCount * 1);
                     }
-                }
+                }*/
+                this.checkNewPattern();
                 //this.associateLastStepNeuronsWithCurrentStepInputNeurons();
+                this.associateLastStepsNeuronsWithCurrentStep();
             }
             recoveryQueue.nextStep();
             this.currentStep++;
             brain.log("-----Next thinkstep (Layer: " + this.number + "): " + this.currentStep + " -----");
+        }
+
+        private void checkNewPattern()
+        {
+            for (int s = 1; s < brain.temporalPatternLength; s++)
+            {
+                foreach (Neuron c in recoveryQueue.getNeuronsInStep(s))
+                {
+                    if (!recoveryQueue.FirstStepContainsSuccessorOf(c))
+                    {
+                        //add a new neuron to represent this pattern
+                        if (c.type == 0) //interneuron
+                        {
+                            if (s == 1) // only for last step neuron
+                            {
+                                if (this.number == brain.maxLayer)
+                                {
+
+                                    Neuron outputNeuron = brain.getOutputNeuron(brain.desiredOutput);
+
+                                    Dendrite od1 = outputNeuron.getDendrite(s);
+                                    c.synapseOn(od1);
+
+                                }
+                                else
+                                {
+                                    Neuron newInputNeuronInNextLayer = new Neuron(brain, this.getHigher());
+                                    newInputNeuronInNextLayer.type = 1;
+                                    c.synapseOn(newInputNeuronInNextLayer.getDendrite(1));
+                                }
+                            }
+                        }
+                        else if (c.type == 1) //inputneuron
+                        {
+                            Neuron newInterNeuron = new Neuron(brain, this);
+                            c.synapseOn(newInterNeuron.getDendrite(s));
+
+                        }
+
+                    }
+                }
+            }
+            
         }
 
         private bool isIdle()
@@ -88,15 +134,18 @@ namespace odin.model
             recoveryQueue.clear();
 
         }
-        private void associateLastStepNeuronsWithCurrentStep()
+        private void associateLastStepsNeuronsWithCurrentStep()
         {
-            foreach (Neuron n in recoveryQueue.getNeuronsInStep(1))
+            for (int when = 1; when < brain.temporalPatternLength; when++)
             {
-                foreach (Neuron c in recoveryQueue.getNeuronsInStep(0))
+                foreach (Neuron n in recoveryQueue.getNeuronsInStep(when))
                 {
-                    if (n.layer.number > c.layer.number)
+                    foreach (Neuron c in recoveryQueue.getNeuronsInStep(0))
                     {
-                        n.synapseOn(c.getDendrite(1));
+                        if (n.type == 0) // interneuron
+                        {
+                            n.synapseOn(c.getDendrite(when));
+                        }
                     }
                 }
             }
@@ -242,7 +291,7 @@ namespace odin.model
                     this.higher = new Layer(brain, this);
                 }
             }
-            return this;
+            return this.higher;
         }
         internal void addToRecoveryQueue(Neuron neuron)
         {
