@@ -97,6 +97,7 @@ namespace odin.model
             }
             return neurons;
         }
+        
         internal List<Neuron> getInputNeuronsInStep(int when)
         {
             List<Neuron> neurons = new List<Neuron>();

@@ -25,7 +25,7 @@ namespace odin.model
         internal void nextStep()
         {
             this.incrementSteps();
-            this.removeStep(brain.temporalPatternLength);
+            this.removeStep(brain.temporalPatternLength+1);
             brain.log("next Step in RecoveryQueue");
         }
 
@@ -104,7 +104,44 @@ namespace odin.model
                 return false;
             return true;
         }
+        internal List<Neuron> getNeuronsStartingStep(int when)
+        {
+            List<Neuron> neurons = new List<Neuron>();
+            for (; when < brain.temporalPatternLength; when++)
+            {
+                
+                foreach (QueueElement e in this.getStep(when).elements)
+                {
+                    neurons.Add(e.neuron);
+                }
+            }
+            return neurons;
+        }
 
-        
+
+
+
+        internal bool containsElementAfterStep(Neuron c, int when)
+        {
+
+            if (this.getNeuronsStartingStep(when).Contains(c))
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+
+
+        internal bool FirstStepContainsSuccessorOf(Neuron c)
+        {
+            foreach (Neuron n in c.getSuccessors())
+            {
+                if (this.getNeuronsInStep(0).Contains(n))
+                    return true;
+            }
+            return false;
+        }
     }
 }
