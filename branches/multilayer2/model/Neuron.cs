@@ -58,7 +58,7 @@ namespace odin.model
             if (this.type != 2)
             {
                layer.addToRecoveryQueue(this);
-               layer.lateralInhibition();
+               layer.lateralInhibition(this);
                this.axon.propagateActionPotential();
             }
             
@@ -70,6 +70,12 @@ namespace odin.model
             
             this.axon.synapseOn(tmpDendrite, inhibitory);
             
+        }
+        internal void synapseOn(Dendrite tmpDendrite, double weight)
+        {
+
+            this.axon.synapseOn(tmpDendrite, weight);
+
         }
 
         internal bool crossesThreshold()

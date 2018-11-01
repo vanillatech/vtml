@@ -57,9 +57,12 @@ namespace odin.model
                         activationQueue.addToStep(tmpNeuron, 1, brain.synapseMaxCount * 1);
                     }
                 }*/
-                this.checkNewPattern();
-                //this.associateLastStepNeuronsWithCurrentStepInputNeurons();
                 this.associateLastStepsNeuronsWithCurrentStep();
+                this.checkNewPattern();
+                
+                
+                //this.associateLastStepNeuronsWithCurrentStepInputNeurons();
+                
             }
             recoveryQueue.nextStep();
             this.currentStep++;
@@ -68,6 +71,10 @@ namespace odin.model
 
         private void checkNewPattern()
         {
+            Neuron outputNeuron = brain.getOutputNeuron(brain.desiredOutput);
+            Neuron newInputNeuronInNextLayer = new Neuron(brain, this.getHigher());
+            Neuron newInterNeuron = new Neuron(brain, this);
+
             for (int s = 1; s < brain.temporalPatternLength; s++)
             {
                 foreach (Neuron c in recoveryQueue.getNeuronsInStep(s))
@@ -82,7 +89,7 @@ namespace odin.model
                                 if (this.number == brain.maxLayer)
                                 {
 
-                                    Neuron outputNeuron = brain.getOutputNeuron(brain.desiredOutput);
+                                    
 
                                     Dendrite od1 = outputNeuron.getDendrite(s);
                                     c.synapseOn(od1);
@@ -90,7 +97,7 @@ namespace odin.model
                                 }
                                 else
                                 {
-                                    Neuron newInputNeuronInNextLayer = new Neuron(brain, this.getHigher());
+                                    
                                     newInputNeuronInNextLayer.type = 1;
                                     c.synapseOn(newInputNeuronInNextLayer.getDendrite(1));
                                 }
@@ -98,7 +105,7 @@ namespace odin.model
                         }
                         else if (c.type == 1) //inputneuron
                         {
-                            Neuron newInterNeuron = new Neuron(brain, this);
+                            
                             c.synapseOn(newInterNeuron.getDendrite(s));
 
                         }
@@ -144,7 +151,7 @@ namespace odin.model
                     {
                         if (n.type == 0) // interneuron
                         {
-                            n.synapseOn(c.getDendrite(when));
+                            n.synapseOn(c.getDendrite(when),0.1);
                         }
                     }
                 }
@@ -301,9 +308,9 @@ namespace odin.model
         {
             this.activationQueue.addToStep(neuron, when);
         }
-        internal void lateralInhibition()
+        internal void lateralInhibition(Neuron caller)
         {
-            activationQueue.inhibitNeuronsInStep(0);
+            activationQueue.inhibitNeuronsInStep(0,caller);
         }
 
         internal void setIdle(bool p)

@@ -31,7 +31,19 @@ namespace odin.model
            
             
         }
+        internal void synapseOn(Dendrite tmpDendrite, double weight)
+        {
+            Synapse s = tmpDendrite.getSynapse(this);
 
+            if (!this.synapses.Contains(s))
+            {
+                s.weight = weight;
+                this.synapses.Add(s);
+
+            }
+
+
+        }
         internal List<Neuron> getSuccessors()
         {
             List<Neuron> tmp = new List<Neuron>();
