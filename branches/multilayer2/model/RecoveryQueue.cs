@@ -26,7 +26,7 @@ namespace odin.model
         {
             this.incrementSteps();
             this.removeStep(brain.temporalPatternLength+1);
-            brain.log("next Step in RecoveryQueue");
+            //brain.log("next Step in RecoveryQueue");
         }
 
         internal Neuron getFirst(int step)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,15 +40,21 @@ namespace odin.model
                 }
             }
             else if (!brain.outputLayer.isIdle()) { brain.outputLayer.think(); }
+
+            this.currentStep++;
+            brain.log("-----Next thinkstep (Layer: " + this.number + "): " + this.currentStep + " -----", Brushes.Black);
+            
+
             activationQueue.nextStep();
             activationQueue.leakActivation();
             activationQueue.processActivation();
             activationQueue.fireCurrentNeurons();
             activationQueue.removeStep(0);
+
             if (brain.isInLearnMode)
             {
                 this.reinforcementLearning();
-                
+
                 /*if (this.checkForRecentlyFiredNeuronsWithoutCommonSuccessor())
                 {
                     Neuron tmpNeuron = this.associateLastFiredNeuronsWithNewNeuron();
@@ -59,14 +66,16 @@ namespace odin.model
                 }*/
                 this.associateLastStepsNeuronsWithCurrentStep();
                 this.checkNewPattern();
-                
-                
+
+
                 //this.associateLastStepNeuronsWithCurrentStepInputNeurons();
-                
+
             }
+
             recoveryQueue.nextStep();
-            this.currentStep++;
-            brain.log("-----Next thinkstep (Layer: " + this.number + "): " + this.currentStep + " -----");
+            
+
+            
         }
 
         private void checkNewPattern()
@@ -86,27 +95,33 @@ namespace odin.model
                         {
                             if (s == 1) // only for last step neuron
                             {
-                                if (this.number == brain.maxLayer)
+                                if (!checkForCommonType1SuccessorInStep(1))
                                 {
+                                    if (this.number == brain.maxLayer)
+                                    {
 
-                                    
 
-                                    Dendrite od1 = outputNeuron.getDendrite(s);
-                                    c.synapseOn(od1);
 
-                                }
-                                else
-                                {
-                                    
-                                    newInputNeuronInNextLayer.type = 1;
-                                    c.synapseOn(newInputNeuronInNextLayer.getDendrite(1));
+                                        Dendrite od1 = outputNeuron.getDendrite(s);
+                                        c.synapseOn(od1);
+                                        brain.log("New outputneuron: " + c.id + " to " + outputNeuron.tag, Brushes.LimeGreen);
+
+                                    }
+                                    else
+                                    {
+
+                                        newInputNeuronInNextLayer.type = 1;
+                                        c.synapseOn(newInputNeuronInNextLayer.getDendrite(1));
+                                        brain.log("New Input in Layer " + this.getHigher().number + ": " + c.id + " to " + newInputNeuronInNextLayer.id, Brushes.Orange);
+                                    }
                                 }
                             }
                         }
                         else if (c.type == 1) //inputneuron
                         {
                             
-                            c.synapseOn(newInterNeuron.getDendrite(s));
+                            bool newLink = c.synapseOn(newInterNeuron.getDendrite(s));
+                            brain.log("New Interneuron: " + c.id + " to " + newInterNeuron.id, Brushes.LightSkyBlue);
 
                         }
 
@@ -149,9 +164,10 @@ namespace odin.model
                 {
                     foreach (Neuron c in recoveryQueue.getNeuronsInStep(0))
                     {
-                        if (n.type == 0) // interneuron
+                        if (n.type == 0 && c.type == 0) // interneuron
                         {
-                            n.synapseOn(c.getDendrite(when),0.1);
+                            bool newlink = n.synapseOn(c.getDendrite(when),0.1);
+                            if (newlink) brain.log("New Link: " + n.id + " to " + c.id, Brushes.Turquoise);
                         }
                     }
                 }
@@ -232,6 +248,43 @@ namespace odin.model
 
             }
             if (commonSuccessors.Count == 0 && !recoveryQueue.empty())
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+        private bool checkForCommonType1SuccessorInStep(int stp)
+        {
+            Neuron n;
+            List<Neuron> commonSuccessors = new List<Neuron>();
+
+            n = recoveryQueue.getFirst(stp);
+            if (n == null)
+            { //if recoveryQueue is empty we don't have commonSuccessors
+                return false;
+            }
+            commonSuccessors = n.getSuccessors();
+            // if only 1 element left 
+            if (recoveryQueue.countElements() == 1 && commonSuccessors == null)
+                return false;
+
+            List<Neuron> commonSuccessorsIterate = new List<Neuron>(commonSuccessors);
+            while ((n = recoveryQueue.getNext(stp)) != null)
+            { // every pair must have at least one common successor
+                List<Neuron> compare = n.getSuccessors();
+
+                foreach (Neuron c in commonSuccessorsIterate)
+                {
+                    if (c.type != 1 || !compare.Contains(c))
+                    {
+                        commonSuccessors.Remove(c);
+                    }
+                }
+
+
+            }
+            if (commonSuccessors.Count > 0)
             {
                 return true;
             }

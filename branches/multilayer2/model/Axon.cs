@@ -18,7 +18,7 @@ namespace odin.model
             brain = mybrain;
         }
 
-        internal void synapseOn(Dendrite tmpDendrite, bool inhibitory = false)
+        internal bool synapseOn(Dendrite tmpDendrite, bool inhibitory = false)
         {
             Synapse s = tmpDendrite.getSynapse(this);
             
@@ -26,12 +26,12 @@ namespace odin.model
             {
                 if (inhibitory) s.weight = -s.weight;
                 this.synapses.Add(s);
-
+                return true;
             }
-           
+            return false;
             
         }
-        internal void synapseOn(Dendrite tmpDendrite, double weight)
+        internal bool synapseOn(Dendrite tmpDendrite, double weight)
         {
             Synapse s = tmpDendrite.getSynapse(this);
 
@@ -39,9 +39,9 @@ namespace odin.model
             {
                 s.weight = weight;
                 this.synapses.Add(s);
-
+                return true;
             }
-
+            return false;
 
         }
         internal List<Neuron> getSuccessors()

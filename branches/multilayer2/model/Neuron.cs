@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,7 +52,7 @@ namespace odin.model
             {
                 brain.addToOutputStack(this.tag);
             }
-            brain.log("Fired: " + this.id);
+            brain.log("Fired: " + this.id,Brushes.Red );
             brain.monitorOutput(this.tag);
             this.activation = 0;
             this.lastFired = layer.currentStep;
@@ -65,16 +66,16 @@ namespace odin.model
         }
 
 
-        internal void synapseOn(Dendrite tmpDendrite,bool inhibitory = false)
+        internal bool synapseOn(Dendrite tmpDendrite,bool inhibitory = false)
         {
             
-            this.axon.synapseOn(tmpDendrite, inhibitory);
+            return this.axon.synapseOn(tmpDendrite, inhibitory);
             
         }
-        internal void synapseOn(Dendrite tmpDendrite, double weight)
+        internal bool synapseOn(Dendrite tmpDendrite, double weight)
         {
 
-            this.axon.synapseOn(tmpDendrite, weight);
+            return this.axon.synapseOn(tmpDendrite, weight);
 
         }
 
@@ -100,7 +101,7 @@ namespace odin.model
         internal void polarize(double p)
         {
             this.activation += p;
-            brain.log("Polarized: " + this.id + " with Activation: " + p + " now having " + this.activation);
+            brain.log("Polarized: " + this.id + " with Activation: " + p + " now having " + this.activation,Brushes.Magenta);
             
         }
 

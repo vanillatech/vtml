@@ -35,7 +35,7 @@ namespace odin.model
                 aqe.val = value;
                 tmp.elements.Add(aqe);
                 neuron.layer.setIdle(false);         
-            
+                
         }
         internal int countElements(int inStep)
         {

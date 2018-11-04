@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace odin.model
         public int synapseDefaultCount = 1;
         public int synapseMaxCount = 999;
         public double leakageFactor = 0.1; //0==remove all activation after each step, 1==store activation forever
-        public int maxLayer = 1;
+        public int maxLayer = 0;
         public double adaptionRate = 0.1;
         public bool learnOnActivate = false;
         public bool learnOnFire = true;
@@ -57,11 +58,15 @@ namespace odin.model
             //this.featureMatrix.Add(new Sense(this, true));
             this.featureMatrix.Add(new Sense(this)); //disable nooutput as output now on outputlayer
         }
-        internal void log(String s) {
+        internal void log(String s,Brush b ) {
             if (this.monitor != null)
             {
-                monitor.log(s);
+                monitor.log(s,b);
             }
+        }
+        internal void log(String s)
+        {
+            this.log(s, Brushes.Black);
         }
 
         Sense readSense;

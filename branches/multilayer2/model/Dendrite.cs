@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,6 +30,7 @@ namespace odin.model
         internal void activate(double activationVal)
         {
             toNeuron.layer.activationQueue.addToStep(toNeuron,length,activationVal);
+            brain.log("Schedule Activation: " + toNeuron.id + " (Delay: " + length + "; ActVal: " + activationVal + ")",Brushes.Brown);
         }
 
 
