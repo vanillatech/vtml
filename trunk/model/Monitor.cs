@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,10 +33,10 @@ namespace odin.model
             this.outputString = "";
         }
         
-        internal void log(String s)
+        internal void log(String s, Brush b)
         {
             this.lastLogEntry = s;
-            NewLogEntry(s);
+            NewLogEntry(s,b);
         }
 
         internal Neuron getInputNode(string inp)
@@ -82,8 +83,8 @@ namespace odin.model
             
         }
 
-        private Action<string> NewLogEntry;
-        internal void attachLog(Action<string> onNewLogEntry)
+        private Action<string,Brush> NewLogEntry;
+        internal void attachLog(Action<string,Brush> onNewLogEntry)
         {
             NewLogEntry = onNewLogEntry;
 

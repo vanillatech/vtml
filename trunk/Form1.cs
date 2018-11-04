@@ -29,6 +29,7 @@ namespace odin
         public Form1()
         {
             InitializeComponent();
+            listBox1.DrawMode = DrawMode.OwnerDrawFixed;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -200,13 +201,23 @@ namespace odin
             }
             catch (System.InvalidOperationException) { }
         }
-        private void onNewLogEntry(String logEntry)
+        private List<Brush> logColors = new List<Brush>();
+        private void onNewLogEntry(String logEntry, Brush color)
         {
             try
             {
+                logColors.Insert(0, color);
                 listBox1.Items.Insert(0, logEntry);
+                
             }
             catch (System.InvalidOperationException) { }
+        }
+        private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            e.DrawBackground();
+            Brush brush = logColors[e.Index];
+            e.Graphics.DrawString(listBox1.Items[e.Index].ToString(), new Font("Arial", 10), brush , e.Bounds);
+            e.DrawFocusRectangle();
         }
         
 

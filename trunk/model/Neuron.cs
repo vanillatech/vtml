@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -51,7 +52,7 @@ namespace odin.model
             {
                 brain.addToOutputStack(this.tag);
             }
-            brain.log("Fired: " + this.id);
+            brain.log("Fired: " + this.id,Brushes.Red );
             brain.monitorOutput(this.tag);
             this.activation = 0;
             this.lastFired = brain.currentStep;
@@ -94,7 +95,7 @@ namespace odin.model
         internal void polarize(double p)
         {
             this.activation += p;
-            brain.log("Polarized: " + this.id + " with Activation: " + p + " now having " + this.activation);
+            brain.log("Polarized: " + this.id + " with Activation: " + p + " now having " + this.activation,Brushes.Magenta);
             
         }
 
