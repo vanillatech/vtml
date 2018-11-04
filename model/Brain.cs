@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,11 +58,15 @@ namespace odin.model
             //this.featureMatrix.Add(new Sense(this, true));
             this.featureMatrix.Add(new Sense(this)); //disable nooutput as output now on outputlayer
         }
-        internal void log(String s) {
+        internal void log(String s,Brush b ) {
             if (this.monitor != null)
             {
-                monitor.log(s);
+                monitor.log(s,b);
             }
+        }
+        internal void log(String s)
+        {
+            this.log(s, Brushes.Black);
         }
 
         Sense readSense;
