@@ -54,7 +54,8 @@ namespace odin.model
 
         private void addFeature()
         {
-            this.featureMatrix.Add(new Sense(this, true));
+            //this.featureMatrix.Add(new Sense(this, true));
+            this.featureMatrix.Add(new Sense(this)); //disable nooutput as output now on outputlayer
         }
         internal void log(String s) {
             if (this.monitor != null)
