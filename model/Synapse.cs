@@ -82,7 +82,7 @@ namespace odin.model
 
         private int forget()
         {
-            if (this.lastActivation + brain.forgetAfterSteps < brain.currentStep)
+            if (this.lastActivation + brain.forgetAfterSteps < brain.lastStepInLearnmode + brain.forgetAfterLearnMode)
             {
                 if (this.countExcitatorySynapses <= brain.synapseDefaultCount && this.countInhibitorySynapses <= brain.synapseDefaultCount) this.weight *= (1 - brain.forgetRate);
                 /*this.countExcitatorySynapses--;

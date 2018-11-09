@@ -20,6 +20,7 @@ namespace odin.model
         internal Dictionary<int,Neuron> outputNeurons = new Dictionary<int,Neuron> ();
 
         public UInt64 currentStep = 0;
+        public UInt64 lastStepInLearnmode = 0;
         //Model parameters
         public double activationThreshold = 0.52;
         public double activationThresholdInLearnMode = 0.49;
@@ -39,6 +40,7 @@ namespace odin.model
         public int refractoryPeriod = 1;
         public double forgetRate = 0.1;
         public UInt64 forgetAfterSteps = 0; //0 to disable
+        public UInt64 forgetAfterLearnMode = 100000;
         public DateTime inactiveSince = DateTime.Now;
         public bool temporary = false;
         //--
@@ -190,6 +192,7 @@ namespace odin.model
             }
             recoveryQueue.nextStep();
             this.currentStep++;
+            if (this.isInLearnMode) this.lastStepInLearnmode = currentStep;
             this.log("-----Next thinkstep: " + this.currentStep + " -----");
         }
 
