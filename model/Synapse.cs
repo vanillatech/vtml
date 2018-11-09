@@ -82,22 +82,28 @@ namespace odin.model
 
         private int forget()
         {
-            if (this.lastActivation + brain.forgetAfterSteps < brain.lastStepInLearnmode + brain.forgetAfterLearnMode)
+            //check if we left learning mode and are still within forget-learning period:
+            if (brain.currentStep < brain.lastStepInLearnmode + brain.forgetAfterLearnMode)
             {
-                if (this.countExcitatorySynapses <= brain.synapseDefaultCount && this.countInhibitorySynapses <= brain.synapseDefaultCount) this.weight *= (1 - brain.forgetRate);
-                /*this.countExcitatorySynapses--;
-                this.countInhibitorySynapses--;
-                if (countExcitatorySynapses < 0) countExcitatorySynapses = 0;
-                if (countInhibitorySynapses < 0) countInhibitorySynapses = 0;*/
-                /*if (countInhibitorySynapses == 0 && countExcitatorySynapses == 0)
+                //now check if last activation is long ago so that we forget what we learned
+                if (this.lastActivation + brain.forgetAfterSteps < brain.currentStep)
                 {
-                    toDendrite.removeSynapse(this);
-                    fromAxon.removeSynapse(this);
-                    return 1;
-                }*/
-                this.lastActivation = brain.currentStep;
 
-            } 
+                    if (this.countExcitatorySynapses <= brain.synapseDefaultCount && this.countInhibitorySynapses <= brain.synapseDefaultCount) this.weight *= (1 - brain.forgetRate);
+                    /*this.countExcitatorySynapses--;
+                    this.countInhibitorySynapses--;
+                    if (countExcitatorySynapses < 0) countExcitatorySynapses = 0;
+                    if (countInhibitorySynapses < 0) countInhibitorySynapses = 0;*/
+                    /*if (countInhibitorySynapses == 0 && countExcitatorySynapses == 0)
+                    {
+                        toDendrite.removeSynapse(this);
+                        fromAxon.removeSynapse(this);
+                        return 1;
+                    }*/
+                    this.lastActivation = brain.currentStep;
+
+                }
+            }
             return 0;
         }
         internal void activate()

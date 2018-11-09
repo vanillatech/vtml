@@ -27,13 +27,13 @@ namespace odin.model
         public double synapseDefaultStrength = 0.5;
         public int synapseDefaultCount = 1;
         public int synapseMaxCount = 999;
-        public double leakageFactor = 0.1; //0==remove all activation after each step, 1==store activation forever
+        public double leakageFactor = 0; //0==remove all activation after each step, 1==store activation forever
         public int maxLayer = 2;
         public double adaptionRate = 0.1;
         public bool learnOnActivate = false;
         public bool learnOnFire = true;
         public bool activateNewNeurons = true;
-        public double inhibitFactor = 0.1; // 0==WTA, 1==no lateral inhibition
+        public double inhibitFactor = 0.3; // 0==WTA, 1==no lateral inhibition
         public int temporalPatternLength = 1;
         public bool distributeActivationAmongSynapses = false;
         public bool activateNeuronBasedOnInputSynapses = false;
