@@ -21,7 +21,7 @@ namespace odin.model
             this.decrementSteps();
             
 
-            //brain.log("next Step in ActivationQueue");
+            brain.log("next Step in ActivationQueue");
         }
 
         

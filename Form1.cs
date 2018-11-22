@@ -29,7 +29,6 @@ namespace odin
         public Form1()
         {
             InitializeComponent();
-            listBox1.DrawMode = DrawMode.OwnerDrawFixed;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -165,14 +164,6 @@ namespace odin
                                 {
                                     brains[inp.token].temporary = inp.temporary;
                                 }
-                                if (inp.desiredOutput != 0)
-                                {
-                                    brains[inp.token].desiredOutput = inp.desiredOutput;
-                                }
-                                else if (inp.input != null)
-                                {
-                                    brains[inp.token].desiredOutput = inp.input[0];
-                                }
                                 datarec = brains[inp.token].query(inp.input, inp.context, inp.learnmode);
                                 brains[inp.token].think(inp.outputLMT);
                                 datarec = brains[inp.token].getOutput();
@@ -201,23 +192,13 @@ namespace odin
             }
             catch (System.InvalidOperationException) { }
         }
-        private List<Brush> logColors = new List<Brush>();
-        private void onNewLogEntry(String logEntry, Brush color)
+        private void onNewLogEntry(String logEntry)
         {
             try
             {
-                logColors.Insert(0, color);
                 listBox1.Items.Insert(0, logEntry);
-                
             }
             catch (System.InvalidOperationException) { }
-        }
-        private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            e.DrawBackground();
-            Brush brush = logColors[e.Index];
-            e.Graphics.DrawString(listBox1.Items[e.Index].ToString(), new Font("Arial", 10), brush , e.Bounds);
-            e.DrawFocusRectangle();
         }
         
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,27 +19,25 @@ namespace odin.model
         internal Dictionary<int,Neuron> outputNeurons = new Dictionary<int,Neuron> ();
 
         public UInt64 currentStep = 0;
-        public UInt64 lastStepInLearnmode = 0;
         //Model parameters
         public double activationThreshold = 0.52;
         public double activationThresholdInLearnMode = 0.49;
         public double synapseDefaultStrength = 0.5;
         public int synapseDefaultCount = 1;
         public int synapseMaxCount = 999;
-        public double leakageFactor = 0; //0==remove all activation after each step, 1==store activation forever
+        public double leakageFactor = 0.1; //0==remove all activation after each step, 1==store activation forever
         public int maxLayer = 2;
         public double adaptionRate = 0.1;
         public bool learnOnActivate = false;
         public bool learnOnFire = true;
         public bool activateNewNeurons = true;
-        public double inhibitFactor = 0.3; // 0==WTA, 1==no lateral inhibition
+        public double inhibitFactor = 0.1; // 0==WTA, 1==no lateral inhibition
         public int temporalPatternLength = 1;
         public bool distributeActivationAmongSynapses = false;
         public bool activateNeuronBasedOnInputSynapses = false;
         public int refractoryPeriod = 1;
         public double forgetRate = 0.1;
         public UInt64 forgetAfterSteps = 0; //0 to disable
-        public UInt64 forgetAfterLearnMode = 100000;
         public DateTime inactiveSince = DateTime.Now;
         public bool temporary = false;
         //--
@@ -57,18 +54,13 @@ namespace odin.model
 
         private void addFeature()
         {
-            //this.featureMatrix.Add(new Sense(this, true));
-            this.featureMatrix.Add(new Sense(this)); //disable nooutput as output now on outputlayer
+            this.featureMatrix.Add(new Sense(this, true));
         }
-        internal void log(String s,Brush b ) {
+        internal void log(String s) {
             if (this.monitor != null)
             {
-                monitor.log(s,b);
+                monitor.log(s);
             }
-        }
-        internal void log(String s)
-        {
-            this.log(s, Brushes.Black);
         }
 
         Sense readSense;
@@ -76,7 +68,6 @@ namespace odin.model
 
         internal ActivationQueue activationQueue; 
         internal RecoveryQueue recoveryQueue;
-        public int desiredOutput;
 
         public string query(string inp, bool learnMode = false) {
             this.outPutStack = "";
@@ -192,7 +183,6 @@ namespace odin.model
             }
             recoveryQueue.nextStep();
             this.currentStep++;
-            if (this.isInLearnMode) this.lastStepInLearnmode = currentStep;
             this.log("-----Next thinkstep: " + this.currentStep + " -----");
         }
 
@@ -301,17 +291,8 @@ namespace odin.model
                 n.synapseOn(tmpDendrite);
                 
                 if (n.layer >= tmpNeuron.layer) tmpNeuron.layer = n.layer + 1;
-                if (n.layer == this.maxLayer)
-                {
-                    tmpNeuron.layer = n.layer;
-
-                    Neuron outputNeuron = this.getOutputNeuron(this.desiredOutput);
-                    Dendrite od1 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 1);
-                    n.synapseOn(od1);
-                    //avoid intial activation after adding connection
-                    activationQueue.addToStep(outputNeuron, 1, -od1.countSynapses());
-                }
-                /*if (n.type == 1) //if n is an input neuron
+                if (n.layer == this.maxLayer) tmpNeuron.layer = n.layer;
+                if (n.type == 1) //if n is an input neuron
                 {
                     //create an output neuron that gets inhibited by current inputneuron and that gets excited by tmpNeuron
                     //this causes the outputneuron only to be fired in case we didn't input the same value
@@ -325,7 +306,7 @@ namespace odin.model
                     //outputNeuron.type = 2;
                     Dendrite od2 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 1);
                     tmpNeuron.synapseOn(od2);
-                }*/
+                }
             }
             return tmpNeuron;
         }
