@@ -22,7 +22,7 @@ namespace odin.model
         public UInt64 currentStep = 0;
         public UInt64 lastStepInLearnmode = 0;
         //Model parameters
-        public double activationThreshold = 0.52;
+        public double activationThreshold = 0.55;
         public double activationThresholdInLearnMode = 0.49;
         public double synapseDefaultStrength = 0.5;
         public int synapseDefaultCount = 1;
@@ -34,7 +34,7 @@ namespace odin.model
         public bool learnOnFire = true;
         public bool activateNewNeurons = true;
         public double inhibitFactor = 0.3; // 0==WTA, 1==no lateral inhibition
-        public int temporalPatternLength = 1;
+        public int temporalPatternLength = 2;
         public bool distributeActivationAmongSynapses = false;
         public bool activateNeuronBasedOnInputSynapses = false;
         public int refractoryPeriod = 1;
@@ -300,32 +300,31 @@ namespace odin.model
                 Dendrite tmpDendrite = tmpNeuron.getDendrite(recoveryQueue.getCurrentStep()+1);
                 n.synapseOn(tmpDendrite);
                 
-                if (n.layer >= tmpNeuron.layer) tmpNeuron.layer = n.layer + 1;
-                if (n.layer == this.maxLayer)
+                if (n.layer >= tmpNeuron.layer) 
+                    tmpNeuron.layer = n.layer + 1;
+                if (n.layer == this.maxLayer )
                 {
                     tmpNeuron.layer = n.layer;
+                    if (this.desiredOutput != 0)
+                    {
+                        Neuron outputNeuron = this.getOutputNeuron(this.desiredOutput);
+                        Dendrite od1 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 1);
+                        n.synapseOn(od1);
+                        //avoid intial activation after adding connection
+                        activationQueue.addToStep(outputNeuron, 1, -od1.countSynapses());
+                        
+                    }
 
-                    Neuron outputNeuron = this.getOutputNeuron(this.desiredOutput);
-                    Dendrite od1 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 1);
-                    n.synapseOn(od1);
-                    //avoid intial activation after adding connection
-                    activationQueue.addToStep(outputNeuron, 1, -od1.countSynapses());
                 }
-                /*if (n.type == 1) //if n is an input neuron
+                if (n.type == 1) //if n is an input neuron
                 {
                     //create an output neuron that gets inhibited by current inputneuron and that gets excited by tmpNeuron
                     //this causes the outputneuron only to be fired in case we didn't input the same value
                     Neuron outputNeuron = this.getOutputNeuron(n.tag);
-                    Dendrite od1 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 2);
+                    Dendrite od1 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 1);
                     n.synapseOn(od1,true);
-                    //avoid intial activation after adding connection
-                    activationQueue.addToStep(outputNeuron, 2,-od1.countSynapses());
                     
-                    //outputNeuron.tag = n.tag;
-                    //outputNeuron.type = 2;
-                    Dendrite od2 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 1);
-                    tmpNeuron.synapseOn(od2);
-                }*/
+                }
             }
             return tmpNeuron;
         }
