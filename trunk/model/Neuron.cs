@@ -59,9 +59,10 @@ namespace odin.model
             if (this.type != 2)
             {
                brain.addToRecoveryQueue(this);
-               brain.lateralInhibition(this.layer);
+               
                this.axon.propagateActionPotential();
             }
+            brain.lateralInhibition(this.layer);
             
         }
 
