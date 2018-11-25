@@ -64,7 +64,7 @@ namespace odin.model
                         activationQueue.addToStep(tmpNeuron, 1, brain.synapseMaxCount * 1);
                     }
                 }*/
-                this.associateLastStepsNeuronsWithCurrentStep();
+               // this.associateLastStepsNeuronsWithCurrentStep();
                 this.checkNewPattern();
 
 
@@ -80,7 +80,11 @@ namespace odin.model
 
         private void checkNewPattern()
         {
-            Neuron outputNeuron = brain.getOutputNeuron(brain.desiredOutput);
+            Neuron outputNeuron = null;
+            if (brain.desiredOutput != 0)
+            {
+                outputNeuron = brain.getOutputNeuron(brain.desiredOutput);
+            }
             Neuron newInputNeuronInNextLayer = new Neuron(brain, this.getHigher());
             Neuron newInterNeuron = new Neuron(brain, this);
 
@@ -100,12 +104,13 @@ namespace odin.model
                                     if (this.number == brain.maxLayer)
                                     {
 
+                                        if (outputNeuron != null)
+                                        {
 
-
-                                        Dendrite od1 = outputNeuron.getDendrite(s);
-                                        c.synapseOn(od1);
-                                        brain.log("New outputneuron: " + c.id + " to " + outputNeuron.tag, Brushes.LimeGreen);
-
+                                            Dendrite od1 = outputNeuron.getDendrite(s);
+                                            c.synapseOn(od1);
+                                            brain.log("New outputneuron: " + c.id + " to " + outputNeuron.tag, Brushes.LimeGreen);
+                                        }
                                     }
                                     else
                                     {
@@ -166,7 +171,7 @@ namespace odin.model
                     {
                         if (n.type == 0 && c.type == 0) // interneuron
                         {
-                            bool newlink = n.synapseOn(c.getDendrite(when),0.1);
+                            bool newlink = n.synapseOn(c.getDendrite(when),0.5);
                             if (newlink) brain.log("New Link: " + n.id + " to " + c.id, Brushes.Turquoise);
                         }
                     }

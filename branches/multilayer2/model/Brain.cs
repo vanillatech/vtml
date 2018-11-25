@@ -21,13 +21,13 @@ namespace odin.model
 
         
         //Model parameters
-        public double activationThreshold = 0.52;
+        public double activationThreshold = 0.55;
         public double activationThresholdInLearnMode = 0.49;
         public double synapseDefaultStrength = 0.5;
         public int synapseDefaultCount = 1;
         public int synapseMaxCount = 999;
         public double leakageFactor = 0.1; //0==remove all activation after each step, 1==store activation forever
-        public int maxLayer = 0;
+        public int maxLayer = 1;
         public double adaptionRate = 0.1;
         public bool learnOnActivate = false;
         public bool learnOnFire = true;
