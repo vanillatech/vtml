@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,7 @@ namespace odin
         Stream braindump = null;
         
         private Thread listenThread;
+        private int[] currentImg;
 
         public Form1()
         {
@@ -249,45 +251,20 @@ namespace odin
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //monitor.clearOutput();
-            String[] splitted = textBox1.Text.Split(',');
-
-            int[] nums = new int[splitted.Length];
-
-            for (int i = 0; i < splitted.Length; i++)
+            if (this.currentImg == null)
             {
-                nums[i] = int.Parse(splitted[i]);
-            }
-            String[] splitted2 = textBox5.Text.Split(',');
+                //monitor.clearOutput();
+                String[] splitted = textBox1.Text.Split(',');
 
-            int[] nums2 = new int[splitted2.Length];
+                int[] nums = new int[splitted.Length];
 
-            for (int i = 0; i < splitted2.Length; i++)
-            {
-                if (splitted2[i] != "")
+                for (int i = 0; i < splitted.Length; i++)
                 {
-                    nums2[i] = int.Parse(splitted2[i]);
+                    nums[i] = int.Parse(splitted[i]);
                 }
-            }
-            textBox4.Text = brain.query(nums,nums2);
-            //textBox1.Text = "";
-        }
-        private void button2_Click(object sender, EventArgs e)
-        {
-            String[] splitted = textBox1.Text.Split(',');
-            
-            int[] nums = new int[splitted.Length];
-
-            for(int i = 0 ; i < splitted.Length ; i++)
-            {
-                nums[i] = int.Parse(splitted[i]);
-            }
-            int[] nums2 = null;
-            if (textBox5.Text != "")
-            {
                 String[] splitted2 = textBox5.Text.Split(',');
 
-                nums2 = new int[splitted2.Length];
+                int[] nums2 = new int[splitted2.Length];
 
                 for (int i = 0; i < splitted2.Length; i++)
                 {
@@ -296,9 +273,49 @@ namespace odin
                         nums2[i] = int.Parse(splitted2[i]);
                     }
                 }
+                textBox4.Text = brain.query(nums, nums2);
+                //textBox1.Text = "";
             }
-            textBox4.Text = brain.query(nums, nums2, true);
-            
+            else
+            {
+                textBox4.Text = brain.query(this.currentImg);
+                this.currentImg = null;
+            }
+        }
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (this.currentImg == null)
+            {
+                String[] splitted = textBox1.Text.Split(',');
+
+                int[] nums = new int[splitted.Length];
+
+                for (int i = 0; i < splitted.Length; i++)
+                {
+                    nums[i] = int.Parse(splitted[i]);
+                }
+                int[] nums2 = null;
+                if (textBox5.Text != "")
+                {
+                    String[] splitted2 = textBox5.Text.Split(',');
+
+                    nums2 = new int[splitted2.Length];
+
+                    for (int i = 0; i < splitted2.Length; i++)
+                    {
+                        if (splitted2[i] != "")
+                        {
+                            nums2[i] = int.Parse(splitted2[i]);
+                        }
+                    }
+                }
+                textBox4.Text = brain.query(nums, nums2, true);
+            }
+            else
+            {
+                textBox4.Text = brain.query(this.currentImg,null,true);
+                this.currentImg = null;
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -542,6 +559,49 @@ namespace odin
             {
                 
                 listBox1.Items.Insert(0,"Error: Could not write file to disk. Original error: " + ex.Message);
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+
+            //openFileDialog1.InitialDirectory = "c:\\";
+            openFileDialog1.Filter = "images (*.png)|*.png|All files (*.*)|*.*";
+            //openFileDialog1.FilterIndex = 2;
+            openFileDialog1.RestoreDirectory = true;
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                Stream imgfile;
+                try
+                {
+                    if ((imgfile = openFileDialog1.OpenFile()) != null)
+                    {
+                        using (imgfile)
+                        {
+                            Bitmap myimg =  (Bitmap)Bitmap.FromStream(imgfile);
+                            pictureBox1.Image = myimg;
+                            int[] nums = new int[myimg.Width * myimg.Height];
+                            int n = 0;
+                            for (int i = 0; i < myimg.Width; i++)
+                            {
+                                for (int j = 0; j < myimg.Height; j++)
+                                {
+                                    Color c = myimg.GetPixel(i, j);
+                                    nums[n] = c.R/64+c.G/64*4+c.B/64*4*4+n*4*4*4;
+                                    n++;
+                                }
+                            }
+                            this.currentImg = nums;
+
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                }
             }
         }
 
