@@ -5,16 +5,13 @@ using System.Text;
 
 namespace odin.model
 {
-    [Serializable()] 
     class Queues
     {
-        [Serializable()]
         internal struct QueueElement
         {
             internal Neuron neuron;
             internal double val;
         }
-        [Serializable()] 
         internal struct Step
         {
             internal List<QueueElement> elements;
@@ -131,13 +128,6 @@ namespace odin.model
             if (steps.Exists(n => n.step == p))
             {
                 steps.Remove(getStep(p));
-            }
-        }
-        internal void clear()
-        {
-            for (int n = steps.Count - 1; n > 0; n-- )
-            {
-                steps.RemoveAt(n);
             }
         }
     }

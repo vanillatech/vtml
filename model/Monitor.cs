@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +7,6 @@ using System.ComponentModel;
 
 namespace odin.model
 {
-    [Serializable()] 
     class Monitor
     {
         private Brain brain;
@@ -33,15 +31,15 @@ namespace odin.model
             this.outputString = "";
         }
         
-        internal void log(String s, Brush b)
+        internal void log(String s)
         {
             this.lastLogEntry = s;
-            NewLogEntry(s,b);
+            NewLogEntry(s);
         }
 
         internal Neuron getInputNode(string inp)
         {
-            int p = int.Parse(inp);
+            int p = char.Parse(inp);
             Neuron n = sense.getInputNeuronIfExists(p);
             if (n != null)
             {
@@ -59,7 +57,7 @@ namespace odin.model
 
         internal void output(int p)
         {
-            this.outputString += p+", ";
+            this.outputString += (Char)(p);
             OutputChanged(this.outputString);
             /*var handler = PropertyChanged;
             if (handler != null)
@@ -83,8 +81,8 @@ namespace odin.model
             
         }
 
-        private Action<string,Brush> NewLogEntry;
-        internal void attachLog(Action<string,Brush> onNewLogEntry)
+        private Action<string> NewLogEntry;
+        internal void attachLog(Action<string> onNewLogEntry)
         {
             NewLogEntry = onNewLogEntry;
 

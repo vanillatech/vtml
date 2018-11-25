@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace odin.model
 {
-    [Serializable()] 
     class ActivationQueue : Queues
     {
         Brain brain;
@@ -21,7 +20,7 @@ namespace odin.model
             this.decrementSteps();
             
 
-            //brain.log("next Step in ActivationQueue");
+            brain.log("next Step in ActivationQueue");
         }
 
         
@@ -65,11 +64,12 @@ namespace odin.model
         {
             foreach (QueueElement a in this.getElementsInStep(p))
             {
-                if (a.neuron.layer == l && a.neuron.type != 3)
+                if (a.neuron.layer == l)
                     a.neuron.inhibit();
                 
 
             }
         }
+
     }
 }

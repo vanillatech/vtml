@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace odin.model
 {
-    [Serializable()] 
     class Neuron
     {
         Axon axon;
@@ -17,7 +15,7 @@ namespace odin.model
         internal UInt64 lastLeakEvent = 0;
         internal int layer;
         internal int tag;
-        internal int type = 0; //1: input, 2: output, 3: context with no output
+        internal int type = 0; //1: input, 2: output
 
         List<Dendrite> dendrites = new List<Dendrite>();
         internal Neuron(Brain mybrain)
@@ -52,17 +50,16 @@ namespace odin.model
             {
                 brain.addToOutputStack(this.tag);
             }
-            brain.log("Fired: " + this.id,Brushes.Red );
+            brain.log("Fired: " + this.id);
             brain.monitorOutput(this.tag);
             this.activation = 0;
             this.lastFired = brain.currentStep;
             if (this.type != 2)
             {
                brain.addToRecoveryQueue(this);
-               
+               brain.lateralInhibition(this.layer);
                this.axon.propagateActionPotential();
             }
-            brain.lateralInhibition(this.layer);
             
         }
 
@@ -76,10 +73,6 @@ namespace odin.model
 
         internal bool crossesThreshold()
         {
-            if ((brain.isInLearnMode||this.type==2) && this.activation > brain.activationThresholdInLearnMode)
-            {
-                return true;
-            }
             if (this.activation > brain.activationThreshold) {
                 return true;
             }
@@ -96,7 +89,7 @@ namespace odin.model
         internal void polarize(double p)
         {
             this.activation += p;
-            brain.log("Polarized: " + this.id + " with Activation: " + p + " now having " + this.activation,Brushes.Magenta);
+            brain.log("Polarized: " + this.id + " with Activation: " + p + " now having " + this.activation);
             
         }
 

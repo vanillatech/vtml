@@ -1,23 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace odin.model
 {
-    [Serializable()] 
     class Sense
     {
         Brain brain;
-        bool noOutput;
-        internal Sense(Brain mybrain,bool noOutput=false)
+        internal Sense(Brain mybrain)
         {
             brain = mybrain;
-            this.noOutput = noOutput;
         }
-        [Serializable()] 
         internal struct Inputs
         {
             internal Dendrite dendrite;
@@ -48,14 +43,11 @@ namespace odin.model
 
                 Neuron tmpNeuron = new Neuron(brain);
                 tmpNeuron.tag = byteRead;
-                if (this.noOutput) tmpNeuron.type = 3;
-                else tmpNeuron.type = 1;
-                
+                tmpNeuron.type = 1;
                 tmp.dendrite = tmpNeuron.getNewDendrite(1);
 
                 tmp.value = byteRead;
                 cInputNeurons.Add(tmp);
-                brain.log("New Inputneuron: " + tmpNeuron.tag + "(" + tmpNeuron.id + ")", Brushes.Green);
                 return tmp.dendrite;
             }
             else return null;

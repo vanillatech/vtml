@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace odin.model
 {
-    [Serializable()] 
     class Synapse
     {
         Axon fromAxon;
@@ -15,7 +14,6 @@ namespace odin.model
         internal int countExcitatorySynapses;
         internal int countInhibitorySynapses = 0;
         internal double weight;
-        internal ulong lastActivation = 0;
 
         internal Synapse(Axon axon, Dendrite dendrite, Brain mybrain) {
             this.brain = mybrain;
@@ -63,11 +61,6 @@ namespace odin.model
 
         internal void activate(int p)
         {
-            if (brain.forgetAfterSteps > 0)
-            //if (brain.forgetAfterSteps > 0)
-            {
-                this.forget();
-            }
             if (brain.activateNeuronBasedOnInputSynapses)
             {
                 toDendrite.activate(this.getStrength() / p / toDendrite.countSynapses());
@@ -77,34 +70,6 @@ namespace odin.model
                 toDendrite.activate(this.getStrength() / p);
             }
             if (brain.learnOnActivate) this.reinforce(true);
-            this.lastActivation = brain.currentStep;
-        }
-
-        private int forget()
-        {
-            //check if we left learning mode and are still within forget-learning period:
-            if (brain.currentStep < brain.lastStepInLearnmode + brain.forgetAfterLearnMode)
-            {
-                //now check if last activation is long ago so that we forget what we learned
-                if (this.lastActivation + brain.forgetAfterSteps < brain.currentStep)
-                {
-
-                    if (this.countExcitatorySynapses <= brain.synapseDefaultCount && this.countInhibitorySynapses <= brain.synapseDefaultCount) this.weight *= (1 - brain.forgetRate);
-                    /*this.countExcitatorySynapses--;
-                    this.countInhibitorySynapses--;
-                    if (countExcitatorySynapses < 0) countExcitatorySynapses = 0;
-                    if (countInhibitorySynapses < 0) countInhibitorySynapses = 0;*/
-                    /*if (countInhibitorySynapses == 0 && countExcitatorySynapses == 0)
-                    {
-                        toDendrite.removeSynapse(this);
-                        fromAxon.removeSynapse(this);
-                        return 1;
-                    }*/
-                    this.lastActivation = brain.currentStep;
-
-                }
-            }
-            return 0;
         }
         internal void activate()
         {
