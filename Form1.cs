@@ -165,6 +165,29 @@ namespace odin
                                 {
                                     brains[inp.token].temporary = inp.temporary;
                                 }
+                                //* translate features to int representation
+                                if (inp.featureMatrix != null)
+                                {
+                                    inp.context = new int[inp.featureMatrix.Count()];
+                                    for(int n=0;n<inp.featureMatrix.Count();n++)
+                                    {
+                                        inp.context[n] = brains[inp.token].getFeatureAsInt(inp.featureMatrix[n]);
+                                    }
+                                }
+                                if (inp.inputFeature != null)
+                                {
+                                    inp.input = new int[inp.inputFeature.Count()];
+                                    for (int n = 0; n < inp.inputFeature.Count(); n++)
+                                    {
+                                        inp.input[n] = brains[inp.token].getFeatureAsInt(inp.inputFeature[n]);
+                                    }
+                                }
+                                if (inp.outputFeature != null)
+                                {
+                                    inp.desiredOutput = brains[inp.token].getFeatureAsInt(inp.outputFeature);
+                                    
+                                }
+                                //*
                                 if (inp.desiredOutput != 0)
                                 {
                                     brains[inp.token].desiredOutput = inp.desiredOutput;
