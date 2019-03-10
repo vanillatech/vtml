@@ -13,6 +13,9 @@ namespace odin
         public int desiredOutput;
         public int[] input;
         public int[] context;
+        public string outputFeature;
+        public string[] inputFeature;
+        public string[] featureMatrix;
         public string token;
         public double activationThreshold;
         public int temporalPatternLength;
