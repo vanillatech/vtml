@@ -18,7 +18,8 @@ namespace odin.model
         private bool lm = false;
         private string outPutStack = "";
         internal Dictionary<int,Neuron> outputNeurons = new Dictionary<int,Neuron> ();
-
+        internal Dictionary<int, string> intToFeature = new Dictionary<int, string>();
+        internal Dictionary<string, int> featureToInt = new Dictionary<string, int>();
         
         //Model parameters
         public double activationThreshold = 0.55;
@@ -189,7 +190,7 @@ namespace odin.model
         
         internal void addToOutputStack(int p)
         {
-            this.outPutStack += p + ", ";
+            this.outPutStack += this.getIntAsFeature(p) + ", ";
         }
 
         
@@ -214,6 +215,27 @@ namespace odin.model
         {
             this.temporalPatternLength = p;
 
+        }
+
+        internal int getFeatureAsInt(string p)
+        {
+            int val = this.featureToInt.Count + 1;
+            if (!this.featureToInt.ContainsKey(p))
+            {
+                this.featureToInt.Add(p, val);
+                this.intToFeature.Add(val, p);
+            }
+            return (this.featureToInt[p]);
+        }
+        internal string getIntAsFeature(int val)
+        {
+
+            if (this.intToFeature.ContainsKey(val))
+            {
+
+                return (this.intToFeature[val]);
+            }
+            else return val.ToString();
         }
     }
 }
