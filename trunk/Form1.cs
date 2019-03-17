@@ -223,28 +223,35 @@ namespace odin
             tcpClient.Close();
         }
         private void onOutputChanged (String output) {
-            try { 
-            textBox3.Text = output;
+            try
+            {
+                textBox3.Text = output;
             }
             catch (System.InvalidOperationException) { }
         }
         private List<Brush> logColors = new List<Brush>();
-        private void onNewLogEntry(String logEntry, Brush color)
+        public void onNewLogEntry(String logEntry, Brush color)
         {
             try
             {
                 logColors.Insert(0, color);
-                listBox1.Items.Insert(0, logEntry);
+                BeginInvoke(new Action(() =>
+   {
+       listBox1.Items.Insert(0, logEntry);
+   }));
                 
             }
             catch (System.InvalidOperationException) { }
         }
         private void listBox1_DrawItem(object sender, DrawItemEventArgs e)
         {
-            e.DrawBackground();
-            Brush brush = logColors[e.Index];
-            e.Graphics.DrawString(listBox1.Items[e.Index].ToString(), new Font("Arial", 10), brush , e.Bounds);
-            e.DrawFocusRectangle();
+            if (e.Index != -1)
+            {
+                e.DrawBackground();
+                Brush brush = logColors[e.Index];
+                e.Graphics.DrawString(listBox1.Items[e.Index].ToString(), new Font("Arial", 10), brush, e.Bounds);
+                e.DrawFocusRectangle();
+            }
         }
         
 
@@ -540,13 +547,43 @@ namespace odin
                 //textBox4.Text = string.Join(",", nums);
             }
         }
-
-        private void debugToolStripMenuItem_Click(object sender, EventArgs e)
+        private void debug_KeyPress(object sender, KeyPressEventArgs e)
         {
-            monitor = brain.addMonitor();
+            if (e.KeyChar == (char)(13))
+            {
+                debugToolStripMenuItem_Click();
+            }
+        }
+        private void debugToolStripMenuItem_Click()
+        {
+            String bid = brainidToolStripMenuItem.Text;
+            if (!brains.ContainsKey(bid))
+            {
+                if (File.Exists(bid + ".dump"))
+                {
+                    try
+                    {
+                        FileStream bd = File.OpenRead(bid + ".dump");
+                        var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                        brains.Add(bid, (Brain)binaryFormatter.Deserialize(bd));
+                        bd.Close();
 
-            monitor.attachLog(onNewLogEntry);
-            monitor.attachOutput(onOutputChanged);
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                }
+                else
+                {
+                    brains.Add(bid, new Brain());
+                }
+            }
+                monitor = brains[bid].addMonitor();
+
+                monitor.attachLog(onNewLogEntry);
+                monitor.attachOutput(onOutputChanged);
+            
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -590,6 +627,8 @@ namespace odin
                 listBox1.Items.Insert(0,"Error: Could not write file to disk. Original error: " + ex.Message);
             }
         }
+
+        
 
         
         
