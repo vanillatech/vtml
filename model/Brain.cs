@@ -102,7 +102,8 @@ namespace odin.model
                 {
                     //if (this.input(n) == 1)
                     //    return (null);
-                    this.input(n);
+                    if (n!=0)
+                        this.input(n);
                     //this.thinkToEnd();
 
                 }
@@ -115,12 +116,13 @@ namespace odin.model
                         this.addFeature();
                     //if (contextSense.input(n) == 1)
                     //return (null);
-                    this.featureMatrix[n].input(context[n]);
+                    if (context[n]!=0)
+                        this.featureMatrix[n].input(context[n]);
                     //this.thinkToEnd();
 
                 }
             }
-            think();
+            //think();
             //this.thinkToEnd();
             return (this.outPutStack);
 
@@ -219,6 +221,7 @@ namespace odin.model
 
         internal int getFeatureAsInt(string p)
         {
+            if (p == "") return 0;
             int val = this.featureToInt.Count + 1;
             if (!this.featureToInt.ContainsKey(p))
             {
@@ -229,7 +232,7 @@ namespace odin.model
         }
         internal string getIntAsFeature(int val)
         {
-
+            if (val == 0) return "";
             if (this.intToFeature.ContainsKey(val))
             {
 
