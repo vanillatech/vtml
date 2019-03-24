@@ -86,7 +86,8 @@ namespace odin.model
                 outputNeuron = brain.getOutputNeuron(brain.desiredOutput);
             }
             Neuron newInputNeuronInNextLayer = new Neuron(brain, this.getHigher());
-            Neuron newInterNeuron = new Neuron(brain, this);
+            Boolean createNewInterNeuron = false;
+            
 
             for (int s = 1; s < brain.temporalPatternLength; s++)
             {
@@ -124,16 +125,32 @@ namespace odin.model
                         }
                         else if (c.type == 1) //inputneuron
                         {
-                            
-                            bool newLink = c.synapseOn(newInterNeuron.getDendrite(s));
-                            brain.log("New Interneuron: " + c.id + " to " + newInterNeuron.id, Brushes.LightSkyBlue);
 
+                            createNewInterNeuron = true;
                         }
 
                     }
                 }
             }
-            
+            // in case we need to create a new interneuron we need to loop again so that we don't miss out
+            // neurons in previous steps
+            if (createNewInterNeuron)
+            {
+                Neuron newInterNeuron = new Neuron(brain, this);
+                for (int s = 1; s < brain.temporalPatternLength; s++)
+                {
+                    foreach (Neuron c in recoveryQueue.getNeuronsInStep(s))
+                    {
+                        if (c.type == 1) //inputneuron
+                        {
+
+                            bool newLink = c.synapseOn(newInterNeuron.getDendrite(s));
+                            brain.log("New Interneuron: " + c.id + " to " + newInterNeuron.id, Brushes.LightSkyBlue);
+
+                        } 
+                    }
+                }
+            }
         }
 
         private bool isIdle()
