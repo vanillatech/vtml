@@ -79,6 +79,7 @@ namespace odin.model
         internal ActivationQueue activationQueue; 
         internal RecoveryQueue recoveryQueue;
         public int desiredOutput;
+        internal ulong blockStep = 0;
 
         public string query(string inp, bool learnMode = false) {
             this.outPutStack = "";
@@ -105,7 +106,7 @@ namespace odin.model
                 {
                     //if (this.input(n) == 1)
                     //    return (null);
-                    //if (n != 0) 
+                    if (n != 0) 
                         this.input(n);
                     //this.thinkToEnd();
 
@@ -119,7 +120,7 @@ namespace odin.model
                         this.addFeature();
                     //if (contextSense.input(n) == 1)
                     //return (null);
-                    //if (context[n] != 0) 
+                    if (context[n] != 0) 
                         this.featureMatrix[n].input(context[n]);
                     //this.thinkToEnd();
 
@@ -324,7 +325,7 @@ namespace odin.model
                 {
                     //create an output neuron that gets inhibited by current inputneuron and that gets excited by tmpNeuron
                     //this causes the outputneuron only to be fired in case we didn't input the same value
-                    Neuron outputNeuron = this.getOutputNeuron(n.tag);
+                    Neuron outputNeuron = this.getOutputNeuron(this.desiredOutput);
                     Dendrite od1 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 1);
                     n.synapseOn(od1,true);
                     
@@ -417,6 +418,11 @@ namespace odin.model
                 return (this.intToFeature[val]);
             }
             else return val.ToString();
+        }
+
+        internal void blockOutputNeuronsForStep(ulong p)
+        {
+            this.blockStep = p;
         }
     }
 }

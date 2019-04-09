@@ -48,22 +48,29 @@ namespace odin.model
         }
         internal void fire()
         {
-            if (this.type == 2)// && !brain.isInLearnMode)
+            if (brain.currentStep == brain.blockStep && this.type == 2)
             {
-                brain.addToOutputStack(this.tag);
+                this.activation = 0;
+                brain.log("Inhibted: " + this.id, Brushes.Gold);
             }
-            brain.log("Fired: " + this.id,Brushes.Red );
-            brain.monitorOutput(this.tag);
-            this.activation = 0;
-            this.lastFired = brain.currentStep;
-            if (this.type != 2)
+            else
             {
-               brain.addToRecoveryQueue(this);
-               
-               this.axon.propagateActionPotential();
+                if (this.type == 2)// && !brain.isInLearnMode)
+                {
+                    brain.addToOutputStack(this.tag);
+                }
+                brain.log("Fired: " + this.id, Brushes.Red);
+                brain.monitorOutput(this.tag);
+                this.activation = 0;
+                this.lastFired = brain.currentStep;
+                if (this.type != 2)
+                {
+                    brain.addToRecoveryQueue(this);
+
+                    this.axon.propagateActionPotential();
+                }
+                brain.lateralInhibition(this.layer);
             }
-            brain.lateralInhibition(this.layer);
-            
         }
 
 
