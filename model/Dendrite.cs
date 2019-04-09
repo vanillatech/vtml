@@ -30,6 +30,7 @@ namespace odin.model
         internal void activate(double activationVal)
         {
             brain.activationQueue.addToStep(toNeuron,length,activationVal);
+            
             brain.log("Schedule Activation: " + toNeuron.id + " (Delay: " + length + "; ActVal: " + activationVal + ")",Brushes.Brown);
         }
 
