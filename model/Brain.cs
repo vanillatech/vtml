@@ -232,9 +232,9 @@ namespace odin.model
         {
             if (this.learnOnFire)
             {
-                foreach (Neuron n in recoveryQueue.getNeuronsInStep(0))
+                Parallel.ForEach(recoveryQueue.getNeuronsInStep(0), n =>
                 {
-                    foreach (Dendrite dendrite in n.getDendrites())
+                    Parallel.ForEach(n.getDendrites(), dendrite =>
                     {
                         foreach (Synapse synapse in dendrite.getSynapses())
                         {
@@ -253,8 +253,8 @@ namespace odin.model
                             }
 
                         }
-                    }
-                }
+                    });
+                });
             }
         }
 
@@ -277,14 +277,14 @@ namespace odin.model
             while ((n = recoveryQueue.getNext()) != null)
             { // every pair must have at least one common successor
                 List<Neuron> compare = n.getSuccessors();
-                
-                foreach (Neuron c in commonSuccessorsIterate)
+
+                Parallel.ForEach(commonSuccessorsIterate, c =>
                 {
                     if (c.type == 2 || !compare.Contains(c))
                     {
                         commonSuccessors.Remove(c);
                     }
-                }
+                });
                 
 
             } 
