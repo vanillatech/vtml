@@ -28,9 +28,8 @@ namespace odin.model
 
         internal void fireCurrentNeurons()
         {
-
-            Parallel.ForEach(this.getElementsInStepOrderByActivation(0), a =>
-            {
+            
+            foreach (QueueElement a in this.getElementsInStepOrderByActivation(0)) {
                 if (a.neuron.crossesThreshold())
                 {
                     if (!a.neuron.isWithinRefractoryPeriod())
@@ -39,17 +38,17 @@ namespace odin.model
                     }
                 }
 
-            });
+            }
         }
 
 
         internal void processActivation()
         {
-            Parallel.ForEach(this.getElementsInStep(0), a =>
+            foreach (QueueElement a in this.getElementsInStep(0))
             {
                 a.neuron.polarize(a.val);
 
-            });
+            }
             
         }
 
