@@ -36,7 +36,7 @@ namespace odin.model
         public bool learnOnFire = true;
         public bool activateNewNeurons = true;
         public double inhibitFactor = 0.3; // 0==WTA, 1==no lateral inhibition
-        public int temporalPatternLength = 2;
+        public int temporalPatternLength = 1;
         public bool distributeActivationAmongSynapses = false;
         public bool activateNeuronBasedOnInputSynapses = false;
         public int refractoryPeriod = 1;
