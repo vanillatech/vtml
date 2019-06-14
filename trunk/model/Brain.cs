@@ -35,6 +35,7 @@ namespace odin.model
         public bool learnOnActivate = false;
         public bool learnOnFire = true;
         public bool activateNewNeurons = true;
+        public bool separateFeatures = true;
         public double inhibitFactor = 0.3; // 0==WTA, 1==no lateral inhibition
         public int temporalPatternLength = 1;
         public bool distributeActivationAmongSynapses = false;
@@ -116,14 +117,25 @@ namespace odin.model
             {
                 for (int n = 0; n < context.Count();n++ )
                 {
-                    if (this.featureMatrix.Count < (n + 1))
-                        this.addFeature();
-                    //if (contextSense.input(n) == 1)
-                    //return (null);
-                    if (context[n] != 0) 
-                        this.featureMatrix[n].input(context[n]);
-                    //this.thinkToEnd();
 
+                    if (this.separateFeatures)
+                    {
+
+
+
+                        if (this.featureMatrix.Count < (n + 1))
+                            this.addFeature();
+                        if (context[n] != 0)
+                            this.featureMatrix[n].input(context[n]);
+
+                    }
+                    else
+                    {
+                        if (this.featureMatrix.Count < 1)
+                            this.addFeature();
+                        if (context[n] != 0)
+                            this.featureMatrix[0].input(context[n]);
+                    }
                 }
             }
             think();

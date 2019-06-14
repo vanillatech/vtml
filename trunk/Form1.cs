@@ -145,6 +145,10 @@ namespace odin
                                 {
                                     brains[inp.token].activateNewNeurons = inp.activateNewNeurons;
                                 }
+                                if (inp.separateFeatures == true)
+                                {
+                                    brains[inp.token].separateFeatures = inp.separateFeatures;
+                                }
                                 if (inp.maxlayer > 0)
                                 {
                                     brains[inp.token].maxLayer = inp.maxlayer;
