@@ -145,7 +145,7 @@ namespace odin
                                 {
                                     brains[inp.token].activateNewNeurons = inp.activateNewNeurons;
                                 }
-                                if (inp.separateFeatures == true)
+                                if (inp.separateFeatures != null)
                                 {
                                     brains[inp.token].separateFeatures = inp.separateFeatures;
                                 }
@@ -213,8 +213,13 @@ namespace odin
                         catch (Exception e) { datarec = "Input Format error."; }
                         if (datarec != null)
                         {
-                            byte[] sendBytes = Encoding.ASCII.GetBytes(datarec + "\n");
-                            clientStream.Write(sendBytes, 0, sendBytes.Length);
+                            try
+                            {
+                                byte[] sendBytes = Encoding.ASCII.GetBytes(datarec + "\n");
+                                clientStream.Write(sendBytes, 0, sendBytes.Length);
+                            }
+                            catch (Exception e) {  }
+
                         }
 
 

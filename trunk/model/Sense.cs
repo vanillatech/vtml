@@ -24,14 +24,14 @@ namespace odin.model
             internal int value;
         }
         internal List<Inputs> cInputNeurons = new List<Inputs>();
-        public int input(int byteRead)
+        public int input(int byteRead,double activationVal = 1)
         {
             Dendrite inp = this.getInputDendrite(byteRead);
 
             if (inp == null)
                 return (1);       
             
-            inp.activate(brain.synapseMaxCount*1);
+            inp.activate(activationVal);
             brain.blockOutputNeuronsForStep(brain.currentStep + 1);
             return (0);
         }

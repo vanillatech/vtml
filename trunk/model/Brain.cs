@@ -115,9 +115,14 @@ namespace odin.model
             }
             if (context != null)
             {
+                
                 for (int n = 0; n < context.Count();n++ )
                 {
-
+                    double activationVal = synapseMaxCount;
+                    if (!this.isInLearnMode)
+                    {
+                        activationVal = 2.0 / context.Count();
+                    }
                     if (this.separateFeatures)
                     {
 
@@ -126,7 +131,7 @@ namespace odin.model
                         if (this.featureMatrix.Count < (n + 1))
                             this.addFeature();
                         if (context[n] != 0)
-                            this.featureMatrix[n].input(context[n]);
+                            this.featureMatrix[n].input(context[n],activationVal);
 
                     }
                     else
@@ -134,7 +139,7 @@ namespace odin.model
                         if (this.featureMatrix.Count < 1)
                             this.addFeature();
                         if (context[n] != 0)
-                            this.featureMatrix[0].input(context[n]);
+                            this.featureMatrix[0].input(context[n],activationVal);
                     }
                 }
             }
