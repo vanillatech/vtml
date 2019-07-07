@@ -119,7 +119,7 @@ namespace odin.model
                 for (int n = 0; n < context.Count();n++ )
                 {
                     double activationVal = synapseMaxCount;
-                    if (!this.isInLearnMode)
+                    if (!this.isInLearnMode && activateNeuronBasedOnInputSynapses)
                     {
                         activationVal = 2.0 / context.Count();
                     }
@@ -295,13 +295,14 @@ namespace odin.model
             { // every pair must have at least one common successor
                 List<Neuron> compare = n.getSuccessors();
                 
-                Parallel.ForEach(commonSuccessorsIterate, c =>
+                foreach(Neuron c in commonSuccessorsIterate )
                 {
                     if (c.type == 2 || !compare.Contains(c))
                     {
-                        commonSuccessors.Remove(c);
+                  
+                            commonSuccessors.Remove(c);
                     }
-                });
+                }
                 
 
             } 
