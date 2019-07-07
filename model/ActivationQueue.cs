@@ -44,11 +44,11 @@ namespace odin.model
 
         internal void processActivation()
         {
-            foreach (QueueElement a in this.getElementsInStep(0))
+            Parallel.ForEach(this.getElementsInStep(0), a =>
             {
                 a.neuron.polarize(a.val);
 
-            }
+            });
             
         }
 
