@@ -65,7 +65,8 @@ namespace odin.model
         {
             foreach (QueueElement a in this.getElementsInStep(p))
             {
-                if (a.neuron.layer == l && a.neuron.type != 3 )
+                //if (a.neuron.layer == l && a.neuron.type != 3 )
+                if (a.neuron.layer == l && a.neuron.type != 1)
                     a.neuron.inhibit();
                 
 
