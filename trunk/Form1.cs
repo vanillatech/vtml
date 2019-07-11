@@ -145,9 +145,9 @@ namespace odin
                                 {
                                     brains[inp.token].activateNewNeurons = inp.activateNewNeurons;
                                 }
-                                if (inp.separateFeatures != null)
+                                if (inp.noSeparateFeatures)
                                 {
-                                    brains[inp.token].separateFeatures = inp.separateFeatures;
+                                    brains[inp.token].separateFeatures = false;
                                 }
                                 if (inp.maxlayer > 0)
                                 {
