@@ -26,30 +26,69 @@ namespace odin
         
         private Thread listenThread;
 
-        public Form1()
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.ContextMenu contextMenu1;
+        private System.Windows.Forms.MenuItem menuItem1;
+        private System.ComponentModel.IContainer comp;
+
+        private bool allowshowdisplay = false;
+        protected override void SetVisibleCore(bool value)
         {
-            InitializeComponent();
-            listBox1.DrawMode = DrawMode.OwnerDrawFixed;
+            base.SetVisibleCore(allowshowdisplay ? value : allowshowdisplay);
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        public Form1()
         {
+            
+            InitializeComponent();
+            listBox1.DrawMode = DrawMode.OwnerDrawFixed;
+            createIcon();
             brain = new Brain();
             brains.Add("ide", brain);
-            /* debug */
-            
-            /* --debug */
-
 
             this.listenThread = new Thread(new ThreadStart(ListenForClients));
             this.listenThread.Start();
             listenThread.IsBackground = true;
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+  
+        }
+        private void notifyIcon1_MouseClick(object sender, EventArgs e )
+        {
             
+            this.allowshowdisplay = true;
+            this.Visible = !this.Visible;
+
+        }
+        private void createIcon()
+        {
+            this.comp = new System.ComponentModel.Container();
+            this.contextMenu1 = new System.Windows.Forms.ContextMenu();
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+
+            this.menuItem1.Index = 0;
+            this.menuItem1.Text = "E&xit";
+            this.menuItem1.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
+            
+            this.contextMenu1.MenuItems.AddRange(
+                        new System.Windows.Forms.MenuItem[] { this.menuItem1 });
+
+            
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+
+            notifyIcon1.Icon = new Icon("ML.ico");
+
+            notifyIcon1.ContextMenu = this.contextMenu1;
+
+            notifyIcon1.Text = "Vanillatech ML";
+            notifyIcon1.Visible = true;
+
+            //--show form: only for development/debugging
+            //notifyIcon1.Click += new System.EventHandler(this.notifyIcon1_MouseClick);
 
 
-
-            
-            
         }
         private void ListenForClients()
         {
@@ -468,94 +507,7 @@ namespace odin
             Application.Exit();
         }
 
-        private void button4_Click(object sender, EventArgs e)
-        {
-            for (int n = 0; n < 30; n++)
-            {
-                int m = 0;
-                Random rnd = new Random();
-                
-                for (; m < rnd.Next(12); m++)
-                {
-                    brain.query(rnd.Next(50),true); 
-
-                }
-                brain.query(1, true);
-                brain.query(2, true);
-                brain.query(3, true);
-                brain.query(4, true);
-                brain.query(5, true);
-                brain.query(6, true);
-                brain.query(7, true);
-                brain.query(8, true);
-                brain.query(9, true); 
-                
-                for (m++; m < 20; m++)
-                {
-                    brain.query(rnd.Next(50), true); 
-
-                }
-                
-                //brain.think(20);
-                //textBox4.Text = string.Join(",", nums);
-            }
-            for (int n = 0; n < 20; n++)
-            {
-                int m = 0;
-                Random rnd = new Random();
-
-                for (; m < rnd.Next(12); m++)
-                {
-                    brain.query(rnd.Next(50), true);
-
-                }
-                brain.query(1, true);
-                brain.query(3, true);
-                brain.query(5, true);
-                brain.query(7, true);
-                brain.query(9, true);
-                brain.query(11, true);
-                brain.query(13, true);
-
-                for (m++; m < 20; m++)
-                {
-                    brain.query(rnd.Next(50), true);
-
-                }
-
-                //brain.think(20);
-                //textBox4.Text = string.Join(",", nums);
-            }
-            for (int n = 0; n < 30; n++)
-            {
-                int m = 0;
-                Random rnd = new Random();
-
-                for (; m < rnd.Next(12); m++)
-                {
-                    brain.query(rnd.Next(50), true);
-
-                }
-                brain.query(1, true);
-                brain.query(2, true);
-                brain.query(3, true);
-                
-                
-                brain.query(6, true);
-                brain.query(9, true);
-                brain.query(12, true);
-                brain.query(15, true);
-
-                for (m++; m < 20; m++)
-                {
-                    brain.query(rnd.Next(50), true);
-
-                }
-
-                brain.think(20);
-                //textBox4.Text = string.Join(",", nums);
-            }
-        }
+        
         private void debug_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)(13))
