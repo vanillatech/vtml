@@ -549,6 +549,9 @@ namespace odin
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            String removenext = "";
+            DateTime longestinactive = DateTime.Now;
+            Boolean unloadBrain = false;
             for (int n = brains.Count() - 1; n >= 0; n--)
             {
                 if (brains.ElementAt(n).Value.inactiveSince.AddMinutes(60) < DateTime.Now && brains.ElementAt(n).Key != "ide")
@@ -557,8 +560,16 @@ namespace odin
                     {
                         this.saveBrain(brains.ElementAt(n).Key);
                     }
-                    brains.Remove(brains.ElementAt(n).Key);
+                    if (brains.ElementAt(n).Value.inactiveSince < longestinactive) {
+                        removenext = brains.ElementAt(n).Key;
+                        longestinactive = brains.ElementAt(n).Value.inactiveSince;
+                        unloadBrain = true;
+                    }
                 }
+            }
+            if (brains.Count() > 5 && unloadBrain)
+            {
+                brains.Remove(removenext);
             }
         }
         private void saveBrain(String b)
