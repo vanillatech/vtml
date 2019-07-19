@@ -560,7 +560,11 @@ namespace odin
                     {
                         this.saveBrain(brains.ElementAt(n).Key);
                     }
-                    if (brains.ElementAt(n).Value.inactiveSince < longestinactive) {
+                    if (brains.ElementAt(n).Value.temporary)
+                    {
+                        brains.Remove(brains.ElementAt(n).Key);
+                    } else if (brains.ElementAt(n).Value.inactiveSince < longestinactive)
+                    {
                         removenext = brains.ElementAt(n).Key;
                         longestinactive = brains.ElementAt(n).Value.inactiveSince;
                         unloadBrain = true;
