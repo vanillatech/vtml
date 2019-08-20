@@ -558,7 +558,11 @@ namespace odin
                 {
                     if (!brains.ElementAt(n).Value.temporary)
                     {
-                        this.saveBrain(brains.ElementAt(n).Key);
+                        if (brains.ElementAt(n).Value.inactiveSince > brains.ElementAt(n).Value.lastSaved)
+                        {
+                            brains.ElementAt(n).Value.lastSaved = DateTime.Now;
+                            this.saveBrain(brains.ElementAt(n).Key);
+                        }
                     }
                     if (brains.ElementAt(n).Value.temporary)
                     {

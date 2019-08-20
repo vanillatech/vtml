@@ -45,6 +45,7 @@ namespace odin.model
         public UInt64 forgetAfterSteps = 0; //0 to disable
         public UInt64 forgetAfterLearnMode = 100000;
         public DateTime inactiveSince = DateTime.Now;
+        public DateTime lastSaved = DateTime.Now;
         public bool temporary = false;
         //--
 
