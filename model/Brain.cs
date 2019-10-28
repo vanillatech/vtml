@@ -434,7 +434,7 @@ namespace odin.model
             if (this.intToFeature.ContainsKey(val))
             {
 
-                return (this.intToFeature[val]);
+                return (this.intToFeature[val].Replace(",","%2C"));
             }
             else return val.ToString();
         }
