@@ -290,21 +290,30 @@ namespace odin.model
             // if only 1 element left wo input neuron 
             if (n.layer > 1 && recoveryQueue.countElements(0) == 1)
                 return false;
-            
+            // if only input neuron left which has an inhibitive connection to outputneuron
+            if (n.layer == 1 && recoveryQueue.countElements(0) == 1 && commonSuccessors.Count == 1)
+            {
+                n = recoveryQueue.getNext();
+                return true;
+            }
+
+
             List<Neuron> commonSuccessorsIterate = new List<Neuron>(commonSuccessors);
             while ((n = recoveryQueue.getNext()) != null)
             { // every pair must have at least one common successor
-                List<Neuron> compare = n.getSuccessors();
+                //if (n.layer < this.maxLayer) { // does not need to have common successors beyond maxlayer
                 
-                foreach(Neuron c in commonSuccessorsIterate )
-                {
-                    if (c.type == 2 || !compare.Contains(c))
+                    List<Neuron> compare = n.getSuccessors();
+
+                    foreach (Neuron c in commonSuccessorsIterate)
                     {
-                  
+                        if (c.type == 2 || !compare.Contains(c))
+                        {
+
                             commonSuccessors.Remove(c);
+                        }
                     }
-                }
-                
+                //}
 
             } 
             if (commonSuccessors.Count == 0 && !recoveryQueue.empty()) {
@@ -333,7 +342,7 @@ namespace odin.model
                     {
                         Neuron outputNeuron = this.getOutputNeuron(this.desiredOutput);
                         Dendrite od1 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 1);
-                        n.synapseOn(od1);
+                        tmpNeuron.synapseOn(od1);
                         //avoid intial activation after adding connection
                         activationQueue.addToStep(outputNeuron, 1, -od1.countSynapses());
                         
@@ -344,16 +353,16 @@ namespace odin.model
                 {
                     //create an output neuron that gets inhibited by current inputneuron and that gets excited by tmpNeuron
                     //this causes the outputneuron only to be fired in case we didn't input the same value
-                    Neuron outputNeuron = this.getOutputNeuron(this.desiredOutput);
+                    /*Neuron outputNeuron = this.getOutputNeuron(this.desiredOutput);
                     Dendrite od1 = outputNeuron.getDendrite(recoveryQueue.getCurrentStep() + 1);
-                    n.synapseOn(od1,true);
+                    n.synapseOn(od1,true);*/
                     
                 }
             }
             return tmpNeuron;
         }
 
-        private Neuron getOutputNeuron(int p)
+        internal Neuron getOutputNeuron(int p)
         {
             if (!this.outputNeurons.ContainsKey(p))
             {
