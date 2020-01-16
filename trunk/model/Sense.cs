@@ -32,7 +32,7 @@ namespace odin.model
                 return (1);       
             
             inp.activate(activationVal);
-            brain.blockOutputNeuronsForStep(brain.currentStep + 1);
+            //brain.blockOutputNeuronsForStep(brain.currentStep + (uint)brain.maxLayer);
             return (0);
         }
 
@@ -49,12 +49,17 @@ namespace odin.model
                 Neuron tmpNeuron = new Neuron(brain);
                 tmpNeuron.tag = byteRead;
                 if (this.noOutput) tmpNeuron.type = 3;
-                else tmpNeuron.type = 1;
+                else
+                {
+                    tmpNeuron.type = 1;
+                    tmpNeuron.synapseOn(brain.getOutputNeuron(byteRead).getNewDendrite(brain.maxLayer), true);
+                }
                 
                 tmp.dendrite = tmpNeuron.getNewDendrite(1);
 
                 tmp.value = byteRead;
                 cInputNeurons.Add(tmp);
+                
                 brain.log("New Inputneuron: " + brain.getIntAsFeature(tmpNeuron.tag) + "(" + tmpNeuron.id + ")", Brushes.Green);
                 return tmp.dendrite;
             }
