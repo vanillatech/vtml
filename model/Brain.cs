@@ -452,5 +452,12 @@ namespace odin.model
         {
             this.blockStep = p;
         }
+
+        internal void init()
+        {
+            //reset queues
+            this.activationQueue.clear();
+            this.recoveryQueue.clear();
+        }
     }
 }
