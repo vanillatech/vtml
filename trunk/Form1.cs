@@ -147,8 +147,8 @@ namespace odin
                     {
 
                         string datarec = "";
-                        //try
-                        //{
+                        try
+                        {
                             templateQueryData inp = new JavaScriptSerializer().Deserialize<templateQueryData>(dataFromClient);
 
 
@@ -249,8 +249,8 @@ namespace odin
                                 datarec = brains[inp.token].getOutput();
                             }
                             else datarec = "token required.";
-                        //}
-                        //catch (Exception e) { datarec = "Input Format error."; }
+                        }
+                        catch (Exception e) { datarec = "Input Format error."; }
                         if (datarec != null)
                         {
                             try
