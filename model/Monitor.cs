@@ -9,7 +9,7 @@ using System.ComponentModel;
 namespace odin.model
 {
     [Serializable()] 
-    class Monitor
+    public class Monitor
     {
         private Brain brain;
         private Sense sense;

@@ -19,7 +19,9 @@ namespace odin
 
     public partial class Form1 : Form
     {
-        Dictionary<String,Brain> brains = new Dictionary<string,Brain>();
+       // Dictionary<String,Brain> brains = new Dictionary<string,Brain>();
+
+         
         Brain brain;
         odin.model.Monitor monitor;
         Stream braindump = null;
@@ -43,13 +45,17 @@ namespace odin
             InitializeComponent();
             listBox1.DrawMode = DrawMode.OwnerDrawFixed;
             createIcon();
+            var db = DictionaryHandler.Instance;
+            Dictionary<String, Brain> brains = db.getBrainDictionary();
             brain = new Brain();
             brains.Add("ide", brain);
 
-            this.listenThread = new Thread(new ThreadStart(ListenForClients));
-            this.listenThread.Start();
-            listenThread.IsBackground = true;
+            //this.listenThread = new Thread(new ThreadStart(ListenForClients));
+            //this.listenThread.Start();
+            //listenThread.IsBackground = true;
         }
+
+      
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -92,7 +98,7 @@ namespace odin
         }
         private void ListenForClients()
         {
-            IPAddress hostIP = Dns.GetHostEntry(Dns.GetHostName()).AddressList[1];
+            IPAddress hostIP = Dns.GetHostEntry(Dns.GetHostName()).AddressList[2];
             TcpListener serverSocket = new TcpListener(hostIP, 11202);
             serverSocket.Start();
             while (true)
@@ -111,7 +117,8 @@ namespace odin
         {
             TcpClient tcpClient = (TcpClient)client;
             NetworkStream clientStream = tcpClient.GetStream();
-
+            var db = DictionaryHandler.Instance;
+            Dictionary<String, Brain> brains = db.getBrainDictionary();
             byte[] message = new byte[4096];
             int bytesRead;
             string dataFromClient = "";
@@ -250,7 +257,9 @@ namespace odin
                             }
                             else datarec = "token required.";
                         }
-                        catch (Exception e) { datarec = "Input Format error."; }
+                        catch (Exception e) { 
+                            datarec = "Input Format error."; 
+                        }
                         if (datarec != null)
                         {
                             try
@@ -518,6 +527,8 @@ namespace odin
         }
         private void debugToolStripMenuItem_Click()
         {
+            var db = DictionaryHandler.Instance;
+            Dictionary<String, Brain> brains = db.getBrainDictionary();
             String bid = brainidToolStripMenuItem.Text;
             if (!brains.ContainsKey(bid))
             {
@@ -550,6 +561,8 @@ namespace odin
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            var db = DictionaryHandler.Instance;
+            Dictionary<String, Brain> brains = db.getBrainDictionary();
             String removenext = "";
             DateTime longestinactive = DateTime.Now;
             Boolean unloadBrain = false;
@@ -583,6 +596,8 @@ namespace odin
         }
         private void saveBrain(String b)
         {
+            var db = DictionaryHandler.Instance;
+            Dictionary<String, Brain> brains = db.getBrainDictionary();
             try
             {
                 if (File.Exists(b + ".dump"))
@@ -607,13 +622,6 @@ namespace odin
                 
                 listBox1.Items.Insert(0,"Error: Could not write file to disk. Original error: " + ex.Message);
             }
-        }
-
-        
-
-        
-        
-
-        
+        } 
     }
 }
