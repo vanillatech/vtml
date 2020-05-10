@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace odin.model
 {
     [Serializable()]  
-    class Brain
+    public class Brain
     {
         private Monitor monitor;
         private int nextFreeID = 1;
