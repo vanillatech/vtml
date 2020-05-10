@@ -18,8 +18,9 @@ namespace odin
         static void Main()
         {
              
-           var db = DictionaryHandler.Instance;
-             
+            var db = DictionaryHandler.Instance;
+            
+
             var config = new HttpSelfHostConfiguration("http://localhost:81");
 
             config.Routes.MapHttpRoute(

@@ -26,7 +26,6 @@ namespace odin
         odin.model.Monitor monitor;
         Stream braindump = null;
         
-        private Thread listenThread;
 
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.ContextMenu contextMenu1;
@@ -34,6 +33,7 @@ namespace odin
         private System.ComponentModel.IContainer comp;
 
         private bool allowshowdisplay = false;
+
         protected override void SetVisibleCore(bool value)
         {
             base.SetVisibleCore(allowshowdisplay ? value : allowshowdisplay);
@@ -49,10 +49,8 @@ namespace odin
             Dictionary<String, Brain> brains = db.getBrainDictionary();
             brain = new Brain();
             brains.Add("ide", brain);
-
-            //this.listenThread = new Thread(new ThreadStart(ListenForClients));
-            //this.listenThread.Start();
-            //listenThread.IsBackground = true;
+            Dictionary<String, SimpleLog> simpleLog = db.getLogs();
+            simpleLog.Add("debug", new SimpleLog());
         }
 
       
@@ -72,9 +70,19 @@ namespace odin
         {
             this.comp = new System.ComponentModel.Container();
             this.contextMenu1 = new System.Windows.Forms.ContextMenu();
+
             this.menuItem1 = new System.Windows.Forms.MenuItem();
 
             this.menuItem1.Index = 0;
+            this.menuItem1.Text = "&Open";
+            this.menuItem1.Click += new System.EventHandler(this.notifyIcon1_MouseClick);
+
+            this.contextMenu1.MenuItems.AddRange(
+                        new System.Windows.Forms.MenuItem[] { this.menuItem1 });
+
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+
+            this.menuItem1.Index = 1;
             this.menuItem1.Text = "E&xit";
             this.menuItem1.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             
@@ -91,195 +99,12 @@ namespace odin
             notifyIcon1.Text = "Vanillatech ML";
             notifyIcon1.Visible = true;
 
-            //--show form: only for development/debugging
-            //notifyIcon1.Click += new System.EventHandler(this.notifyIcon1_MouseClick);
+            //--show form: 
+            notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_MouseClick);
 
 
         }
-        private void ListenForClients()
-        {
-            IPAddress hostIP = Dns.GetHostEntry(Dns.GetHostName()).AddressList[2];
-            TcpListener serverSocket = new TcpListener(hostIP, 11202);
-            serverSocket.Start();
-            while (true)
-            {
-                //blocks until a client has connected to the server
-                TcpClient client = serverSocket.AcceptTcpClient();
-
-                //create a thread to handle communication 
-                //with connected client
-                Thread clientThread = new Thread(new ParameterizedThreadStart(HandleClientComm));
-                clientThread.Start(client);
-            }
-            
-        }
-        private void HandleClientComm(object client)
-        {
-            TcpClient tcpClient = (TcpClient)client;
-            NetworkStream clientStream = tcpClient.GetStream();
-            var db = DictionaryHandler.Instance;
-            Dictionary<String, Brain> brains = db.getBrainDictionary();
-            byte[] message = new byte[4096];
-            int bytesRead;
-            string dataFromClient = "";
-
-            while (true)
-            {
-                bytesRead = 0;
-
-                try
-                {
-                    //blocks until a client sends a message
-                    bytesRead = clientStream.Read(message, 0, 4096);
-                }
-                catch
-                {
-                    //a socket error has occured
-                    break;
-                }
-
-                if (bytesRead == 0)
-                {
-                    //the client has disconnected from the server
-                    break;
-                }
-
-                //message has successfully been received
-                ASCIIEncoding encoder = new ASCIIEncoding();
-                dataFromClient += encoder.GetString(message, 0, bytesRead);
-                if (dataFromClient.IndexOf("\n") > -1)
-                {
-                    dataFromClient = dataFromClient.Substring(0, dataFromClient.IndexOf("\n")-1);
-                    if (dataFromClient != null)
-                    {
-
-                        string datarec = "";
-                        try
-                        {
-                            templateQueryData inp = new JavaScriptSerializer().Deserialize<templateQueryData>(dataFromClient);
-
-
-                            if (inp.token != null)
-                            {
-                                if (!brains.ContainsKey(inp.token))
-                                {
-                                    if (File.Exists(inp.token + ".dump"))
-                                    {
-                                        try
-                                        {
-                                            FileStream bd = File.OpenRead(inp.token + ".dump");
-                                            var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                                            brains.Add(inp.token, (Brain)binaryFormatter.Deserialize(bd));
-                                            bd.Close();
-
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            datarec = "Error: Could not read file from disk. Original error: " + ex.Message;
-                                        }
-                                        brains[inp.token].init();
-                                    }
-                                    else
-                                    {
-                                        brains.Add(inp.token, new Brain());
-                                    }
-                                }
-                                if (inp.activationThreshold > 0)
-                                {
-                                    brains[inp.token].activationThreshold = inp.activationThreshold;
-                                }
-                                if (inp.activateNewNeurons  == true)
-                                {
-                                    brains[inp.token].activateNewNeurons = inp.activateNewNeurons;
-                                }
-                                if (inp.noSeparateFeatures)
-                                {
-                                    brains[inp.token].separateFeatures = false;
-                                }
-                                if (inp.maxlayer > 0)
-                                {
-                                    brains[inp.token].maxLayer = inp.maxlayer;
-                                }
-                                if (inp.temporalPatternLength > 0)
-                                {
-                                    brains[inp.token].temporalPatternLength = inp.temporalPatternLength;
-                                }
-                                if (inp.leakageFactor > 0)
-                                {
-                                    brains[inp.token].leakageFactor = inp.leakageFactor;
-                                }
-                                if (inp.token.Contains("READONLY"))
-                                {
-                                    inp.learnmode = false;
-                                }
-                                if (inp.temporary == true)
-                                {
-                                    brains[inp.token].temporary = inp.temporary;
-                                }
-                                //* translate features to int representation
-                                if (inp.featureMatrix != null)
-                                {
-                                    inp.context = new int[inp.featureMatrix.Count()];
-                                    for(int n=0;n<inp.featureMatrix.Count();n++)
-                                    {
-                                        inp.context[n] = brains[inp.token].getFeatureAsInt(inp.featureMatrix[n]);
-                                    }
-                                }
-                                if (inp.inputFeature != null)
-                                {
-                                    inp.input = new int[inp.inputFeature.Count()];
-                                    for (int n = 0; n < inp.inputFeature.Count(); n++)
-                                    {
-                                        inp.input[n] = brains[inp.token].getFeatureAsInt(inp.inputFeature[n]);
-                                    }
-                                }
-                                if (inp.outputFeature != null)
-                                {
-                                    inp.desiredOutput = brains[inp.token].getFeatureAsInt(inp.outputFeature);
-                                    
-                                }
-                                //*
-                                if (inp.desiredOutput != 0)
-                                {
-                                    brains[inp.token].desiredOutput = inp.desiredOutput;
-                                }
-                                else if (inp.input != null)
-                                {
-                                    brains[inp.token].desiredOutput = inp.input[0];
-                                }
-                                else
-                                {
-                                    brains[inp.token].desiredOutput = 0;
-                                }
-                                datarec = brains[inp.token].query(inp.input, inp.context, inp.learnmode);
-                                brains[inp.token].think(inp.outputLMT);
-                                datarec = brains[inp.token].getOutput();
-                            }
-                            else datarec = "token required.";
-                        }
-                        catch (Exception e) { 
-                            datarec = "Input Format error."; 
-                        }
-                        if (datarec != null)
-                        {
-                            try
-                            {
-                                byte[] sendBytes = Encoding.ASCII.GetBytes(datarec + "\n");
-                                clientStream.Write(sendBytes, 0, sendBytes.Length);
-                            }
-                            catch (Exception e) {  }
-
-                        }
-
-
-                        dataFromClient = "";
-                    }
-                }
-                
-            }
-
-            tcpClient.Close();
-        }
+        
         private void onOutputChanged (String output) {
             try
             {
@@ -298,6 +123,19 @@ namespace odin
        listBox1.Items.Insert(0, logEntry);
    }));
                 
+            }
+            catch (System.InvalidOperationException) { }
+        }
+        public void onNewSimpleLogEntry(String logEntry)
+        {
+            try
+            {
+               
+                BeginInvoke(new Action(() =>
+                {
+                    listBox2.Items.Insert(0, logEntry);
+                }));
+
             }
             catch (System.InvalidOperationException) { }
         }
@@ -447,6 +285,9 @@ namespace odin
                         {
                             var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                             brain = (Brain)binaryFormatter.Deserialize(braindump);
+                            var db = DictionaryHandler.Instance;
+                            Dictionary<String, Brain> brains = db.getBrainDictionary();
+                            brains["ide"] = brain;
                         }
                     }
                 }
@@ -489,7 +330,9 @@ namespace odin
                         using (braindump)
                         {
                             var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                            binaryFormatter.Serialize(braindump, brain);
+                            var db = DictionaryHandler.Instance;
+                            Dictionary<String, Brain> brains = db.getBrainDictionary();
+                            binaryFormatter.Serialize(braindump, brains["ide"]);
                         }
                     }
                 }
@@ -506,7 +349,7 @@ namespace odin
             else
             {
                 
-                saveAsDump();
+                saveDump();
             }
 
         }
@@ -525,37 +368,23 @@ namespace odin
                 debugToolStripMenuItem_Click();
             }
         }
-        private void debugToolStripMenuItem_Click()
+        private void debugToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var db = DictionaryHandler.Instance;
-            Dictionary<String, Brain> brains = db.getBrainDictionary();
-            String bid = brainidToolStripMenuItem.Text;
-            if (!brains.ContainsKey(bid))
-            {
-                if (File.Exists(bid + ".dump"))
-                {
-                    try
-                    {
-                        FileStream bd = File.OpenRead(bid + ".dump");
-                        var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                        brains.Add(bid, (Brain)binaryFormatter.Deserialize(bd));
-                        bd.Close();
-
-                    }
-                    catch (Exception ex)
-                    {
-                        
-                    }
-                }
-                else
-                {
-                    brains.Add(bid, new Brain());
-                }
-            }
-                monitor = brains[bid].addMonitor();
+            /* monitor = brain.addMonitor();
 
                 monitor.attachLog(onNewLogEntry);
-                monitor.attachOutput(onOutputChanged);
+                monitor.attachOutput(onOutputChanged);*/
+            var db = DictionaryHandler.Instance;
+            Dictionary<String, SimpleLog> simpleLog = db.getLogs();
+            if (!simpleLog["debug"].attached)
+            {
+               
+                simpleLog["debug"].attachLog(onNewSimpleLogEntry);
+            }
+            else
+            {
+                simpleLog["debug"].detachLog();
+            }
             
         }
 
@@ -622,6 +451,26 @@ namespace odin
                 
                 listBox1.Items.Insert(0,"Error: Could not write file to disk. Original error: " + ex.Message);
             }
+        }
+
+        private void debugToolStripMenuItem_Click()
+        {
+
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            brain = new Brain();
+            var db = DictionaryHandler.Instance;
+            Dictionary<String, Brain> brains = db.getBrainDictionary();
+            brains["ide"] = brain;
+            braindump = null;
+            listBox2.Items.Clear();
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            listBox2.Items.Clear();
         } 
     }
 }
