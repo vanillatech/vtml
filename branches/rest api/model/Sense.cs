@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace odin.model
 {
     [Serializable()] 
-    class Sense
+    public class Sense
     {
         Brain brain;
         bool noOutput;
