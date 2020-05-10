@@ -11,6 +11,7 @@ namespace odin
     {
         
         private Dictionary<String, Brain> brains = new Dictionary<string, Brain>();
+        private Dictionary<String, SimpleLog> logs = new Dictionary<string, SimpleLog>();
 
         private DictionaryHandler()
         {
@@ -25,6 +26,10 @@ namespace odin
         public Dictionary<String, Brain> getBrainDictionary()
         {
             return brains;
+        }
+        public Dictionary<String, SimpleLog> getLogs()
+        {
+            return logs;
         }
     }
 }
