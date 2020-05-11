@@ -51,6 +51,8 @@ namespace odin
             brains.Add("ide", brain);
             Dictionary<String, SimpleLog> simpleLog = db.getLogs();
             simpleLog.Add("debug", new SimpleLog());
+            listBox2.Items.Insert(0, DateTime.Now.ToString() + ": New model created.");
+            listBox2.Items.Insert(0, DateTime.Now.ToString() + ": Listening to incoming requests on http://localhost:81/api/query.");
         }
 
       
@@ -288,6 +290,7 @@ namespace odin
                             var db = DictionaryHandler.Instance;
                             Dictionary<String, Brain> brains = db.getBrainDictionary();
                             brains["ide"] = brain;
+                            listBox2.Items.Insert(0, DateTime.Now.ToString() + ": Model loaded.");
                         }
                     }
                 }
@@ -380,10 +383,12 @@ namespace odin
             {
                
                 simpleLog["debug"].attachLog(onNewSimpleLogEntry);
+                listBox2.Items.Insert(0, DateTime.Now.ToString() + ": Debugging enabled.");
             }
             else
             {
                 simpleLog["debug"].detachLog();
+                listBox2.Items.Insert(0, DateTime.Now.ToString() + ": Debugging disabled.");
             }
             
         }
@@ -443,6 +448,7 @@ namespace odin
                         var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
                         binaryFormatter.Serialize(bd, brains[b]);
                         bd.Close();
+                        listBox2.Items.Insert(0, DateTime.Now.ToString() + ": Model saved.");
                     }
                 }
             }
@@ -466,11 +472,25 @@ namespace odin
             brains["ide"] = brain;
             braindump = null;
             listBox2.Items.Clear();
+            listBox2.Items.Insert(0,DateTime.Now.ToString() + ": New model created.");
         }
 
         private void button4_Click(object sender, EventArgs e)
         {
             listBox2.Items.Clear();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.FormOwnerClosing) //if closed by aplication
+            {
+                this.Close();
+            }
+            if (e.CloseReason == CloseReason.UserClosing) //if closed by user
+            {
+                e.Cancel = true;
+                this.Hide();
+            }
         } 
     }
 }
