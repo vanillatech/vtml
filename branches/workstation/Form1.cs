@@ -491,6 +491,12 @@ namespace odin
                 e.Cancel = true;
                 this.Hide();
             }
+        }
+
+        private void infoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InfoWindow a = new InfoWindow();
+            a.Show();
         } 
     }
 }
