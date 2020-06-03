@@ -250,7 +250,9 @@ namespace odin
                             }
                             else datarec = "token required.";
                         }
-                        catch (Exception e) { datarec = "Input Format error."; }
+                        catch (Exception e) {
+                            datarec = e.Message; //  "Input Format error."; 
+                        }
                         if (datarec != null)
                         {
                             try
