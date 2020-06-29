@@ -84,7 +84,7 @@ namespace odin.model
         internal List<QueueElement> getElementsInStepOrderByActivation(int when)
         {
             //return copy of list because List could be changed
-            return new List<QueueElement>(getStep(when).elements.OrderByDescending(ele => ele.neuron.activation));
+            return new List<QueueElement>(getStep(when).elements.OrderByDescending(ele => ele.neuron != null ? ele.neuron.activation : 0));
         }
 
 

@@ -30,6 +30,7 @@ namespace odin
         private System.Windows.Forms.ContextMenu contextMenu1;
         private System.Windows.Forms.MenuItem menuItem1;
         private System.ComponentModel.IContainer comp;
+        private readonly object rlock = new object();
 
         private bool allowshowdisplay = false;
         protected override void SetVisibleCore(bool value)
@@ -107,6 +108,7 @@ namespace odin
             }
             
         }
+
         private void HandleClientComm(object client)
         {
             TcpClient tcpClient = (TcpClient)client;
@@ -156,25 +158,29 @@ namespace odin
                             {
                                 if (!brains.ContainsKey(inp.token))
                                 {
-                                    if (File.Exists(inp.token + ".dump"))
-                                    {
-                                        try
-                                        {
-                                            FileStream bd = File.OpenRead(inp.token + ".dump");
-                                            var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-                                            brains.Add(inp.token, (Brain)binaryFormatter.Deserialize(bd));
-                                            bd.Close();
 
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            datarec = "Error: Could not read file from disk. Original error: " + ex.Message;
-                                        }
-                                        brains[inp.token].init();
-                                    }
-                                    else
+                                    lock (rlock)
                                     {
-                                        brains.Add(inp.token, new Brain());
+                                        if (File.Exists(inp.token + ".dump"))
+                                        {
+                                            try
+                                            {
+                                                FileStream bd = File.OpenRead(inp.token + ".dump");
+                                                var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                                                brains.Add(inp.token, (Brain)binaryFormatter.Deserialize(bd));
+                                                bd.Close();
+
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                datarec = "Error: Could not read file from disk. Original error: " + ex.Message;
+                                            }
+                                            brains[inp.token].init();
+                                        }
+                                        else
+                                        {
+                                            brains.Add(inp.token, new Brain());
+                                        }
                                     }
                                 }
                                 if (inp.activationThreshold > 0)
