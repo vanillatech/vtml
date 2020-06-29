@@ -56,8 +56,10 @@ namespace odin.model
         {
             foreach (QueueElement a in this.getElementsInStep(0))
             {
-                a.neuron.leakActivation();
-
+                if (a.neuron != null)
+                {
+                    a.neuron.leakActivation();
+                }
             }
         }
 
