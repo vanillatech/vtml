@@ -30,11 +30,13 @@ namespace odin.model
         {
             
                 Step tmp = this.getStep(when);
-                QueueElement aqe = new QueueElement();
-                aqe.neuron = neuron;
-                aqe.val = value;
-                tmp.elements.Add(aqe);
-                         
+                if (tmp.elements != null)
+                {
+                    QueueElement aqe = new QueueElement();
+                    aqe.neuron = neuron;
+                    aqe.val = value;
+                    tmp.elements.Add(aqe);
+                }     
             
         }
         internal int countElements(int inStep)

@@ -151,16 +151,17 @@ namespace odin
                         string datarec = "";
                         try
                         {
-                            templateQueryData inp = new JavaScriptSerializer().Deserialize<templateQueryData>(dataFromClient);
-
-
-                            if (inp.token != null)
+                            lock (rlock)
                             {
-                                if (!brains.ContainsKey(inp.token))
-                                {
+                                templateQueryData inp = new JavaScriptSerializer().Deserialize<templateQueryData>(dataFromClient);
 
-                                    lock (rlock)
+
+                                if (inp.token != null)
+                                {
+                                    if (!brains.ContainsKey(inp.token))
                                     {
+
+
                                         if (File.Exists(inp.token + ".dump"))
                                         {
                                             try
@@ -181,80 +182,81 @@ namespace odin
                                         {
                                             brains.Add(inp.token, new Brain());
                                         }
+
                                     }
-                                }
-                                if (inp.activationThreshold > 0)
-                                {
-                                    brains[inp.token].activationThreshold = inp.activationThreshold;
-                                }
-                                if (inp.activateNewNeurons  == true)
-                                {
-                                    brains[inp.token].activateNewNeurons = inp.activateNewNeurons;
-                                }
-                                if (inp.noSeparateFeatures)
-                                {
-                                    brains[inp.token].separateFeatures = false;
-                                }
-                                if (inp.maxlayer > 0)
-                                {
-                                    brains[inp.token].maxLayer = inp.maxlayer;
-                                }
-                                if (inp.temporalPatternLength > 0)
-                                {
-                                    brains[inp.token].temporalPatternLength = inp.temporalPatternLength;
-                                }
-                                if (inp.leakageFactor > 0)
-                                {
-                                    brains[inp.token].leakageFactor = inp.leakageFactor;
-                                }
-                                if (inp.token.Contains("READONLY"))
-                                {
-                                    inp.learnmode = false;
-                                }
-                                if (inp.temporary == true)
-                                {
-                                    brains[inp.token].temporary = inp.temporary;
-                                }
-                                //* translate features to int representation
-                                if (inp.featureMatrix != null)
-                                {
-                                    inp.context = new int[inp.featureMatrix.Count()];
-                                    for(int n=0;n<inp.featureMatrix.Count();n++)
+                                    if (inp.activationThreshold > 0)
                                     {
-                                        inp.context[n] = brains[inp.token].getFeatureAsInt(inp.featureMatrix[n]);
+                                        brains[inp.token].activationThreshold = inp.activationThreshold;
                                     }
-                                }
-                                if (inp.inputFeature != null)
-                                {
-                                    inp.input = new int[inp.inputFeature.Count()];
-                                    for (int n = 0; n < inp.inputFeature.Count(); n++)
+                                    if (inp.activateNewNeurons == true)
                                     {
-                                        inp.input[n] = brains[inp.token].getFeatureAsInt(inp.inputFeature[n]);
+                                        brains[inp.token].activateNewNeurons = inp.activateNewNeurons;
                                     }
+                                    if (inp.noSeparateFeatures)
+                                    {
+                                        brains[inp.token].separateFeatures = false;
+                                    }
+                                    if (inp.maxlayer > 0)
+                                    {
+                                        brains[inp.token].maxLayer = inp.maxlayer;
+                                    }
+                                    if (inp.temporalPatternLength > 0)
+                                    {
+                                        brains[inp.token].temporalPatternLength = inp.temporalPatternLength;
+                                    }
+                                    if (inp.leakageFactor > 0)
+                                    {
+                                        brains[inp.token].leakageFactor = inp.leakageFactor;
+                                    }
+                                    if (inp.token.Contains("READONLY"))
+                                    {
+                                        inp.learnmode = false;
+                                    }
+                                    if (inp.temporary == true)
+                                    {
+                                        brains[inp.token].temporary = inp.temporary;
+                                    }
+                                    //* translate features to int representation
+                                    if (inp.featureMatrix != null)
+                                    {
+                                        inp.context = new int[inp.featureMatrix.Count()];
+                                        for (int n = 0; n < inp.featureMatrix.Count(); n++)
+                                        {
+                                            inp.context[n] = brains[inp.token].getFeatureAsInt(inp.featureMatrix[n]);
+                                        }
+                                    }
+                                    if (inp.inputFeature != null)
+                                    {
+                                        inp.input = new int[inp.inputFeature.Count()];
+                                        for (int n = 0; n < inp.inputFeature.Count(); n++)
+                                        {
+                                            inp.input[n] = brains[inp.token].getFeatureAsInt(inp.inputFeature[n]);
+                                        }
+                                    }
+                                    if (inp.outputFeature != null)
+                                    {
+                                        inp.desiredOutput = brains[inp.token].getFeatureAsInt(inp.outputFeature);
+
+                                    }
+                                    //*
+                                    if (inp.desiredOutput != 0)
+                                    {
+                                        brains[inp.token].desiredOutput = inp.desiredOutput;
+                                    }
+                                    else if (inp.input != null)
+                                    {
+                                        brains[inp.token].desiredOutput = inp.input[0];
+                                    }
+                                    else
+                                    {
+                                        brains[inp.token].desiredOutput = 0;
+                                    }
+                                    datarec = brains[inp.token].query(inp.input, inp.context, inp.learnmode);
+                                    brains[inp.token].think(inp.outputLMT);
+                                    datarec = brains[inp.token].getOutput();
                                 }
-                                if (inp.outputFeature != null)
-                                {
-                                    inp.desiredOutput = brains[inp.token].getFeatureAsInt(inp.outputFeature);
-                                    
-                                }
-                                //*
-                                if (inp.desiredOutput != 0)
-                                {
-                                    brains[inp.token].desiredOutput = inp.desiredOutput;
-                                }
-                                else if (inp.input != null)
-                                {
-                                    brains[inp.token].desiredOutput = inp.input[0];
-                                }
-                                else
-                                {
-                                    brains[inp.token].desiredOutput = 0;
-                                }
-                                datarec = brains[inp.token].query(inp.input, inp.context, inp.learnmode);
-                                brains[inp.token].think(inp.outputLMT);
-                                datarec = brains[inp.token].getOutput();
+                                else datarec = "token required.";
                             }
-                            else datarec = "token required.";
                         }
                         catch (Exception e) {
                             datarec = e.Message; //  "Input Format error."; 

@@ -30,14 +30,16 @@ namespace odin.model
         {
             
             foreach (QueueElement a in this.getElementsInStepOrderByActivation(0)) {
-                if (a.neuron.crossesThreshold())
+                if (a.neuron != null)
                 {
-                    if (!a.neuron.isWithinRefractoryPeriod())
+                    if (a.neuron.crossesThreshold())
                     {
-                        a.neuron.fire();
+                        if (!a.neuron.isWithinRefractoryPeriod())
+                        {
+                            a.neuron.fire();
+                        }
                     }
                 }
-
             }
         }
 
@@ -46,7 +48,7 @@ namespace odin.model
         {
             Parallel.ForEach(this.getElementsInStep(0), a =>
             {
-                a.neuron.polarize(a.val);
+                if (a.neuron !=null) a.neuron.polarize(a.val);
 
             });
             
@@ -68,9 +70,11 @@ namespace odin.model
             foreach (QueueElement a in this.getElementsInStep(p))
             {
                 //if (a.neuron.layer == l && a.neuron.type != 3 )
-                if (a.neuron.layer == l && a.neuron.type != 1)
-                    a.neuron.inhibit();
-                
+                if (a.neuron != null)
+                {
+                    if (a.neuron.layer == l && a.neuron.type != 1)
+                        a.neuron.inhibit();
+                }
 
             }
         }
@@ -78,9 +82,11 @@ namespace odin.model
         {
             foreach (QueueElement a in this.getElementsInStep(p))
             {
-                if (a.neuron.type == 2)
-                    a.neuron.inhibit();
-
+                if (a.neuron != null)
+                {
+                    if (a.neuron.type == 2)
+                        a.neuron.inhibit();
+                }
 
             }
         }
